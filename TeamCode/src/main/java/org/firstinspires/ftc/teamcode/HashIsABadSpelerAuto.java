@@ -40,25 +40,25 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException
     {
         //Maps hardware for all parts
-        FLMotor = hardwareMap.dcMotor.get("FLMotor");
-        FRMotor = hardwareMap.dcMotor.get("FRMotor");
-        BLMotor = hardwareMap.dcMotor.get("BLMotor");
-        BRMotor = hardwareMap.dcMotor.get("BRMotor");
-        Flywheel = hardwareMap.dcMotor.get("Flywheel");
+        FLMotor = hardwareMap.dcMotor.get("0");
+        FRMotor = hardwareMap.dcMotor.get("1");
+        BLMotor = hardwareMap.dcMotor.get("2");
+        BRMotor = hardwareMap.dcMotor.get("3");
+        Flywheel = hardwareMap.dcMotor.get("Fly");
         // HorizontalSlidePack = hardwareMap.dcMotor.get("HorizontalSlidePack");
         // VerticalSlidePack = hardwareMap.dcMotor.get("VerticalSlidePack");
         // EaterMotor = hardwareMap.dcMotor.get("Eater");
 
-        FRMotor.setDirection(DcMotor.Direction.REVERSE);
-        FLMotor.setDirection(DcMotor.Direction.FORWARD);
+        FRMotor.setDirection(DcMotor.Direction.FORWARD);
+        FLMotor.setDirection(DcMotor.Direction.REVERSE);
         BRMotor.setDirection(DcMotor.Direction.FORWARD);
-        BLMotor.setDirection(DcMotor.Direction.REVERSE);
+        BLMotor.setDirection(DcMotor.Direction.FORWARD);
         Flywheel.setDirection(DcMotor.Direction.FORWARD);
         // HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
         // VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
         // EaterMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        double DriveSpeed = 1;
+        double DriveSpeed = 0.75;
 
         waitForStart();
         telemetry.addData("Status","TeleOp");
@@ -95,21 +95,24 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
 
         sleep(50);
         //The actual program
+        eTime.reset();
         while (opModeIsActive())
         {
-
-            timedrive(DriveSpeed, 1);
-            timedrive(DriveSpeed*-1, 1);
+            if (!opModeIsActive())
+                break;
+            timedrive(DriveSpeed, 100);
+            leftturn(DriveSpeed, 100);
+            timedrive(DriveSpeed, 500);
 
 
         }
     }
     private void timedrive(double power, double time){
         eTime.reset();
-        while(opModeIsActive() && eTime.seconds() < time){
+        while(opModeIsActive() && eTime.milliseconds() < time){
             FLMotor.setPower(power);
-            FRMotor.setPower(-power);
-            BLMotor.setPower(-power);
+            FRMotor.setPower(power);
+            BLMotor.setPower(power);
             BRMotor.setPower(power);
             telemetry.addData("Time:", eTime);
             telemetry.update();
@@ -136,10 +139,10 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
     // }
     private void leftturn(double power, double time){
         eTime.reset();
-        while(opModeIsActive() && eTime.seconds() < time){
+        while(opModeIsActive() && eTime.milliseconds() < time){
             FLMotor.setPower(-1 * power);
-            FRMotor.setPower(-1* power);
-            BLMotor.setPower(1 * power);
+            FRMotor.setPower(1 * power);
+            BLMotor.setPower(-1 * power);
             BRMotor.setPower(1 * power);
         }
         FLMotor.setPower(0);
@@ -149,7 +152,7 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
     }
     private void rightturn(double power, double time){
         eTime.reset();
-        while(opModeIsActive() && eTime.seconds() < time){
+        while(opModeIsActive() && eTime.milliseconds() < time){
             FLMotor.setPower(-1 * power);
             FRMotor.setPower(1 * power);
             BLMotor.setPower(-1 * power);
