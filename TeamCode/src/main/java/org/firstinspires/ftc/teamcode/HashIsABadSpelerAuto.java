@@ -34,8 +34,13 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
     // private Orientation lastAngles = new Orientation();
     // double globalAngle, power = .30, correction;
     private ElapsedTime eTime = new ElapsedTime();
-
-
+    
+    enum DriveDirection {
+        FORWARD,
+        LEFT,
+        RIGHT
+    }
+    
     @Override
     public void runOpMode() throws InterruptedException
     {
@@ -58,7 +63,7 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
         // VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
         // EaterMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        double DriveSpeed = 0.75;
+        double DrivePower = 0.75;
 
         waitForStart();
         telemetry.addData("Status","TeleOp");
@@ -96,16 +101,43 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
         sleep(50);
         //The actual program
         eTime.reset();
-        while (opModeIsActive())
-        {
-            if (!opModeIsActive())
+        drive(DriveDirection.FORWARD, DrivePower, 100);
+        sleep(500); // For Testing Purposes
+        drive(DriveDirection.LEFT, DrivePower, 100);
+        sleep(500);
+        drive(DriveDirection.FORWARD, DrivePower, 500);
+    }
+    
+    private void drive(DriveDirection direction, double power, double time) {
+        eTime.reset();
+        switch(direction) {
+            case FORWARD:
+                FLMotor.setPower(power);
+                FRMotor.setPower(power);
+                BLMotor.setPower(power);
+                BRMotor.setPower(power);
                 break;
-            timedrive(DriveSpeed, 100);
-            leftturn(DriveSpeed, 100);
-            timedrive(DriveSpeed, 500);
-
-
+            case LEFT:
+                FLMotor.setPower(-1 * power);
+                FRMotor.setPower(power);
+                BLMotor.setPower(-1 * power);
+                BRMotor.setPower(power);
+                break;
+            case RIGHT:
+                FLMotor.setPower(power);
+                FRMotor.setPower(-1 * power);
+                BLMotor.setPower(power);
+                BRMotor.setPower(-1 * power);
+                break;
+        } 
+        while(opModeIsActive() && eTime.milliseconds() < time){
+            telemetry.addData("Time:", eTime);
+            telemetry.update();
         }
+        FLMotor.setPower(0);
+        FRMotor.setPower(0);
+        BLMotor.setPower(0);
+        BRMotor.setPower(0);
     }
     private void timedrive(double power, double time){
         eTime.reset();
