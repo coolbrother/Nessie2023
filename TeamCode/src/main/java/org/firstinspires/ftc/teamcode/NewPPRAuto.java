@@ -22,6 +22,22 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 
 @Autonomous(name="HashIsABadSpelerAuto")
 public class HashIsABadSpelerAuto extends LinearOpMode {
+    enum DriveDirection {
+        FORWARD,
+        LEFT,
+        RIGHT,
+        BACK
+    }
+    
+    enum StartingPositionEnum {
+        BLUEHUB,
+        BLUEWAREHOUSE,
+        REDHUB,
+        REDWAREHOUSE
+    }
+    
+    private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.BLUEHUB;
+    
     private DcMotor FLMotor;
     private DcMotor FRMotor;
     private DcMotor BLMotor;
@@ -38,13 +54,6 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
     // private Orientation lastAngles = new Orientation();
     // double globalAngle, power = .30, correction;
     private ElapsedTime eTime = new ElapsedTime();
-
-    enum DriveDirection {
-        FORWARD,
-        LEFT,
-        RIGHT,
-        BACK
-    }
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -106,20 +115,56 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
         telemetry.update();
 
         //The actual program
-        eTime.reset();
-        drive(DriveDirection.FORWARD, DrivePower, 24); // Drive forward 24 inches
-        sleep(TIME_BETWEEN_ACTIONS);
-        
-        strafe(DriveDirection.RIGHT, DrivePower, 24); // Strafe right 24 inches
-        sleep(TIME_BETWEEN_ACTIONS);
-        
-        drive(DriveDirection.BACK, DrivePower, 12); // Drive backward 12 inches
-        sleep(TIME_BETWEEN_ACTIONS);
-        
-        spinFlywheel(.3, 2000); // Spin flywheel for 2 seconds at a power of .3
-        sleep(TIME_BETWEEN_ACTIONS);
-        
-        drive(DriveDirection.FORWARD, DrivePower, 12); // Drive forward 12 inches
+        switch(STARTING_POSITION) {
+            case BLUEHUB:
+                eTime.reset();
+                
+                drive(DriveDirection.FORWARD, DrivePower, 24); // Drive forward 24 inches
+                sleep(TIME_BETWEEN_ACTIONS);
+
+                strafe(DriveDirection.RIGHT, DrivePower, 24); // Strafe right 24 inches
+                sleep(TIME_BETWEEN_ACTIONS);
+
+                drive(DriveDirection.BACK, DrivePower, 12); // Drive backward 12 inches
+                sleep(TIME_BETWEEN_ACTIONS);
+
+                spinFlywheel(.3, 2000); // Spin flywheel for 2 seconds at a power of .3
+                sleep(TIME_BETWEEN_ACTIONS);
+
+                drive(DriveDirection.FORWARD, DrivePower, 12); // Drive forward 12 inches
+                break;
+            case BLUEWAREHOUSE:
+                drive(DriveDirection.FORWARD, DrivePower, 3); // Drive forward 3 inches
+                sleep(TIME_BETWEEN_ACTIONS);
+
+                strafe(DriveDirection.LEFT, DrivePower, 30); // Strafe left 30 inches
+                sleep(TIME_BETWEEN_ACTIONS);
+                break;            
+            case REDHUB:
+                eTime.reset();
+                
+                drive(DriveDirection.FORWARD, DrivePower, 24); // Drive forward 24 inches
+                sleep(TIME_BETWEEN_ACTIONS);
+
+                strafe(DriveDirection.LEFT, DrivePower, 24); // Strafe left 24 inches
+                sleep(TIME_BETWEEN_ACTIONS);
+
+                drive(DriveDirection.BACK, DrivePower, 12); // Drive backward 12 inches
+                sleep(TIME_BETWEEN_ACTIONS);
+
+                spinFlywheel(.3, 2000); // Spin flywheel for 2 seconds at a power of .3
+                sleep(TIME_BETWEEN_ACTIONS);
+
+                drive(DriveDirection.FORWARD, DrivePower, 12); // Drive forward 12 inches
+                break;
+            case REDWAREHOUSE:
+                drive(DriveDirection.FORWARD, DrivePower, 3); // Drive forward 3 inches
+                sleep(TIME_BETWEEN_ACTIONS);
+
+                strafe(DriveDirection.RIGHT, DrivePower, 30); // Strafe right 30 inches
+                sleep(TIME_BETWEEN_ACTIONS);
+                break;
+        }
     }
 
     private void spinFlywheel(double power, double time) {
