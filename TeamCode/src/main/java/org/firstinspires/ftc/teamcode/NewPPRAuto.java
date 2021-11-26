@@ -21,7 +21,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 
 
 @Autonomous(name="HashIsABadSpelerAuto")
-public class NewPPRAuto extends LinearOpMode {
+public class HashIsABadSpelerAuto extends LinearOpMode {
     private DcMotor FLMotor;
     private DcMotor FRMotor;
     private DcMotor BLMotor;
@@ -40,7 +40,8 @@ public class NewPPRAuto extends LinearOpMode {
     enum DriveDirection {
         FORWARD,
         LEFT,
-        RIGHT
+        RIGHT,
+        BACK
     }
 
     @Override
@@ -107,9 +108,24 @@ public class NewPPRAuto extends LinearOpMode {
         eTime.reset();
         drive(DriveDirection.FORWARD, DrivePower, 1 * PPR);
         sleep(500); // For Testing Purposes
-        drive(DriveDirection.LEFT, DrivePower, 1 * PPR);
+        strafe(DriveDirection.RIGHT, DrivePower, 2 * PPR);
         sleep(500);
-        drive(DriveDirection.FORWARD, DrivePower, 5 * PPR);
+        drive(DriveDirection.BACK, DrivePower, 1 * PPR);
+        sleep(500);
+        spinFlywheel(.3, 2 * PPR);
+        sleep(500);
+        drive(DriveDirection.FORWARD, DrivePower, (int) (1.5 * PPR));
+    }
+
+    private void spinFlywheel(double power, int position) {
+        eTime.reset();
+        Flywheel.setPower(power);
+        Flywheel.setTargetPosition(position);
+        while(opModeIsActive() && eTime.milliseconds() < time){
+            telemetry.addData("Time:", eTime);
+            telemetry.update();
+        }
+        FLMotor.setPower(0);
     }
 
     private void drive(DriveDirection direction, double power, int position) {
@@ -133,15 +149,20 @@ public class NewPPRAuto extends LinearOpMode {
                 BLMotor.setTargetPosition(position);
                 BRMotor.setTargetPosition(-1 * position);
                 break;
+            case BACK:
+                FLMotor.setTargetPosition(-position);
+                FRMotor.setTargetPosition(-position);
+                BLMotor.setTargetPosition(-position);
+                BRMotor.setTargetPosition(-position);
         }
-//         while(opModeIsActive() && eTime.milliseconds() < time){
-//             telemetry.addData("Time:", eTime);
-//             telemetry.update();
-//         }
-//         FLMotor.setPower(0);
-//         FRMotor.setPower(0);
-//         BLMotor.setPower(0);
-//         BRMotor.setPower(0);
+         while(opModeIsActive() && eTime.milliseconds() < time){
+             telemetry.addData("Time:", eTime);
+             telemetry.update();
+         }
+         FLMotor.setPower(0);
+         FRMotor.setPower(0);
+         BLMotor.setPower(0);
+         BRMotor.setPower(0);
     }
     private void timedrive(double power, double time){
         eTime.reset();
@@ -158,21 +179,31 @@ public class NewPPRAuto extends LinearOpMode {
         BLMotor.setPower(0);
         BRMotor.setPower(0);
     }
-    // private void strafe(double power, double time){
-    //     eTime.reset();
-    //     while(opModeIsActive() && eTime.seconds() < time){
-    //         FLMotor.setPower(-power);
-    //         FRMotor.setPower(-power);
-    //         BLMotor.setPower(-power);
-    //         BRMotor.setPower(-power);
-    //         telemetry.addData("Time:", eTime);
-    //         telemetry.update();
-    //     }
-    //     FLMotor.setPower(0);
-    //     FRMotor.setPower(0);
-    //     BLMotor.setPower(0);
-    //     BRMotor.setPower(0);
-    // }
+     private void strafe(DriveDirection direction, double power, int position){
+         eTime.reset();
+         switch(direction) {
+             case LEFT:
+                 FLMotor.setTargetPosition(position);
+                 FRMotor.setTargetPosition(position);
+                 BLMotor.setTargetPosition(-position);
+                 BRMotor.setTargetPosition(-position);
+                 break;
+             case RIGHT:
+                 FLMotor.setTargetPosition(-position);
+                 FRMotor.setTargetPosition(-position);
+                 BLMotor.setTargetPosition(position);
+                 BRMotor.setTargetPosition(position);
+                 break;
+         }
+         while(opModeIsActive() && eTime.seconds() < time){
+             telemetry.addData("Time:", eTime);
+             telemetry.update();
+         }
+         FLMotor.setPower(0);
+         FRMotor.setPower(0);
+         BLMotor.setPower(0);
+         BRMotor.setPower(0);
+     }
     private void leftturn(double power, double time){
         eTime.reset();
         while(opModeIsActive() && eTime.milliseconds() < time){
