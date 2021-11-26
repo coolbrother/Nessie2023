@@ -107,19 +107,19 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
 
         //The actual program
         eTime.reset();
-        drive(DriveDirection.FORWARD, DrivePower, 20); // Drive forward 20 inches
+        drive(DriveDirection.FORWARD, DrivePower, 24); // Drive forward 24 inches
         sleep(TIME_BETWEEN_ACTIONS);
         
-        strafe(DriveDirection.RIGHT, DrivePower, 30); // Strafe right 30 inches
+        strafe(DriveDirection.RIGHT, DrivePower, 24); // Strafe right 24 inches
         sleep(TIME_BETWEEN_ACTIONS);
         
-        drive(DriveDirection.BACK, DrivePower, 10); // Drive backward 10 inches
+        drive(DriveDirection.BACK, DrivePower, 12); // Drive backward 12 inches
         sleep(TIME_BETWEEN_ACTIONS);
         
         spinFlywheel(.3, 2000); // Spin flywheel for 2 seconds at a power of .3
         sleep(TIME_BETWEEN_ACTIONS);
         
-        drive(DriveDirection.FORWARD, DrivePower, 30); // Drive forward 30 inches
+        drive(DriveDirection.FORWARD, DrivePower, 12); // Drive forward 12 inches
     }
 
     private void spinFlywheel(double power, double time) {
