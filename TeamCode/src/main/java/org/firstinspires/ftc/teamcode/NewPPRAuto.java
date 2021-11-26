@@ -27,8 +27,10 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
     private DcMotor BLMotor;
     private DcMotor BRMotor;
     private DcMotor Flywheel;
-    private final int PPR = 145;
+    private final double PPR = 145.1;
     private final double DrivePower = 0.75;
+    private final double WHEEL_DIAMETER = 3.77953; // Unit: inch
+    private final double TIME_BETWEEN_ACTIONS = 500; // Unit: ms
     // private DcMotor HorizontalSlidePack;
     // private DcMotor VerticalSlidePack;
     // private DcMotor EaterMotor;
@@ -103,136 +105,140 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
         telemetry.addData("Mode", "running");
         telemetry.update();
 
-        sleep(50);
         //The actual program
         eTime.reset();
-        drive(DriveDirection.FORWARD, DrivePower, 1 * PPR);
-        sleep(500); // For Testing Purposes
-        strafe(DriveDirection.RIGHT, DrivePower, 2 * PPR);
-        sleep(500);
-        drive(DriveDirection.BACK, DrivePower, 1 * PPR);
-        sleep(500);
-        spinFlywheel(.3, 2 * PPR);
-        sleep(500);
-        drive(DriveDirection.FORWARD, DrivePower, (int) (1.5 * PPR));
+        drive(DriveDirection.FORWARD, DrivePower, 20); // Drive forward 20 inches
+        sleep(TIME_BETWEEN_ACTIONS);
+        
+        strafe(DriveDirection.RIGHT, DrivePower, 30); // Strafe right 30 inches
+        sleep(TIME_BETWEEN_ACTIONS);
+        
+        drive(DriveDirection.BACK, DrivePower, 10); // Drive backward 10 inches
+        sleep(TIME_BETWEEN_ACTIONS);
+        
+        spinFlywheel(.3, 2000); // Spin flywheel for 2 seconds at a power of .3
+        sleep(TIME_BETWEEN_ACTIONS);
+        
+        drive(DriveDirection.FORWARD, DrivePower, 30); // Drive forward 30 inches
     }
 
-    private void spinFlywheel(double power, int position) {
+    private void spinFlywheel(double power, double time) {
         eTime.reset();
         Flywheel.setPower(power);
-        Flywheel.setTargetPosition(position);
         while(opModeIsActive() && eTime.milliseconds() < time){
             telemetry.addData("Time:", eTime);
             telemetry.update();
         }
-        FLMotor.setPower(0);
+        Flywheel.setPower(0);
     }
 
-    private void drive(DriveDirection direction, double power, int position) {
-        eTime.reset();
+    private void drive(DriveDirection direction, double power, double distance) {
+        int pulses = distanceToPulses(distance);
+        setPowerAll(power);
         switch(direction) {
             case FORWARD:
-                FLMotor.setTargetPosition(position);
-                FRMotor.setTargetPosition(position);
-                BLMotor.setTargetPosition(position);
-                BRMotor.setTargetPosition(position);
+                FLMotor.setTargetPosition(pulses);
+                FRMotor.setTargetPosition(pulses);
+                BLMotor.setTargetPosition(pulses);
+                BRMotor.setTargetPosition(pulses);
                 break;
             case LEFT:
-                FLMotor.setTargetPosition(-1 * position);
-                FRMotor.setTargetPosition(position);
-                BLMotor.setTargetPosition(-1 * position);
-                BRMotor.setTargetPosition(position);
+                FLMotor.setTargetPosition(-1 * pulses);
+                FRMotor.setTargetPosition(pulses);
+                BLMotor.setTargetPosition(-1 * pulses);
+                BRMotor.setTargetPosition(pulses);
                 break;
             case RIGHT:
-                FLMotor.setTargetPosition(position);
-                FRMotor.setTargetPosition(-1 * position);
-                BLMotor.setTargetPosition(position);
-                BRMotor.setTargetPosition(-1 * position);
+                FLMotor.setTargetPosition(pulses);
+                FRMotor.setTargetPosition(-1 * pulses);
+                BLMotor.setTargetPosition(pulses);
+                BRMotor.setTargetPosition(-1 * pulses);
                 break;
             case BACK:
-                FLMotor.setTargetPosition(-position);
-                FRMotor.setTargetPosition(-position);
-                BLMotor.setTargetPosition(-position);
-                BRMotor.setTargetPosition(-position);
+                FLMotor.setTargetPosition(-pulses);
+                FRMotor.setTargetPosition(-pulses);
+                BLMotor.setTargetPosition(-pulses);
+                BRMotor.setTargetPosition(-pulses);
         }
-         while(opModeIsActive() && eTime.milliseconds() < time){
-             telemetry.addData("Time:", eTime);
-             telemetry.update();
-         }
-         FLMotor.setPower(0);
-         FRMotor.setPower(0);
-         BLMotor.setPower(0);
-         BRMotor.setPower(0);
+         setPowerAll(0);
     }
-    private void timedrive(double power, double time){
-        eTime.reset();
-        while(opModeIsActive() && eTime.milliseconds() < time){
-            FLMotor.setPower(power);
-            FRMotor.setPower(power);
-            BLMotor.setPower(power);
-            BRMotor.setPower(power);
-            telemetry.addData("Time:", eTime);
-            telemetry.update();
-        }
-        FLMotor.setPower(0);
-        FRMotor.setPower(0);
-        BLMotor.setPower(0);
-        BRMotor.setPower(0);
-    }
-     private void strafe(DriveDirection direction, double power, int position){
-         eTime.reset();
+    
+     private void strafe(DriveDirection direction, double power, double distance){
+         int pulses = distanceToPulses(distance);
+         setPowerAll(power);
          switch(direction) {
              case LEFT:
-                 FLMotor.setTargetPosition(position);
-                 FRMotor.setTargetPosition(position);
-                 BLMotor.setTargetPosition(-position);
-                 BRMotor.setTargetPosition(-position);
+                 FLMotor.setTargetPosition(pulses);
+                 FRMotor.setTargetPosition(pulses);
+                 BLMotor.setTargetPosition(-pulses);
+                 BRMotor.setTargetPosition(-pulses);
                  break;
              case RIGHT:
-                 FLMotor.setTargetPosition(-position);
-                 FRMotor.setTargetPosition(-position);
-                 BLMotor.setTargetPosition(position);
-                 BRMotor.setTargetPosition(position);
+                 FLMotor.setTargetPosition(-pulses);
+                 FRMotor.setTargetPosition(-pulses);
+                 BLMotor.setTargetPosition(pulses);
+                 BRMotor.setTargetPosition(pulses);
                  break;
          }
-         while(opModeIsActive() && eTime.seconds() < time){
-             telemetry.addData("Time:", eTime);
-             telemetry.update();
-         }
-         FLMotor.setPower(0);
-         FRMotor.setPower(0);
-         BLMotor.setPower(0);
-         BRMotor.setPower(0);
+         setPowerAll(0);
      }
-    private void leftturn(double power, double time){
-        eTime.reset();
-        while(opModeIsActive() && eTime.milliseconds() < time){
-            FLMotor.setPower(-1 * power);
-            FRMotor.setPower(1 * power);
-            BLMotor.setPower(-1 * power);
-            BRMotor.setPower(1 * power);
-        }
-        FLMotor.setPower(0);
-        FRMotor.setPower(0);
-        BLMotor.setPower(0);
-        BRMotor.setPower(0);
+    
+    private int distanceToPulses(double distance) {         // Unit: inch
+        double rotations = distance / (Math.PI * WHEEL_DIAMETER); 
+        double pulses = rotations * PPR;
+        return pulses; 
     }
-    private void rightturn(double power, double time){
-        eTime.reset();
-        while(opModeIsActive() && eTime.milliseconds() < time){
-            FLMotor.setPower(-1 * power);
-            FRMotor.setPower(1 * power);
-            BLMotor.setPower(-1 * power);
-            BRMotor.setPower(1 *power);
-        }
-        FLMotor.setPower(0);
-        FRMotor.setPower(0);
-        BLMotor.setPower(0);
-        BRMotor.setPower(0);
+    
+    private void setPowerAll(double power) {
+        FLMotor.setPower(power);
+        FRMotor.setPower(power);
+        BLMotor.setPower(power);
+        BRMotor.setPower(power);
     }
-
-
-
+    
+//     private void leftturn(double power, double time){
+//         eTime.reset();
+//         while(opModeIsActive() && eTime.milliseconds() < time){
+//             FLMotor.setPower(-1 * power);
+//             FRMotor.setPower(1 * power);
+//             BLMotor.setPower(-1 * power);
+//             BRMotor.setPower(1 * power);
+//         }
+//         FLMotor.setPower(0);
+//         FRMotor.setPower(0);
+//         BLMotor.setPower(0);
+//         BRMotor.setPower(0);
+//     }
+    
+//     private void rightturn(double power, double time){
+//         eTime.reset();
+//         while(opModeIsActive() && eTime.milliseconds() < time){
+//             FLMotor.setPower(-1 * power);
+//             FRMotor.setPower(1 * power);
+//             BLMotor.setPower(-1 * power);
+//             BRMotor.setPower(1 *power);
+//         }
+//         FLMotor.setPower(0);
+//         FRMotor.setPower(0);
+//         BLMotor.setPower(0);
+//         BRMotor.setPower(0);
+//     }
+    
+//     private void timedrive(double power, double time){
+//         eTime.reset();
+//         while(opModeIsActive() && eTime.milliseconds() < time){
+//             FLMotor.setPower(power);
+//             FRMotor.setPower(power);
+//             BLMotor.setPower(power);
+//             BRMotor.setPower(power);
+//             telemetry.addData("Time:", eTime);
+//             telemetry.update();
+//         }
+//         FLMotor.setPower(0);
+//         FRMotor.setPower(0);
+//         BLMotor.setPower(0);
+//         BRMotor.setPower(0);
+//     }
 
     /*(gamepad2.a){
             LGServo.setPosition(0);
