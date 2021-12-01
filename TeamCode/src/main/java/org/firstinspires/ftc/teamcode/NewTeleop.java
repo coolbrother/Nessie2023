@@ -63,7 +63,7 @@ public class NewTeleop extends LinearOpMode {
         FRMotor = hardwareMap.dcMotor.get("0");
         BLMotor = hardwareMap.dcMotor.get("2");
         BRMotor = hardwareMap.dcMotor.get("3");
-//        Flywheel = hardwareMap.dcMotor.get("Fly");
+        Flywheel = hardwareMap.dcMotor.get("Fly");
 //        GrabberL = hardwareMap.crservo.get("GrabL");
 //        GrabberR = hardwareMap.crservo.get("GrabR");
 //        DcMotor HorizontalSlidePack = hardwareMap.dcMotor.get("HorizontalSlidePack");
@@ -75,7 +75,7 @@ public class NewTeleop extends LinearOpMode {
         FRMotor.setDirection(DcMotor.Direction.REVERSE);
         BLMotor.setDirection(DcMotor.Direction.FORWARD);
         BRMotor.setDirection(DcMotor.Direction.REVERSE);
-//        Flywheel.setDirection(DcMotor.Direction.FORWARD);
+        Flywheel.setDirection(DcMotor.Direction.FORWARD);
 //        GrabberL.setDirection(DcMotorSimple.Direction.FORWARD);
 //        GrabberR.setDirection(DcMotorSimple.Direction.REVERSE);
 //        HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
@@ -99,8 +99,8 @@ public class NewTeleop extends LinearOpMode {
             double RightDrive = gamepad1.right_stick_y * DriveSpeed;
 
             // FLYWHEEL DIRECTION
-            boolean FlyWheelR = gamepad1.right_bumper;
-            boolean FlyWheelL = gamepad1.left_bumper;
+//            boolean FlyWheelR = gamepad1.right_bumper;
+//            boolean FlyWheelL = gamepad1.left_bumper;
 //            double LeftDrive = Range.clip(drive + turn, -1.0, 1.0) * DriveSpeed;
 //            double RightDrive = Range.clip(drive - turn, -1.0, 1.0) * DriveSpeed;
 
@@ -119,9 +119,9 @@ public class NewTeleop extends LinearOpMode {
             double GrabberOut = gamepad2.cross ? 1 : 0;
 
             if (FlywheelClockwise != 0 || FlywheelCounterClockwise != 0) {
-//                Flywheel.setPower(0.5 * (FlywheelCounterClockwise + FlywheelClockwise));
+                Flywheel.setPower(0.5 * (FlywheelCounterClockwise + FlywheelClockwise));
             } else {
-//                Flywheel.setPower(0);
+                Flywheel.setPower(0);
             }
 
             if (GrabberIn > 0 || GrabberOut > 0) {
