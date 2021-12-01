@@ -44,9 +44,9 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
     private DcMotor BRMotor;
     private DcMotor Flywheel;
     private final double PPR = 145.1;
-    private final double DrivePower = 0.75;
+    private final double DrivePower = 0.9;
     private final double WHEEL_DIAMETER = 3.77953; // Unit: inch
-    private final double TIME_BETWEEN_ACTIONS = 500; // Unit: ms
+    private final int TIME_BETWEEN_ACTIONS = 500; // Unit: ms
     // private DcMotor HorizontalSlidePack;
     // private DcMotor VerticalSlidePack;
     // private DcMotor EaterMotor;
@@ -59,8 +59,8 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException
     {
         //Maps hardware for all parts
-        FLMotor = hardwareMap.dcMotor.get("0");
-        FRMotor = hardwareMap.dcMotor.get("1");
+        FLMotor = hardwareMap.dcMotor.get("1");
+        FRMotor = hardwareMap.dcMotor.get("0");
         BLMotor = hardwareMap.dcMotor.get("2");
         BRMotor = hardwareMap.dcMotor.get("3");
         Flywheel = hardwareMap.dcMotor.get("Fly");
@@ -68,10 +68,10 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
         // VerticalSlidePack = hardwareMap.dcMotor.get("VerticalSlidePack");
         // EaterMotor = hardwareMap.dcMotor.get("Eater");
 
-        FRMotor.setDirection(DcMotor.Direction.FORWARD);
-        FLMotor.setDirection(DcMotor.Direction.REVERSE);
-        BRMotor.setDirection(DcMotor.Direction.FORWARD);
+        FLMotor.setDirection(DcMotor.Direction.FORWARD);
+        FRMotor.setDirection(DcMotor.Direction.REVERSE);
         BLMotor.setDirection(DcMotor.Direction.FORWARD);
+        BRMotor.setDirection(DcMotor.Direction.REVERSE);
         Flywheel.setDirection(DcMotor.Direction.FORWARD);
         // HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
         // VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
@@ -100,10 +100,10 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
         // VerticalSlidePack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // EaterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        FLMotor.setPower(DrivePower);
-        BRMotor.setPower(DrivePower);
-        FRMotor.setPower(DrivePower);
-        BLMotor.setPower(DrivePower);
+//        FLMotor.setPower(DrivePower);
+//        BRMotor.setPower(DrivePower);
+//        FRMotor.setPower(DrivePower);
+//        BLMotor.setPower(DrivePower);
 
         telemetry.addData("Mode", "waiting for start");
         telemetry.update();
@@ -178,7 +178,7 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
     }
 
     private void drive(DriveDirection direction, double power, double distance) {
-        int pulses = distanceToPulses(distance);
+        int pulses = (int) distanceToPulses(distance);
         setPowerAll(power);
         switch(direction) {
             case FORWARD:
@@ -209,26 +209,26 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
     }
     
      private void strafe(DriveDirection direction, double power, double distance){
-         int pulses = distanceToPulses(distance);
+         int pulses = (int) distanceToPulses(distance);
          setPowerAll(power);
          switch(direction) {
              case LEFT:
-                 FLMotor.setTargetPosition(pulses);
-                 FRMotor.setTargetPosition(pulses);
-                 BLMotor.setTargetPosition(-pulses);
-                 BRMotor.setTargetPosition(-pulses);
+                 FLMotor.setTargetPosition(-pulses);
+                 BLMotor.setTargetPosition(pulses);
+                 FRMotor.setTargetPosition(-pulses);
+                 BRMotor.setTargetPosition(pulses);
                  break;
              case RIGHT:
-                 FLMotor.setTargetPosition(-pulses);
+                 FLMotor.setTargetPosition(pulses);
                  FRMotor.setTargetPosition(-pulses);
                  BLMotor.setTargetPosition(pulses);
-                 BRMotor.setTargetPosition(pulses);
+                 BRMotor.setTargetPosition(-pulses);
                  break;
          }
          setPowerAll(0);
      }
     
-    private int distanceToPulses(double distance) {         // Unit: inch
+    private double distanceToPulses(double distance) {         // Unit: inch
         double rotations = distance / (Math.PI * WHEEL_DIAMETER); 
         double pulses = rotations * PPR;
         return pulses; 

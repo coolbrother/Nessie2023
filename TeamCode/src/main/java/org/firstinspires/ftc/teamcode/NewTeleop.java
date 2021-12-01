@@ -52,7 +52,7 @@ public class NewTeleop extends LinearOpMode {
     private DcMotor VerticalSlidePack;
     private double drive;
     private double turn;
-    private final double DriveSpeed = 0.75;
+    private final double DriveSpeed = 0.9;
     private final double GrabberOutPosition = 0.3;
 
     @Override
