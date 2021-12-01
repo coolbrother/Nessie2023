@@ -57,9 +57,10 @@ public class NewTeleop extends LinearOpMode {
 
     @Override
     public void runOpMode () {
-
-        FLMotor = hardwareMap.dcMotor.get("0");
-        FRMotor = hardwareMap.dcMotor.get("1");
+        // Get motors, the expansion hub doesn't always properly connect which is why
+        // the flywheel is commented out
+        FLMotor = hardwareMap.dcMotor.get("1");
+        FRMotor = hardwareMap.dcMotor.get("0");
         BLMotor = hardwareMap.dcMotor.get("2");
         BRMotor = hardwareMap.dcMotor.get("3");
 //        Flywheel = hardwareMap.dcMotor.get("Fly");
@@ -69,10 +70,11 @@ public class NewTeleop extends LinearOpMode {
 //        VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
 //        DcMotor EaterMotor = hardwareMap.dcMotor.get("Eater");
 
-        FRMotor.setDirection(DcMotor.Direction.FORWARD);
-        FLMotor.setDirection(DcMotor.Direction.REVERSE);
-        BRMotor.setDirection(DcMotor.Direction.REVERSE);
+        // Set Directions
+        FLMotor.setDirection(DcMotor.Direction.FORWARD);
+        FRMotor.setDirection(DcMotor.Direction.REVERSE);
         BLMotor.setDirection(DcMotor.Direction.FORWARD);
+        BRMotor.setDirection(DcMotor.Direction.REVERSE);
 //        Flywheel.setDirection(DcMotor.Direction.FORWARD);
 //        GrabberL.setDirection(DcMotorSimple.Direction.FORWARD);
 //        GrabberR.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -80,6 +82,7 @@ public class NewTeleop extends LinearOpMode {
 //        VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
 //        EaterMotor.setDirection(DcMotor.Direction.FORWARD);
 
+        // wait for the coach to press start
         waitForStart();
         telemetry.addData("Status","TeleOp");
         telemetry.update();
@@ -90,16 +93,26 @@ public class NewTeleop extends LinearOpMode {
             //Driver 1
 //            drive = -gamepad1.left_stick_y;
 //            turn = gamepad1.right_stick_x;
+
+            //TANK DRIVE
             double LeftDrive = gamepad1.left_stick_y * DriveSpeed;
             double RightDrive = gamepad1.right_stick_y * DriveSpeed;
+
+            // FLYWHEEL DIRECTION
+            boolean FlyWheelR = gamepad1.right_bumper;
+            boolean FlyWheelL = gamepad1.left_bumper;
 //            double LeftDrive = Range.clip(drive + turn, -1.0, 1.0) * DriveSpeed;
 //            double RightDrive = Range.clip(drive - turn, -1.0, 1.0) * DriveSpeed;
+
+            //WHY ARE THERE TWO FLYWHEELS also strafe
             double FlywheelClockwise = gamepad1.left_bumper ? -1 : 0;
             double FlywheelCounterClockwise = gamepad1.right_bumper ? 1 : 0;
             double LeftStrafe = gamepad1.left_trigger > 0 ? 1 : 0;
             double RightStrafe = gamepad1.right_trigger > 0 ? 1 : 0;
 //            double HorizontalSlidePackForward = gamepad2.right_bumper ? 1 : 0;
 //            double HorizontalSlidePackBackward = gamepad2.right_trigger > 0 ? 1 : gamepad2.right_trigger < 0 ? -1 : 0;
+
+            //FOR DA CLAW
             double VerticalSlidePackForward = gamepad2.dpad_up ? 1 : 0;
             double VerticalSlidePackBackward = gamepad2.dpad_down ? -1 : 0;
             double GrabberIn = gamepad2.circle ? 1 : 0;
@@ -138,14 +151,22 @@ public class NewTeleop extends LinearOpMode {
              } else if (LeftStrafe > 0) {
                  FLMotor.setPower(-1);
                  BLMotor.setPower(1);
-                 FRMotor.setPower(1);
-                 BRMotor.setPower(-1);
+                 FRMotor.setPower(-1);
+                 BRMotor.setPower(1);
              } else if (RightStrafe > 0) {
                  FLMotor.setPower(1);
                  BLMotor.setPower(-1);
-                 FRMotor.setPower(-1);
-                 BRMotor.setPower(1);
+                 FRMotor.setPower(1);
+                 BRMotor.setPower(-1);
              }
+// Shane wrote this, this might not work. Yeah it probably doesn't THIS IS JAVA NOT PYTHON SHANE lol
+//             if FlyWheelR{
+//                 Flywheel.setPower(0.5);
+//             }
+//             else if FlyWheelL{
+//                 Flywheel.setPower(-0.5) ;
+//             }
+
 //             if (LeftDrive != 0 && RightDrive != 0) {
 //            FLMotor.setPower(LeftDrive);
 //            BLMotor.setPower(LeftDrive);
@@ -168,11 +189,13 @@ public class NewTeleop extends LinearOpMode {
             //     FRMotor.setPower(0);
             //     BRMotor.setPower(0);
             // }
+
+            // add random telemetry stuff (shows up on driver station app) cuz why not
             telemetry.addData("LeftDrive", LeftDrive);
             telemetry.addData("RightDrive", RightDrive);
             telemetry.addData("Flywheel", FlywheelCounterClockwise + FlywheelClockwise);
 //            telemetry.addData("HorizontalSlidePack", -HorizontalSlidePackBackward + HorizontalSlidePackForward);
-            telemetry.addData("VerticalSlidePack", -VerticalSlidePackBackward + VerticalSlidePackForward);
+//            telemetry.addData("VerticalSlidePack", -VerticalSlidePackBackward + VerticalSlidePackForward);
             telemetry.addData("Grabber", -GrabberOut + GrabberIn);
 
             telemetry.update();
