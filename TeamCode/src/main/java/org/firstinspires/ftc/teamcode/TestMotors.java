@@ -47,6 +47,7 @@ public class TestMotors extends LinearOpMode {
     private final double DrivePower = 0.9;
     private final double WHEEL_DIAMETER = 3.77953; // Unit: inch
     private final int TIME_BETWEEN_ACTIONS = 500; // Unit: ms
+    private final double GEAR_RATIO = 1.0/3;
     // private DcMotor HorizontalSlidePack;
     // private DcMotor VerticalSlidePack;
     // private DcMotor EaterMotor;
@@ -91,6 +92,11 @@ public class TestMotors extends LinearOpMode {
         // VerticalSlidePack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // EaterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        FLMotor.setTargetPosition(0);
+        FRMotor.setTargetPosition(0);
+        BLMotor.setTargetPosition(0);
+        BRMotor.setTargetPosition(0);
+
         FLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         FRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -117,11 +123,23 @@ public class TestMotors extends LinearOpMode {
         int pulses = (int) distanceToPulses(12);
         setPowerAll(0.9);
 
+        telemetry.addData("Pulses", pulses);
+        telemetry.update();
+
         //The actual program
         FLMotor.setTargetPosition(pulses);
-        FRMotor.setTargetPosition(-pulses);
+        FRMotor.setTargetPosition(pulses);
         BLMotor.setTargetPosition(pulses);
-        BRMotor.setTargetPosition(-pulses);
+        BRMotor.setTargetPosition(pulses);
+
+        eTime.reset();
+        while (eTime.milliseconds() <= 3000 && opModeIsActive()) {
+            telemetry.addData("FLMotorPosition", FLMotor.getCurrentPosition());
+            telemetry.addData("FRMotorPosition", FRMotor.getCurrentPosition());
+            telemetry.addData("BLMotorPosition", BLMotor.getCurrentPosition());
+            telemetry.addData("BRMotorPosition", BRMotor.getCurrentPosition());
+            telemetry.update();
+        }
 //         switch(STARTING_POSITION) {
 //             case BLUEHUB:
 //                 eTime.reset();
@@ -236,9 +254,9 @@ public class TestMotors extends LinearOpMode {
      }
     
     private double distanceToPulses(double distance) {         // Unit: inch
-        double rotations = distance / (Math.PI * WHEEL_DIAMETER); 
-        double pulses = rotations * PPR;
-        return pulses; 
+        double rotations = distance / (Math.PI * WHEEL_DIAMETER);
+        double pulses = rotations * PPR / GEAR_RATIO;
+        return pulses;
     }
     
     private void setPowerAll(double power) {
