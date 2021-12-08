@@ -64,10 +64,10 @@ public class NewTeleop extends LinearOpMode {
         BLMotor = hardwareMap.dcMotor.get("2");
         BRMotor = hardwareMap.dcMotor.get("3");
         Flywheel = hardwareMap.dcMotor.get("Fly");
-//        GrabberL = hardwareMap.crservo.get("GrabL");
-//        GrabberR = hardwareMap.crservo.get("GrabR");
+        GrabberL = hardwareMap.crservo.get("GrabL");
+        GrabberR = hardwareMap.crservo.get("GrabR");
 //        DcMotor HorizontalSlidePack = hardwareMap.dcMotor.get("HorizontalSlidePack");
-//        VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
+        VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
 //        DcMotor EaterMotor = hardwareMap.dcMotor.get("Eater");
 
         // Set Directions
@@ -76,10 +76,10 @@ public class NewTeleop extends LinearOpMode {
         BLMotor.setDirection(DcMotor.Direction.FORWARD);
         BRMotor.setDirection(DcMotor.Direction.REVERSE);
         Flywheel.setDirection(DcMotor.Direction.FORWARD);
-//        GrabberL.setDirection(DcMotorSimple.Direction.FORWARD);
-//        GrabberR.setDirection(DcMotorSimple.Direction.REVERSE);
+        GrabberL.setDirection(DcMotorSimple.Direction.FORWARD);
+        GrabberR.setDirection(DcMotorSimple.Direction.REVERSE);
 //        HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
-//        VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
+        VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
 //        EaterMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // wait for the coach to press start
@@ -119,14 +119,14 @@ public class NewTeleop extends LinearOpMode {
             double GrabberOut = gamepad2.cross ? 1 : 0;
 
             if (FlywheelClockwise != 0 || FlywheelCounterClockwise != 0) {
-                Flywheel.setPower(0.5 * (FlywheelCounterClockwise + FlywheelClockwise));
+                Flywheel.setPower(0.3 * (FlywheelCounterClockwise + FlywheelClockwise));
             } else {
                 Flywheel.setPower(0);
             }
 
             if (GrabberIn > 0 || GrabberOut > 0) {
-//                GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn > 0 ? 0 : GrabberOutPosition);
-//                GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberIn > 0 ? 0 : GrabberOutPosition);
+                GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn > 0 ? 0 : GrabberOutPosition);
+                GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberIn > 0 ? 0 : GrabberOutPosition);
             }
 
 //            if (HorizontalSlidePackBackward != 0 || HorizontalSlidePackForward != 0) {
@@ -134,7 +134,7 @@ public class NewTeleop extends LinearOpMode {
 //            }
 //
             if (VerticalSlidePackBackward != 0 || VerticalSlidePackForward != 0) {
-//                VerticalSlidePack.setPower(- VerticalSlidePackBackward + VerticalSlidePackForward);
+                VerticalSlidePack.setPower(- VerticalSlidePackBackward + VerticalSlidePackForward);
             }
 //
 //            if (EaterBackward != 0 || EaterForward != 0) {
@@ -159,13 +159,6 @@ public class NewTeleop extends LinearOpMode {
                  FRMotor.setPower(1);
                  BRMotor.setPower(-1);
              }
-// Shane wrote this, this might not work. Yeah it probably doesn't THIS IS JAVA NOT PYTHON SHANE lol
-//             if FlyWheelR{
-//                 Flywheel.setPower(0.5);
-//             }
-//             else if FlyWheelL{
-//                 Flywheel.setPower(-0.5) ;
-//             }
 
 //             if (LeftDrive != 0 && RightDrive != 0) {
 //            FLMotor.setPower(LeftDrive);
@@ -195,7 +188,7 @@ public class NewTeleop extends LinearOpMode {
             telemetry.addData("RightDrive", RightDrive);
             telemetry.addData("Flywheel", FlywheelCounterClockwise + FlywheelClockwise);
 //            telemetry.addData("HorizontalSlidePack", -HorizontalSlidePackBackward + HorizontalSlidePackForward);
-//            telemetry.addData("VerticalSlidePack", -VerticalSlidePackBackward + VerticalSlidePackForward);
+            telemetry.addData("VerticalSlidePack", -VerticalSlidePackBackward + VerticalSlidePackForward);
             telemetry.addData("Grabber", -GrabberOut + GrabberIn);
 
             telemetry.update();

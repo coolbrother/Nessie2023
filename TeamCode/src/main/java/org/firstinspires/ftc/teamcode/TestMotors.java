@@ -69,10 +69,10 @@ public class TestMotors extends LinearOpMode {
         // VerticalSlidePack = hardwareMap.dcMotor.get("VerticalSlidePack");
         // EaterMotor = hardwareMap.dcMotor.get("Eater");
 
-        FLMotor.setDirection(DcMotor.Direction.FORWARD);
-        FRMotor.setDirection(DcMotor.Direction.REVERSE);
-        BLMotor.setDirection(DcMotor.Direction.FORWARD);
-        BRMotor.setDirection(DcMotor.Direction.REVERSE);
+        FLMotor.setDirection(DcMotor.Direction.REVERSE);
+        FRMotor.setDirection(DcMotor.Direction.FORWARD);
+        BLMotor.setDirection(DcMotor.Direction.REVERSE);
+        BRMotor.setDirection(DcMotor.Direction.FORWARD);
         Flywheel.setDirection(DcMotor.Direction.FORWARD);
         // HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
         // VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
@@ -91,6 +91,10 @@ public class TestMotors extends LinearOpMode {
         // HorizontalSlidePack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // VerticalSlidePack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // EaterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        FRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         FLMotor.setTargetPosition(0);
         FRMotor.setTargetPosition(0);
@@ -122,6 +126,8 @@ public class TestMotors extends LinearOpMode {
       
         int pulses = (int) distanceToPulses(12);
         setPowerAll(0.9);
+
+        sleep(500);
 
         telemetry.addData("Pulses", pulses);
         telemetry.update();

@@ -20,8 +20,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 
-@Autonomous(name="HashIsABadSpelerAuto")
-public class NewAuto extends LinearOpMode {
+@Autonomous(name="NewHashIsABadSpelerAuto")
+public class NewHashIsABadSpelerAuto extends LinearOpMode {
     private DcMotor FLMotor;
     private DcMotor FRMotor;
     private DcMotor BLMotor;
@@ -30,23 +30,26 @@ public class NewAuto extends LinearOpMode {
     // private DcMotor HorizontalSlidePack;
     // private DcMotor VerticalSlidePack;
     // private DcMotor EaterMotor;
-    // private Blinker expansion_Hub_4;
-    // private Orientation lastAngles = new Orientation();
-    // double globalAngle, power = .30, correction;
+    private Blinker expansion_Hub_4;
+    DigitalChannel touch;
+    BNO055IMU imu;
+    private Orientation lastAngles = new Orientation();
+    double globalAngle, power = .30, correction;
     private ElapsedTime eTime = new ElapsedTime();
 
     enum DriveDirection {
         FORWARD,
         LEFT,
-        RIGHT
+        RIGHT,
+        BACKWARD
     }
 
     @Override
     public void runOpMode() throws InterruptedException
     {
         //Maps hardware for all parts
-        FLMotor = hardwareMap.dcMotor.get("0");
-        FRMotor = hardwareMap.dcMotor.get("1");
+        FLMotor = hardwareMap.dcMotor.get("1");
+        FRMotor = hardwareMap.dcMotor.get("0");
         BLMotor = hardwareMap.dcMotor.get("2");
         BRMotor = hardwareMap.dcMotor.get("3");
         Flywheel = hardwareMap.dcMotor.get("Fly");
@@ -54,10 +57,10 @@ public class NewAuto extends LinearOpMode {
         // VerticalSlidePack = hardwareMap.dcMotor.get("VerticalSlidePack");
         // EaterMotor = hardwareMap.dcMotor.get("Eater");
 
-        FRMotor.setDirection(DcMotor.Direction.FORWARD);
         FLMotor.setDirection(DcMotor.Direction.REVERSE);
+        FRMotor.setDirection(DcMotor.Direction.FORWARD);
+        BLMotor.setDirection(DcMotor.Direction.REVERSE);
         BRMotor.setDirection(DcMotor.Direction.FORWARD);
-        BLMotor.setDirection(DcMotor.Direction.FORWARD);
         Flywheel.setDirection(DcMotor.Direction.FORWARD);
         // HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
         // VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
@@ -79,11 +82,11 @@ public class NewAuto extends LinearOpMode {
         // VerticalSlidePack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // EaterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // FLMotor.setMode(DcMotor.RunMode.RUN);
+        // BRMotor.setMode(DcMotor.RunMode.RUN);
+        // FRMotor.setMode(DcMotor.RunMode.RUN);
+        // BLMotor.setMode(DcMotor.RunMode.RUN);
+        // Flywheel.setMode(DcMotor.RunMode.RUN);
         // HorizontalSlidePack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // VerticalSlidePack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // EaterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -101,11 +104,55 @@ public class NewAuto extends LinearOpMode {
         sleep(50);
         //The actual program
         eTime.reset();
-        drive(DriveDirection.FORWARD, DrivePower, 100);
+// RED WAREHOUSE
+//        drive(DriveDirection.FORWARD, DrivePower, 700);
+//        sleep(500); // For Testing Purposes
+//        drive(DriveDirection.RIGHT, DrivePower, 600);
+//        sleep(500);
+//        drive(DriveDirection.FORWARD, .9, 1200);
+// RED HUB
+        drive(DriveDirection.FORWARD, DrivePower, 700);
         sleep(500); // For Testing Purposes
-        drive(DriveDirection.LEFT, DrivePower, 300);
+        drive(DriveDirection.LEFT, DrivePower, 600);
         sleep(500);
-        drive(DriveDirection.FORWARD, DrivePower, 200);
+        drive(DriveDirection.FORWARD, DrivePower, 700);
+        sleep(500); // For Testing Purposes
+        drive(DriveDirection.RIGHT, DrivePower, 600);
+        sleep(500);
+        drive(DriveDirection.BACKWARD, DrivePower, 450);
+        sleep(500);
+        spinFlywheel(-0.3, 3000);
+        sleep(500);
+        drive(DriveDirection.FORWARD, DrivePower, 550);
+// BLUE WAREHOUSE
+//        drive(DriveDirection.FORWARD, DrivePower, 700);
+//        sleep(500); // For Testing Purposes
+//        drive(DriveDirection.LEFT, DrivePower, 600);
+//        sleep(500);
+//        drive(DriveDirection.FORWARD, .9, 1200);
+// BLUE HUB
+//        drive(DriveDirection.FORWARD, DrivePower, 700);
+//        sleep(500); // For Testing Purposes
+//        drive(DriveDirection.RIGHT, DrivePower, 600);
+//        sleep(500);
+//        drive(DriveDirection.FORWARD, DrivePower, 700);
+//        sleep(500); // For Testing Purposes
+//        drive(DriveDirection.LEFT, DrivePower, 600);
+//        sleep(500);
+//        drive(DriveDirection.BACKWARD, DrivePower, 450);
+//        sleep(500);
+//        spinFlywheel(0.3, 3000);
+//        sleep(500);
+//        drive(DriveDirection.FORWARD, DrivePower, 550);
+    }
+    private void spinFlywheel(double power, double time) {
+        eTime.reset();
+        Flywheel.setPower(power);
+        while(opModeIsActive() && eTime.milliseconds() < time){
+            telemetry.addData("Time:", eTime);
+            telemetry.update();
+        }
+        Flywheel.setPower(0);
     }
 
     private void drive(DriveDirection direction, double power, double time) {
@@ -118,17 +165,22 @@ public class NewAuto extends LinearOpMode {
                 BRMotor.setPower(power);
                 break;
             case LEFT:
-                FLMotor.setPower(-1 * power);
+                FLMotor.setPower(-power);
                 FRMotor.setPower(power);
-                BLMotor.setPower(-1 * power);
+                BLMotor.setPower(-power);
                 BRMotor.setPower(power);
                 break;
             case RIGHT:
                 FLMotor.setPower(power);
-                FRMotor.setPower(-1 * power);
+                FRMotor.setPower(-power);
                 BLMotor.setPower(power);
-                BRMotor.setPower(-1 * power);
+                BRMotor.setPower(-power);
                 break;
+            case BACKWARD:
+                FLMotor.setPower(-power);
+                FRMotor.setPower(-power);
+                BLMotor.setPower(-power);
+                BRMotor.setPower(-power);
         }
         while(opModeIsActive() && eTime.milliseconds() < time){
             telemetry.addData("Time:", eTime);
@@ -154,21 +206,35 @@ public class NewAuto extends LinearOpMode {
         BLMotor.setPower(0);
         BRMotor.setPower(0);
     }
-    // private void strafe(double power, double time){
-    //     eTime.reset();
-    //     while(opModeIsActive() && eTime.seconds() < time){
-    //         FLMotor.setPower(-power);
-    //         FRMotor.setPower(-power);
-    //         BLMotor.setPower(-power);
-    //         BRMotor.setPower(-power);
-    //         telemetry.addData("Time:", eTime);
-    //         telemetry.update();
-    //     }
-    //     FLMotor.setPower(0);
-    //     FRMotor.setPower(0);
-    //     BLMotor.setPower(0);
-    //     BRMotor.setPower(0);
-    // }
+    private void strafe(DriveDirection driveDirection, double power, double time){
+        eTime.reset();
+        switch (driveDirection) {
+            case LEFT:
+                while(opModeIsActive() && eTime.seconds() < time){
+                    FLMotor.setPower(-power);
+                    FRMotor.setPower(power);
+                    BLMotor.setPower(power);
+                    BRMotor.setPower(-power);
+                    telemetry.addData("Time:", eTime);
+                    telemetry.update();
+                }
+                break;
+            case RIGHT:
+                while(opModeIsActive() && eTime.seconds() < time){
+                    FLMotor.setPower(power);
+                    FRMotor.setPower(-power);
+                    BLMotor.setPower(-power);
+                    BRMotor.setPower(power);
+                    telemetry.addData("Time:", eTime);
+                    telemetry.update();
+                }
+                break;
+        }
+        FLMotor.setPower(0);
+        FRMotor.setPower(0);
+        BLMotor.setPower(0);
+        BRMotor.setPower(0);
+    }
     private void leftturn(double power, double time){
         eTime.reset();
         while(opModeIsActive() && eTime.milliseconds() < time){
@@ -207,94 +273,94 @@ public class NewAuto extends LinearOpMode {
             RGServo.setPosition(0);
         }
     */
-//    private void resetAngle()
-//    {
-//        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-//
-//        globalAngle = 0;
-//    }
-//
-//    //Get Angle Function
-//    private double getAngle()
-//    {
-//        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-//
-//        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
-//
-//        if (deltaAngle < -180)
-//            deltaAngle += 360;
-//        else if (deltaAngle > 180)
-//            deltaAngle -= 360;
-//
-//        globalAngle += deltaAngle;
-//
-//        lastAngles = angles;
-//
-//        return globalAngle;
-//    }
+    private void resetAngle()
+    {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-    //Check Direction Function
-//    private double checkDirection()
-//    {
-//        double correction, angle, gain = .10;
-//
-//        angle = getAngle();
-//
-//        if (angle == 0)
-//            correction = 0;
-//        else
-//            correction = -angle;
-//
-//        correction = correction * gain;
-//
-//        return correction;
-//    }
-//
-//    //Rotate Function
-//    private void rotate(double power, int degrees)
-//    {
-//        if(opModeIsActive())
-//        {
-//            double currentAng = 0;
-//            resetAngle();
-//            if (power > 0)
-//            {
-//                while(opModeIsActive() && (-currentAng) < degrees)
-//                {
-//                    currentAng  =   getAngle();
-//                    FLMotor.setPower(power);
-//                    FRMotor.setPower(-power);
-//                    BLMotor.setPower(power);
-//                    BRMotor.setPower(-power);
-//
-//                    telemetry.addData("Angle: ", currentAng);
-//                    telemetry.addData("Target: ", degrees);
-//                }
-//            }
-//
-//            else
-//            {
-//                degrees = -degrees;
-//                while(opModeIsActive() && (currentAng) < degrees)
-//                {
-//                    currentAng  =   getAngle();
-//                    FLMotor.setPower(power);
-//                    FRMotor.setPower(-power);
-//                    BLMotor.setPower(power);
-//                    BRMotor.setPower(-power);
-//
-//                    telemetry.addData("Angle: ", currentAng);
-//                    telemetry.addData("Target: ", degrees);
-//                }
-//            }
-//
-//            FLMotor.setPower(0);
-//            FRMotor.setPower(0);
-//            BLMotor.setPower(0);
-//            BRMotor.setPower(0);
-//
-//        }
-//    }
+        globalAngle = 0;
+    }
+
+    //Get Angle Function
+    private double getAngle()
+    {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        lastAngles = angles;
+
+        return globalAngle;
+    }
+
+    //    Check Direction Function
+    private double checkDirection()
+    {
+        double correction, angle, gain = .10;
+
+        angle = getAngle();
+
+        if (angle == 0)
+            correction = 0;
+        else
+            correction = -angle;
+
+        correction = correction * gain;
+
+        return correction;
+    }
+
+    //Rotate Function
+    private void rotate(double power, int degrees)
+    {
+        if(opModeIsActive())
+        {
+            double currentAng = 0;
+            resetAngle();
+            if (power > 0)
+            {
+                while(opModeIsActive() && (-currentAng) < degrees)
+                {
+                    currentAng  =   getAngle();
+                    FLMotor.setPower(power);
+                    FRMotor.setPower(-power);
+                    BLMotor.setPower(power);
+                    BRMotor.setPower(-power);
+
+                    telemetry.addData("Angle: ", currentAng);
+                    telemetry.addData("Target: ", degrees);
+                }
+            }
+
+            else
+            {
+                degrees = -degrees;
+                while(opModeIsActive() && (currentAng) < degrees)
+                {
+                    currentAng  =   getAngle();
+                    FLMotor.setPower(power);
+                    FRMotor.setPower(-power);
+                    BLMotor.setPower(power);
+                    BRMotor.setPower(-power);
+
+                    telemetry.addData("Angle: ", currentAng);
+                    telemetry.addData("Target: ", degrees);
+                }
+            }
+
+            FLMotor.setPower(0);
+            FRMotor.setPower(0);
+            BLMotor.setPower(0);
+            BRMotor.setPower(0);
+
+        }
+    }
 
     //Encoder Drive Function
     // public void drive(double power, int centimeters)

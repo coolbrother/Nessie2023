@@ -20,8 +20,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 
-@Autonomous(name="HashIsABadSpelerAuto")
-public class HashIsABadSpelerAuto extends LinearOpMode {
+@Autonomous(name="NewPPRAuto")
+public class NewPPRAuto extends LinearOpMode {
     enum DriveDirection {
         FORWARD,
         LEFT,
@@ -45,8 +45,9 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
     private DcMotor Flywheel;
     private final double PPR = 145.1;
     private final double DrivePower = 0.9;
-    private final double WHEEL_DIAMETER = 3.77953; // Unit: inch
+    private final double WHEEL_DIAMETER = 3.77; // Unit: inch
     private final int TIME_BETWEEN_ACTIONS = 500; // Unit: ms
+    private final double GEAR_RATIO = 1.0/3;
     // private DcMotor HorizontalSlidePack;
     // private DcMotor VerticalSlidePack;
     // private DcMotor EaterMotor;
@@ -69,9 +70,9 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
         // EaterMotor = hardwareMap.dcMotor.get("Eater");
 
         FLMotor.setDirection(DcMotor.Direction.FORWARD);
-        FRMotor.setDirection(DcMotor.Direction.REVERSE);
+        FRMotor.setDirection(DcMotor.Direction.FORWARD);
         BLMotor.setDirection(DcMotor.Direction.FORWARD);
-        BRMotor.setDirection(DcMotor.Direction.REVERSE);
+        BRMotor.setDirection(DcMotor.Direction.FORWARD);
         Flywheel.setDirection(DcMotor.Direction.FORWARD);
         // HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
         // VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
@@ -90,6 +91,10 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
         // HorizontalSlidePack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // VerticalSlidePack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // EaterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FLMotor.setTargetPosition(0);
+        FRMotor.setTargetPosition(0);
+        BLMotor.setTargetPosition(0);
+        BRMotor.setTargetPosition(0);
 
         FLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -122,16 +127,16 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
                 drive(DriveDirection.FORWARD, DrivePower, 24); // Drive forward 24 inches
                 sleep(TIME_BETWEEN_ACTIONS);
 
-                strafe(DriveDirection.RIGHT, DrivePower, 24); // Strafe right 24 inches
-                sleep(TIME_BETWEEN_ACTIONS);
-
-                drive(DriveDirection.BACK, DrivePower, 12); // Drive backward 12 inches
-                sleep(TIME_BETWEEN_ACTIONS);
-
-                spinFlywheel(.3, 2000); // Spin flywheel for 2 seconds at a power of .3
-                sleep(TIME_BETWEEN_ACTIONS);
-
-                drive(DriveDirection.FORWARD, DrivePower, 12); // Drive forward 12 inches
+//                strafe(DriveDirection.RIGHT, DrivePower, 24); // Strafe right 24 inches
+//                sleep(TIME_BETWEEN_ACTIONS);
+//
+//                drive(DriveDirection.BACK, DrivePower, 12); // Drive backward 12 inches
+//                sleep(TIME_BETWEEN_ACTIONS);
+//
+//                spinFlywheel(.3, 2000); // Spin flywheel for 2 seconds at a power of .3
+//                sleep(TIME_BETWEEN_ACTIONS);
+//
+//                drive(DriveDirection.FORWARD, DrivePower, 12); // Drive forward 12 inches
                 break;
             case BLUEWAREHOUSE:
                 drive(DriveDirection.FORWARD, DrivePower, 3); // Drive forward 3 inches
@@ -179,6 +184,8 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
 
     private void drive(DriveDirection direction, double power, double distance) {
         int pulses = (int) distanceToPulses(distance);
+        telemetry.addData("pulses", pulses);
+        telemetry.update();
         setPowerAll(power);
         switch(direction) {
             case FORWARD:
@@ -205,7 +212,7 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
                 BLMotor.setTargetPosition(-pulses);
                 BRMotor.setTargetPosition(-pulses);
         }
-         setPowerAll(0);
+//         setPowerAll(0);
     }
     
      private void strafe(DriveDirection direction, double power, double distance){
@@ -229,9 +236,9 @@ public class HashIsABadSpelerAuto extends LinearOpMode {
      }
     
     private double distanceToPulses(double distance) {         // Unit: inch
-        double rotations = distance / (Math.PI * WHEEL_DIAMETER); 
-        double pulses = rotations * PPR;
-        return pulses; 
+        double rotations = distance / (Math.PI * WHEEL_DIAMETER);
+        double pulses = rotations * PPR / GEAR_RATIO;
+        return pulses;
     }
     
     private void setPowerAll(double power) {
