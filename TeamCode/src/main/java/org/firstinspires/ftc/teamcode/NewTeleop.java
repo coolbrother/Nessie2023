@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name="NewHashIsABadSpelerTeleop")
@@ -49,11 +50,13 @@ public class NewTeleop extends LinearOpMode {
     private DcMotor Flywheel;
     private CRServo GrabberL;
     private CRServo GrabberR;
+    //    private CRServo GrabberL;
+//    private CRServo GrabberR;
     private DcMotor VerticalSlidePack;
     private double drive;
     private double turn;
     private final double DriveSpeed = 0.9;
-    private final double GrabberOutPosition = 0.3;
+    private final double GrabberOutPosition = 1;
 
     @Override
     public void runOpMode () {
@@ -64,8 +67,10 @@ public class NewTeleop extends LinearOpMode {
         BLMotor = hardwareMap.dcMotor.get("2");
         BRMotor = hardwareMap.dcMotor.get("3");
         Flywheel = hardwareMap.dcMotor.get("Fly");
-        GrabberL = hardwareMap.crservo.get("GrabL");
-        GrabberR = hardwareMap.crservo.get("GrabR");
+        GrabberL = hardwareMap.crservo.get("GL");
+        GrabberR = hardwareMap.crservo.get("GR");
+//        GrabberL = hardwareMap.crservo.get("GL");
+//        GrabberR = hardwareMap.crservo.get("GR");
 //        DcMotor HorizontalSlidePack = hardwareMap.dcMotor.get("HorizontalSlidePack");
         VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
 //        DcMotor EaterMotor = hardwareMap.dcMotor.get("Eater");
@@ -76,8 +81,8 @@ public class NewTeleop extends LinearOpMode {
         BLMotor.setDirection(DcMotor.Direction.FORWARD);
         BRMotor.setDirection(DcMotor.Direction.REVERSE);
         Flywheel.setDirection(DcMotor.Direction.FORWARD);
-        GrabberL.setDirection(DcMotorSimple.Direction.FORWARD);
-        GrabberR.setDirection(DcMotorSimple.Direction.REVERSE);
+        GrabberL.setDirection(CRServo.Direction.FORWARD);
+        GrabberR.setDirection(CRServo.Direction.REVERSE);
 //        HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
         VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
 //        EaterMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -113,10 +118,10 @@ public class NewTeleop extends LinearOpMode {
 //            double HorizontalSlidePackBackward = gamepad2.right_trigger > 0 ? 1 : gamepad2.right_trigger < 0 ? -1 : 0;
 
             //FOR DA CLAW
-            double VerticalSlidePackForward = gamepad2.dpad_up ? 1 : 0;
-            double VerticalSlidePackBackward = gamepad2.dpad_down ? -1 : 0;
-            double GrabberIn = gamepad2.circle ? 1 : 0;
-            double GrabberOut = gamepad2.cross ? 1 : 0;
+            double VerticalSlidePackForward = gamepad2.left_stick_y * .5;
+//            double VerticalSlidePackBackward = gamepad2.dpad_down ? -1 : 0;
+            boolean GrabberIn = gamepad2.a;
+            boolean GrabberOut = gamepad2.b;
 
             if (FlywheelClockwise != 0 || FlywheelCounterClockwise != 0) {
                 Flywheel.setPower(0.3 * (FlywheelCounterClockwise + FlywheelClockwise));
@@ -124,18 +129,24 @@ public class NewTeleop extends LinearOpMode {
                 Flywheel.setPower(0);
             }
 
-            if (GrabberIn > 0 || GrabberOut > 0) {
-                GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn > 0 ? 0 : GrabberOutPosition);
-                GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberIn > 0 ? 0 : GrabberOutPosition);
+            if (GrabberIn || GrabberOut) {
+                // GrabberL.setPosition(GrabberIn > 0 ? 0 : -GrabberOutPosition);
+                // GrabberR.setPosition(GrabberIn > 0 ? 0 : -GrabberOutPosition);
+                //   GrabberL.setPower(GrabberIn ? 0.3 : -0.3);
+                //   GrabberR.setPower(GrabberIn ? 0.3 : -0.3);
+                GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn ? 0.8 : 0.5);
+                GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberIn ? 0.3 : 0.6);
             }
+
+            // if(gamepad2.a)
+            //     GrabberL.setPower(0.25);
+
 
 //            if (HorizontalSlidePackBackward != 0 || HorizontalSlidePackForward != 0) {
 //                HorizontalSlidePack.setPower(- HorizontalSlidePackBackward + HorizontalSlidePackForward);
 //            }
 //
-            if (VerticalSlidePackBackward != 0 || VerticalSlidePackForward != 0) {
-                VerticalSlidePack.setPower(- VerticalSlidePackBackward + VerticalSlidePackForward);
-            }
+            VerticalSlidePack.setPower(VerticalSlidePackForward);
 //
 //            if (EaterBackward != 0 || EaterForward != 0) {
 //                EaterMotor.setPower(- EaterBackward + EaterForward);
@@ -143,22 +154,22 @@ public class NewTeleop extends LinearOpMode {
 
 //            LeftDrive = DriveSpeed * (gamepad1.left_stick_y);
 //            RightDrive = DriveSpeed * (gamepad1.right_stick_y);
-             if (LeftStrafe == 0 && RightStrafe == 0) {
-                 FLMotor.setPower(LeftDrive);
-                 BLMotor.setPower(LeftDrive);
-                 FRMotor.setPower(RightDrive);
-                 BRMotor.setPower(RightDrive);
-             } else if (LeftStrafe > 0) {
-                 FLMotor.setPower(-1);
-                 BLMotor.setPower(1);
-                 FRMotor.setPower(-1);
-                 BRMotor.setPower(1);
-             } else if (RightStrafe > 0) {
-                 FLMotor.setPower(1);
-                 BLMotor.setPower(-1);
-                 FRMotor.setPower(1);
-                 BRMotor.setPower(-1);
-             }
+            if (LeftStrafe == 0 && RightStrafe == 0) {
+                FLMotor.setPower(LeftDrive);
+                BLMotor.setPower(LeftDrive);
+                FRMotor.setPower(RightDrive);
+                BRMotor.setPower(RightDrive);
+            } else if (LeftStrafe > 0) {
+                FLMotor.setPower(-1);
+                BLMotor.setPower(1);
+                FRMotor.setPower(-1);
+                BRMotor.setPower(1);
+            } else if (RightStrafe > 0) {
+                FLMotor.setPower(1);
+                BLMotor.setPower(-1);
+                FRMotor.setPower(1);
+                BRMotor.setPower(-1);
+            }
 
 //             if (LeftDrive != 0 && RightDrive != 0) {
 //            FLMotor.setPower(LeftDrive);
@@ -188,9 +199,9 @@ public class NewTeleop extends LinearOpMode {
             telemetry.addData("RightDrive", RightDrive);
             telemetry.addData("Flywheel", FlywheelCounterClockwise + FlywheelClockwise);
 //            telemetry.addData("HorizontalSlidePack", -HorizontalSlidePackBackward + HorizontalSlidePackForward);
-            telemetry.addData("VerticalSlidePack", -VerticalSlidePackBackward + VerticalSlidePackForward);
-            telemetry.addData("Grabber", -GrabberOut + GrabberIn);
-
+            telemetry.addData("VerticalSlidePack", VerticalSlidePackForward);
+            telemetry.addData("GrabberIn", GrabberIn);
+            telemetry.addData("GrabberOut", GrabberOut);
             telemetry.update();
         }
     }

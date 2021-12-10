@@ -117,13 +117,13 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         sleep(500);
         drive(DriveDirection.FORWARD, DrivePower, 700);
         sleep(500); // For Testing Purposes
-        drive(DriveDirection.RIGHT, DrivePower, 600);
+        drive(DriveDirection.RIGHT, DrivePower, 650);
         sleep(500);
-        drive(DriveDirection.BACKWARD, DrivePower, 450);
+        drive(DriveDirection.BACKWARD, 0.4, 850);
         sleep(500);
         spinFlywheel(-0.3, 3000);
         sleep(500);
-        drive(DriveDirection.FORWARD, DrivePower, 550);
+        drive(DriveDirection.FORWARD, DrivePower, 600);
 // BLUE WAREHOUSE
 //        drive(DriveDirection.FORWARD, DrivePower, 700);
 //        sleep(500); // For Testing Purposes
