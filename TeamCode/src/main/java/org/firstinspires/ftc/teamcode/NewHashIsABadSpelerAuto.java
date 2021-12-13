@@ -107,43 +107,41 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
 // RED WAREHOUSE
 //        drive(DriveDirection.FORWARD, DrivePower, 700);
 //        sleep(500); // For Testing Purposes
-//        drive(DriveDirection.RIGHT, DrivePower, 600);
+//        drive(DriveDirection.RIGHT, DrivePower, 700);
 //        sleep(500);
-//        drive(DriveDirection.FORWARD, .9, 1200);
+//        drive(DriveDirection.FORWARD, .9, 1500);
 // RED HUB
-        drive(DriveDirection.FORWARD, DrivePower, 700);
-        sleep(500); // For Testing Purposes
-        drive(DriveDirection.LEFT, DrivePower, 600);
-        sleep(500);
-        drive(DriveDirection.FORWARD, DrivePower, 700);
-        sleep(500); // For Testing Purposes
-        drive(DriveDirection.RIGHT, DrivePower, 650);
-        sleep(500);
-        drive(DriveDirection.BACKWARD, 0.4, 850);
-        sleep(500);
-        spinFlywheel(-0.3, 3000);
-        sleep(500);
-        drive(DriveDirection.FORWARD, DrivePower, 600);
+//        drive(DriveDirection.FORWARD, DrivePower, 700);
+//        sleep(500); // For Testing Purposes
+//        drive(DriveDirection.LEFT, DrivePower, 600);
+//        sleep(500);
+//        drive(DriveDirection.FORWARD, DrivePower, 700);
+//        sleep(500); // For Testing Purposes
+//        drive(DriveDirection.RIGHT, DrivePower, 650);
+//        sleep(500);
+//        drive(DriveDirection.BACKWARD, 0.4, 900);
+//        sleep(500);
+//        spinFlywheel(-0.3, 3000);
+//        sleep(500);
+//        drive(DriveDirection.FORWARD, DrivePower, 500);
 // BLUE WAREHOUSE
 //        drive(DriveDirection.FORWARD, DrivePower, 700);
 //        sleep(500); // For Testing Purposes
-//        drive(DriveDirection.LEFT, DrivePower, 600);
+//        drive(DriveDirection.LEFT, DrivePower, 700);
 //        sleep(500);
-//        drive(DriveDirection.FORWARD, .9, 1200);
+//        drive(DriveDirection.FORWARD, .9, 1500);
 // BLUE HUB
-//        drive(DriveDirection.FORWARD, DrivePower, 700);
-//        sleep(500); // For Testing Purposes
-//        drive(DriveDirection.RIGHT, DrivePower, 600);
-//        sleep(500);
-//        drive(DriveDirection.FORWARD, DrivePower, 700);
-//        sleep(500); // For Testing Purposes
-//        drive(DriveDirection.LEFT, DrivePower, 600);
-//        sleep(500);
-//        drive(DriveDirection.BACKWARD, DrivePower, 450);
-//        sleep(500);
-//        spinFlywheel(0.3, 3000);
-//        sleep(500);
-//        drive(DriveDirection.FORWARD, DrivePower, 550);
+        drive(DriveDirection.FORWARD, DrivePower, 200);
+        sleep(500); // For Testing Purposes
+        drive(DriveDirection.LEFT, DrivePower, 550);
+        sleep(500);
+        drive(DriveDirection.BACKWARD, 0.4, 950);
+        sleep(500); // For Testing Purposes
+        spinFlywheel(0.3, 3000);
+        sleep(500);
+        drive(DriveDirection.RIGHT, DrivePower, 600);
+        sleep(500);
+        drive(DriveDirection.FORWARD, DrivePower, 700);
     }
     private void spinFlywheel(double power, double time) {
         eTime.reset();
