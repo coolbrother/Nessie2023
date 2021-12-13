@@ -22,6 +22,23 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 
 @Autonomous(name="NewHashIsABadSpelerAuto")
 public class NewHashIsABadSpelerAuto extends LinearOpMode {
+
+    enum DriveDirection {
+        FORWARD,
+        LEFT,
+        RIGHT,
+        BACKWARD
+    }
+
+    enum StartingPositionEnum {
+        BLUEHUB,
+        BLUEWAREHOUSE,
+        REDHUB,
+        REDWAREHOUSE
+    }
+
+    private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.BLUEHUB;
+
     private DcMotor FLMotor;
     private DcMotor FRMotor;
     private DcMotor BLMotor;
@@ -36,13 +53,6 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
     private Orientation lastAngles = new Orientation();
     double globalAngle, power = .30, correction;
     private ElapsedTime eTime = new ElapsedTime();
-
-    enum DriveDirection {
-        FORWARD,
-        LEFT,
-        RIGHT,
-        BACKWARD
-    }
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -104,6 +114,50 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         sleep(50);
         //The actual program
         eTime.reset();
+
+        switch (STARTING_POSITION) {
+            case REDHUB:
+                drive(DriveDirection.FORWARD, DrivePower, 700);
+                sleep(500); // For Testing Purposes
+                drive(DriveDirection.LEFT, DrivePower, 600);
+                sleep(500);
+                drive(DriveDirection.FORWARD, DrivePower, 700);
+                sleep(500); // For Testing Purposes
+                drive(DriveDirection.RIGHT, DrivePower, 650);
+                sleep(500);
+                drive(DriveDirection.BACKWARD, 0.4, 900);
+                sleep(500);
+                spinFlywheel(-0.3, 3000);
+                sleep(500);
+                drive(DriveDirection.FORWARD, DrivePower, 500);
+            case REDWAREHOUSE:
+                drive(DriveDirection.FORWARD, DrivePower, 700);
+                sleep(500); // For Testing Purposes
+                drive(DriveDirection.RIGHT, DrivePower, 700);
+                sleep(500);
+                drive(DriveDirection.FORWARD, .9, 1500);
+                break;
+            case BLUEHUB:
+                drive(DriveDirection.FORWARD, DrivePower, 200);
+                sleep(500); // For Testing Purposes
+                drive(DriveDirection.LEFT, DrivePower, 550);
+                sleep(500);
+                drive(DriveDirection.BACKWARD, 0.4, 950);
+                sleep(500); // For Testing Purposes
+                spinFlywheel(0.3, 3000);
+                sleep(500);
+                drive(DriveDirection.RIGHT, DrivePower, 600);
+                sleep(500);
+                drive(DriveDirection.FORWARD, DrivePower, 700);
+                break;
+            case BLUEWAREHOUSE:
+                drive(DriveDirection.FORWARD, DrivePower, 700);
+                sleep(500); // For Testing Purposes
+                drive(DriveDirection.LEFT, DrivePower, 700);
+                sleep(500);
+                drive(DriveDirection.FORWARD, .9, 1500);
+                break;
+        }
 // RED WAREHOUSE
 //        drive(DriveDirection.FORWARD, DrivePower, 700);
 //        sleep(500); // For Testing Purposes
@@ -131,17 +185,17 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
 //        sleep(500);
 //        drive(DriveDirection.FORWARD, .9, 1500);
 // BLUE HUB
-        drive(DriveDirection.FORWARD, DrivePower, 200);
-        sleep(500); // For Testing Purposes
-        drive(DriveDirection.LEFT, DrivePower, 550);
-        sleep(500);
-        drive(DriveDirection.BACKWARD, 0.4, 950);
-        sleep(500); // For Testing Purposes
-        spinFlywheel(0.3, 3000);
-        sleep(500);
-        drive(DriveDirection.RIGHT, DrivePower, 600);
-        sleep(500);
-        drive(DriveDirection.FORWARD, DrivePower, 700);
+//        drive(DriveDirection.FORWARD, DrivePower, 200);
+//        sleep(500); // For Testing Purposes
+//        drive(DriveDirection.LEFT, DrivePower, 550);
+//        sleep(500);
+//        drive(DriveDirection.BACKWARD, 0.4, 950);
+//        sleep(500); // For Testing Purposes
+//        spinFlywheel(0.3, 3000);
+//        sleep(500);
+//        drive(DriveDirection.RIGHT, DrivePower, 600);
+//        sleep(500);
+//        drive(DriveDirection.FORWARD, DrivePower, 700);
     }
     private void spinFlywheel(double power, double time) {
         eTime.reset();
