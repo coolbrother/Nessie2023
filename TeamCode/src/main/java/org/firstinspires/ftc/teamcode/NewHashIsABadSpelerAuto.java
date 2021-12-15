@@ -130,6 +130,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
                 spinFlywheel(-0.3, 3000);
                 sleep(500);
                 drive(DriveDirection.FORWARD, DrivePower, 500);
+                break;
             case REDWAREHOUSE:
                 drive(DriveDirection.FORWARD, DrivePower, 700);
                 sleep(500); // For Testing Purposes

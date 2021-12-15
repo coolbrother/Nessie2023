@@ -57,6 +57,8 @@ public class NewTeleop extends LinearOpMode {
     private double turn;
     private final double DriveSpeed = 0.9;
     private final double GrabberOutPosition = 1;
+    private final double VSP_MAX_POSITION = 0;
+    private final double VSP_MIN_POSITION = 0;
 
     @Override
     public void runOpMode () {
@@ -118,7 +120,7 @@ public class NewTeleop extends LinearOpMode {
 //            double HorizontalSlidePackBackward = gamepad2.right_trigger > 0 ? 1 : gamepad2.right_trigger < 0 ? -1 : 0;
 
             //FOR DA CLAW
-            double VerticalSlidePackForward = gamepad2.left_stick_y * .5;
+            double VerticalSlidePackForward = -gamepad2.left_stick_y * .75;
 //            double VerticalSlidePackBackward = gamepad2.dpad_down ? -1 : 0;
             boolean GrabberIn = gamepad2.a;
             boolean GrabberOut = gamepad2.b;
@@ -146,8 +148,10 @@ public class NewTeleop extends LinearOpMode {
 //                HorizontalSlidePack.setPower(- HorizontalSlidePackBackward + HorizontalSlidePackForward);
 //            }
 //
-            VerticalSlidePack.setPower(VerticalSlidePackForward);
-//
+            if (VerticalSlidePack.getCurrentPosition() > VSP_MAX_POSITION
+                || VerticalSlidePack.getCurrentPosition() < VSP_MIN_POSITION) {
+                VerticalSlidePack.setPower(VerticalSlidePackForward);
+            }
 //            if (EaterBackward != 0 || EaterForward != 0) {
 //                EaterMotor.setPower(- EaterBackward + EaterForward);
 //            }
@@ -200,6 +204,7 @@ public class NewTeleop extends LinearOpMode {
             telemetry.addData("Flywheel", FlywheelCounterClockwise + FlywheelClockwise);
 //            telemetry.addData("HorizontalSlidePack", -HorizontalSlidePackBackward + HorizontalSlidePackForward);
             telemetry.addData("VerticalSlidePack", VerticalSlidePackForward);
+            telemetry.addData("VerticalSlidePackPosition", VerticalSlidePack.getCurrentPosition());
             telemetry.addData("GrabberIn", GrabberIn);
             telemetry.addData("GrabberOut", GrabberOut);
             telemetry.update();
