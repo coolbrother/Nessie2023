@@ -75,6 +75,7 @@ public class NewTeleop extends LinearOpMode {
 //        GrabberR = hardwareMap.crservo.get("GR");
 //        DcMotor HorizontalSlidePack = hardwareMap.dcMotor.get("HorizontalSlidePack");
         VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
+        VerticalSlidePack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        DcMotor EaterMotor = hardwareMap.dcMotor.get("Eater");
 
         // Set Directions
@@ -148,10 +149,10 @@ public class NewTeleop extends LinearOpMode {
 //                HorizontalSlidePack.setPower(- HorizontalSlidePackBackward + HorizontalSlidePackForward);
 //            }
 //
-            if (VerticalSlidePack.getCurrentPosition() > VSP_MAX_POSITION
-                || VerticalSlidePack.getCurrentPosition() < VSP_MIN_POSITION) {
+//            if (VerticalSlidePack.getCurrentPosition() > VSP_MAX_POSITION
+//                || VerticalSlidePack.getCurrentPosition() < VSP_MIN_POSITION) {
                 VerticalSlidePack.setPower(VerticalSlidePackForward);
-            }
+//            }
 //            if (EaterBackward != 0 || EaterForward != 0) {
 //                EaterMotor.setPower(- EaterBackward + EaterForward);
 //            }

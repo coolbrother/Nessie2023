@@ -119,11 +119,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
             case REDHUB:
                 drive(DriveDirection.FORWARD, DrivePower, 700);
                 sleep(500); // For Testing Purposes
-                drive(DriveDirection.LEFT, DrivePower, 600);
-                sleep(500);
-                drive(DriveDirection.FORWARD, DrivePower, 700);
-                sleep(500); // For Testing Purposes
-                drive(DriveDirection.RIGHT, DrivePower, 650);
+                strafe(DriveDirection.LEFT, DrivePower, 1000);
                 sleep(500);
                 drive(DriveDirection.BACKWARD, 0.4, 900);
                 sleep(500);
@@ -139,17 +135,15 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
                 drive(DriveDirection.FORWARD, .9, 1500);
                 break;
             case BLUEHUB:
-                drive(DriveDirection.FORWARD, DrivePower, 200);
-                sleep(500); // For Testing Purposes
-                drive(DriveDirection.LEFT, DrivePower, 550);
-                sleep(500);
                 drive(DriveDirection.BACKWARD, 0.4, 950);
-                sleep(500); // For Testing Purposes
+                sleep(500);
                 spinFlywheel(0.3, 3000);
                 sleep(500);
-                drive(DriveDirection.RIGHT, DrivePower, 600);
-                sleep(500);
                 drive(DriveDirection.FORWARD, DrivePower, 700);
+                sleep(500); // For Testing Purposes
+                strafe(DriveDirection.RIGHT, DrivePower, 600);
+                sleep(500);
+                drive(DriveDirection.BACKWARD, DrivePower, 700);
                 break;
             case BLUEWAREHOUSE:
                 drive(DriveDirection.FORWARD, DrivePower, 700);
@@ -159,44 +153,6 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
                 drive(DriveDirection.FORWARD, .9, 1500);
                 break;
         }
-// RED WAREHOUSE
-//        drive(DriveDirection.FORWARD, DrivePower, 700);
-//        sleep(500); // For Testing Purposes
-//        drive(DriveDirection.RIGHT, DrivePower, 700);
-//        sleep(500);
-//        drive(DriveDirection.FORWARD, .9, 1500);
-// RED HUB
-//        drive(DriveDirection.FORWARD, DrivePower, 700);
-//        sleep(500); // For Testing Purposes
-//        drive(DriveDirection.LEFT, DrivePower, 600);
-//        sleep(500);
-//        drive(DriveDirection.FORWARD, DrivePower, 700);
-//        sleep(500); // For Testing Purposes
-//        drive(DriveDirection.RIGHT, DrivePower, 650);
-//        sleep(500);
-//        drive(DriveDirection.BACKWARD, 0.4, 900);
-//        sleep(500);
-//        spinFlywheel(-0.3, 3000);
-//        sleep(500);
-//        drive(DriveDirection.FORWARD, DrivePower, 500);
-// BLUE WAREHOUSE
-//        drive(DriveDirection.FORWARD, DrivePower, 700);
-//        sleep(500); // For Testing Purposes
-//        drive(DriveDirection.LEFT, DrivePower, 700);
-//        sleep(500);
-//        drive(DriveDirection.FORWARD, .9, 1500);
-// BLUE HUB
-//        drive(DriveDirection.FORWARD, DrivePower, 200);
-//        sleep(500); // For Testing Purposes
-//        drive(DriveDirection.LEFT, DrivePower, 550);
-//        sleep(500);
-//        drive(DriveDirection.BACKWARD, 0.4, 950);
-//        sleep(500); // For Testing Purposes
-//        spinFlywheel(0.3, 3000);
-//        sleep(500);
-//        drive(DriveDirection.RIGHT, DrivePower, 600);
-//        sleep(500);
-//        drive(DriveDirection.FORWARD, DrivePower, 700);
     }
     private void spinFlywheel(double power, double time) {
         eTime.reset();
