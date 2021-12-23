@@ -44,6 +44,9 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
     private DcMotor BLMotor;
     private DcMotor BRMotor;
     private DcMotor Flywheel;
+    private CRServo GrabberL;
+    private CRServo GrabberR;
+    private DcMotor VerticalSlidePack;
     // private DcMotor HorizontalSlidePack;
     // private DcMotor VerticalSlidePack;
     // private DcMotor EaterMotor;
@@ -63,6 +66,10 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         BLMotor = hardwareMap.dcMotor.get("2");
         BRMotor = hardwareMap.dcMotor.get("3");
         Flywheel = hardwareMap.dcMotor.get("Fly");
+        GrabberL = hardwareMap.crservo.get("GL");
+        GrabberR = hardwareMap.crservo.get("GR");
+        VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
+        VerticalSlidePack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // HorizontalSlidePack = hardwareMap.dcMotor.get("HorizontalSlidePack");
         // VerticalSlidePack = hardwareMap.dcMotor.get("VerticalSlidePack");
         // EaterMotor = hardwareMap.dcMotor.get("Eater");
@@ -72,6 +79,9 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         BLMotor.setDirection(DcMotor.Direction.REVERSE);
         BRMotor.setDirection(DcMotor.Direction.FORWARD);
         Flywheel.setDirection(DcMotor.Direction.FORWARD);
+        GrabberL.setDirection(CRServo.Direction.FORWARD);
+        GrabberR.setDirection(CRServo.Direction.REVERSE);
+        VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
         // HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
         // VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
         // EaterMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -79,7 +89,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         double DrivePower = 0.75;
 
         waitForStart();
-        telemetry.addData("Status","TeleOp");
+        telemetry.addData("Status","Auto");
         telemetry.update();
 
         //Configures settings for different parts
@@ -88,6 +98,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         FRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        VerticalSlidePack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // HorizontalSlidePack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // VerticalSlidePack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // EaterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -135,15 +146,59 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
                 drive(DriveDirection.FORWARD, .9, 1500);
                 break;
             case BLUEHUB:
-                drive(DriveDirection.BACKWARD, 0.4, 950);
-                sleep(500);
-                spinFlywheel(0.3, 3000);
-                sleep(500);
+                // Step 1: Forward
                 drive(DriveDirection.FORWARD, DrivePower, 700);
-                sleep(500); // For Testing Purposes
-                strafe(DriveDirection.RIGHT, DrivePower, 600);
+
+                // Step 2: Left 45
+                drive(DriveDirection.LEFT, DrivePower, 380);
+
+                // Step 3: Forward
+                drive(DriveDirection.FORWARD, DrivePower, 410);
+
+
+                // Step 4: Drop Block
+                GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), 0.8);
+                GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), 0.3);
+
+                sleep(2000);
+                // UNUSED! Step 5: Turn Left Slightly
+                // drive(DriveDirection.LEFT, DrivePower, );
+
+                // Step 6: Backward to Carousel
+                drive(DriveDirection.BACKWARD, DrivePower, 1100);
+                drive(DriveDirection.BACKWARD, 0.3, 850);
+
+                sleep(2000);
+                // Step 7: Spin Carousel
+                spinFlywheel(0.3, 5000);
+
+                sleep(250);
+                // Step 8: Forward
+                drive(DriveDirection.FORWARD, DrivePower, 600);
+
+                // Step 9: Turn Left Slightly
+                drive(DriveDirection.LEFT, DrivePower, 300);
+
+                // Step 10: Strafe to Wall
+                strafe(DriveDirection.LEFT, DrivePower, 500);
+                strafe(DriveDirection.LEFT, 0.3, 1000);
+
                 sleep(500);
-                drive(DriveDirection.BACKWARD, DrivePower, 700);
+                // Step 11: Strafe to Center
+                strafe(DriveDirection.RIGHT, DrivePower, 1300);
+
+                // Step 12: Backward to Storage Unit
+                drive(DriveDirection.BACKWARD, 0.4, 1300);
+
+//                drive(DriveDirection.BACKWARD, 0.4, 950);
+//                sleep(500);
+//                spinFlywheel(0.3, 3000);
+//                sleep(500);
+//                drive(DriveDirection.FORWARD, DrivePower, 700);
+//                sleep(500); // For Testing Purposes
+//                strafe(DriveDirection.RIGHT, DrivePower, 600);
+//                sleep(500);
+//                drive(DriveDirection.BACKWARD, DrivePower, 700);
                 break;
             case BLUEWAREHOUSE:
                 drive(DriveDirection.FORWARD, DrivePower, 700);
@@ -219,20 +274,20 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         eTime.reset();
         switch (driveDirection) {
             case LEFT:
-                while(opModeIsActive() && eTime.seconds() < time){
-                    FLMotor.setPower(-power);
+                while(opModeIsActive() && eTime.milliseconds() < time){
+                    FLMotor.setPower(power);
                     FRMotor.setPower(power);
-                    BLMotor.setPower(power);
+                    BLMotor.setPower(-power);
                     BRMotor.setPower(-power);
                     telemetry.addData("Time:", eTime);
                     telemetry.update();
                 }
                 break;
             case RIGHT:
-                while(opModeIsActive() && eTime.seconds() < time){
-                    FLMotor.setPower(power);
+                while(opModeIsActive() && eTime.milliseconds() < time){
+                    FLMotor.setPower(-power);
                     FRMotor.setPower(-power);
-                    BLMotor.setPower(-power);
+                    BLMotor.setPower(power);
                     BRMotor.setPower(power);
                     telemetry.addData("Time:", eTime);
                     telemetry.update();
