@@ -37,7 +37,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         REDWAREHOUSE
     }
 
-    private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.BLUEWAREHOUSE;
+    private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.REDSTORAGEUNIT;
     private final double BATTERY_LEVEL = 1;
     private final double DrivePower = 0.75;
 
@@ -247,7 +247,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         drive(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 380);
 
         // Step 3: Forward
-        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 410);
+        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 450);
 
 
         // Step 4: Drop Block
@@ -260,7 +260,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
 
         // Step 6: Backward to Carousel
         drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
-        drive(DriveDirection.BACKWARD, getDrivePower(0.15), 2200);
+        drive(DriveDirection.BACKWARD, getDrivePower(0.15), 2400);
 
         sleep(2000);
         // Step 7: Spin Carousel
