@@ -131,8 +131,8 @@ public class NewTeleop extends LinearOpMode {
             }
 
             if (GrabberIn || GrabberOut) {
-                GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), 0.3);//GrabberIn ? 0.8 : 0.5);
-                GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), 0.3);//GrabberIn ? 0.3 : 0.6);
+                GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn ? 0.8 : 0.5);
+                GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberIn ? 0.3 : 0.6);
             }
 
             // if(gamepad2.a)
