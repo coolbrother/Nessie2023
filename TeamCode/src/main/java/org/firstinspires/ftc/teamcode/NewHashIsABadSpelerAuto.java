@@ -31,13 +31,15 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
     }
 
     enum StartingPositionEnum {
-        BLUEHUB,
+        BLUESTORAGEUNIT,
         BLUEWAREHOUSE,
-        REDHUB,
+        REDSTORAGEUNIT,
         REDWAREHOUSE
     }
 
-    private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.BLUEHUB;
+    private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.REDSTORAGEUNIT;
+    private final double BATTERY_LEVEL = 1;
+    private final double DrivePower = 0.75;
 
     private DcMotor FLMotor;
     private DcMotor FRMotor;
@@ -86,8 +88,6 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         // VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
         // EaterMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        double DrivePower = 0.75;
-
         waitForStart();
         telemetry.addData("Status","Auto");
         telemetry.update();
@@ -127,16 +127,8 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         eTime.reset();
 
         switch (STARTING_POSITION) {
-            case REDHUB:
-                drive(DriveDirection.FORWARD, DrivePower, 700);
-                sleep(500); // For Testing Purposes
-                strafe(DriveDirection.LEFT, DrivePower, 1000);
-                sleep(500);
-                drive(DriveDirection.BACKWARD, 0.4, 900);
-                sleep(500);
-                spinFlywheel(-0.3, 3000);
-                sleep(500);
-                drive(DriveDirection.FORWARD, DrivePower, 500);
+            case REDSTORAGEUNIT:
+                doStorageUnitActions(StartingPositionEnum.REDSTORAGEUNIT);
                 break;
             case REDWAREHOUSE:
                 drive(DriveDirection.FORWARD, DrivePower, 700);
@@ -145,60 +137,8 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
                 sleep(500);
                 drive(DriveDirection.FORWARD, .9, 1500);
                 break;
-            case BLUEHUB:
-                // Step 1: Forward
-                drive(DriveDirection.FORWARD, DrivePower, 700);
-
-                // Step 2: Left 45
-                drive(DriveDirection.LEFT, DrivePower, 380);
-
-                // Step 3: Forward
-                drive(DriveDirection.FORWARD, DrivePower, 410);
-
-
-                // Step 4: Drop Block
-                GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), 0.8);
-                GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), 0.3);
-
-                sleep(2000);
-                // UNUSED! Step 5: Turn Left Slightly
-                // drive(DriveDirection.LEFT, DrivePower, );
-
-                // Step 6: Backward to Carousel
-                drive(DriveDirection.BACKWARD, DrivePower, 1100);
-                drive(DriveDirection.BACKWARD, 0.3, 850);
-
-                sleep(2000);
-                // Step 7: Spin Carousel
-                spinFlywheel(0.3, 5000);
-
-                sleep(250);
-                // Step 8: Forward
-                drive(DriveDirection.FORWARD, DrivePower, 600);
-
-                // Step 9: Turn Left Slightly
-                drive(DriveDirection.LEFT, DrivePower, 300);
-
-                // Step 10: Strafe to Wall
-                strafe(DriveDirection.LEFT, DrivePower, 500);
-                strafe(DriveDirection.LEFT, 0.3, 1000);
-
-                sleep(500);
-                // Step 11: Strafe to Center
-                strafe(DriveDirection.RIGHT, DrivePower, 1300);
-
-                // Step 12: Backward to Storage Unit
-                drive(DriveDirection.BACKWARD, 0.4, 1300);
-
-//                drive(DriveDirection.BACKWARD, 0.4, 950);
-//                sleep(500);
-//                spinFlywheel(0.3, 3000);
-//                sleep(500);
-//                drive(DriveDirection.FORWARD, DrivePower, 700);
-//                sleep(500); // For Testing Purposes
-//                strafe(DriveDirection.RIGHT, DrivePower, 600);
-//                sleep(500);
-//                drive(DriveDirection.BACKWARD, DrivePower, 700);
+            case BLUESTORAGEUNIT:
+                doStorageUnitActions(StartingPositionEnum.BLUESTORAGEUNIT);
                 break;
             case BLUEWAREHOUSE:
                 drive(DriveDirection.FORWARD, DrivePower, 700);
@@ -207,8 +147,95 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
                 sleep(500);
                 drive(DriveDirection.FORWARD, .9, 1500);
                 break;
+            default:
+                break;
         }
     }
+
+    private DriveDirection getCorrectDirection(DriveDirection direction, boolean needInvert) {
+        if (!needInvert)
+            return direction;
+
+        DriveDirection invertedDirection = direction;
+        switch (direction) {
+            case LEFT:
+                invertedDirection = DriveDirection.RIGHT;
+                break;
+            case RIGHT:
+                invertedDirection = DriveDirection.LEFT;
+                break;
+            case FORWARD:
+                invertedDirection = DriveDirection.BACKWARD;
+                break;
+            case BACKWARD:
+                invertedDirection = DriveDirection.FORWARD;
+                break;
+            default:
+                break;
+        }
+
+        return invertedDirection;
+    }
+
+    private void doStorageUnitActions(StartingPositionEnum position) {
+        boolean needInvert = (position != StartingPositionEnum.BLUESTORAGEUNIT);
+
+        // Step 1: Forward
+        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 650);
+
+        // Step 2: Left 45
+        drive(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 380);
+
+        // Step 3: Forward
+        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 410);
+
+
+        // Step 4: Drop Block
+        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), 0.8);
+        GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), 0.3);
+
+        sleep(2000);
+        // UNUSED! Step 5: Turn Left Slightly
+        // drive(DriveDirection.LEFT, DrivePower, );
+
+        // Step 6: Backward to Carousel
+        drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
+        drive(DriveDirection.BACKWARD, getDrivePower(0.15), 2200);
+
+        sleep(2000);
+        // Step 7: Spin Carousel
+        if (needInvert)
+            spinFlywheel(-0.3, 5000);
+        else
+            spinFlywheel(0.3, 5000);
+
+        sleep(250);
+        // Step 8: Forward
+        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
+
+        // Step 9: Turn Left Slightly
+        drive(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 300);
+
+        // Step 10: Strafe to Wall
+        strafe(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 500);
+        strafe(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(0.3), 1500);
+
+        sleep(500);
+        // Step 11: Strafe to Center
+        strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 1150);
+
+        // Step 12: Backward to Storage Unit
+        drive(DriveDirection.BACKWARD, getDrivePower(0.4), 1400);
+    }
+
+    private int getDriveTime(int time) {
+        return (int) (time * (1 + (0.1 - BATTERY_LEVEL * 0.1)));
+    }
+
+    private double getDrivePower(double power) {
+        return power * (1 + (0.1 - BATTERY_LEVEL * 0.1));
+    }
+
     private void spinFlywheel(double power, double time) {
         eTime.reset();
         Flywheel.setPower(power);
