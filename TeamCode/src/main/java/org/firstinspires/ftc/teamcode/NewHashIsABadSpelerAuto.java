@@ -37,7 +37,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         REDWAREHOUSE
     }
 
-    private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.REDSTORAGEUNIT;
+    private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.BLUEWAREHOUSE;
     private final double BATTERY_LEVEL = 1;
     private final double DrivePower = 0.75;
 
@@ -131,21 +131,23 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
                 doStorageUnitActions(StartingPositionEnum.REDSTORAGEUNIT);
                 break;
             case REDWAREHOUSE:
-                drive(DriveDirection.FORWARD, DrivePower, 700);
-                sleep(500); // For Testing Purposes
-                drive(DriveDirection.RIGHT, DrivePower, 700);
-                sleep(500);
-                drive(DriveDirection.FORWARD, .9, 1500);
+                doWarehouseActions(StartingPositionEnum.REDWAREHOUSE, true);
+//                drive(DriveDirection.FORWARD, DrivePower, 700);
+//                sleep(500); // For Testing Purposes
+//                drive(DriveDirection.RIGHT, DrivePower, 700);
+//                sleep(500);
+//                drive(DriveDirection.FORWARD, .9, 1500);
                 break;
             case BLUESTORAGEUNIT:
                 doStorageUnitActions(StartingPositionEnum.BLUESTORAGEUNIT);
                 break;
             case BLUEWAREHOUSE:
-                drive(DriveDirection.FORWARD, DrivePower, 700);
-                sleep(500); // For Testing Purposes
-                drive(DriveDirection.LEFT, DrivePower, 700);
-                sleep(500);
-                drive(DriveDirection.FORWARD, .9, 1500);
+                doWarehouseActions(StartingPositionEnum.BLUEWAREHOUSE, true);
+//                drive(DriveDirection.FORWARD, DrivePower, 700);
+//                sleep(500); // For Testing Purposes
+//                drive(DriveDirection.LEFT, DrivePower, 700);
+//                sleep(500);
+//                drive(DriveDirection.FORWARD, .9, 1500);
                 break;
             default:
                 break;
@@ -175,6 +177,64 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         }
 
         return invertedDirection;
+    }
+
+    private void doWarehouseActions(StartingPositionEnum position, boolean emergency) {
+        boolean needInvert = (position != StartingPositionEnum.BLUEWAREHOUSE);
+
+        // Step 1: Strafe Left
+        strafe(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 1750);
+
+        sleep(500);
+        // Step 2: Forward
+        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 210);
+
+        // Step 3: Drop Block
+        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), 0.8);
+        GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), 0.3);
+
+        sleep(2000);
+        // Step 4: Backward
+        drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 175);
+
+        sleep(1000);
+
+        if (emergency) {
+            // ALTERNATIVELY: Step 5: Strafe Right
+            strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 1200);
+            strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(0.3), 1900);
+
+            sleep(500);
+
+            // Step 5.5: Re-align by Strafing Left
+            strafe(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(0.3), 200);
+
+            sleep(500);
+            // Step 6: Backward
+            drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 900);
+
+            sleep(500);
+            // Step 7: Strafe Left
+            strafe(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 1300);
+
+            sleep(1000);
+
+            // Step 7.5: Turn Right
+            drive(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 620);
+
+            sleep(500);
+            // Step 8: Strafe Right
+            strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 1000);
+
+            sleep(500);
+        } else {
+            // Step 5: Strafe Right
+            strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 600);
+
+            sleep(1000);
+            // Step 6: Backward
+//        drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 2000);
+        }
     }
 
     private void doStorageUnitActions(StartingPositionEnum position) {
