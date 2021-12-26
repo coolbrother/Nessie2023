@@ -37,7 +37,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         REDWAREHOUSE
     }
 
-    private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.REDSTORAGEUNIT;
+    private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.REDWAREHOUSE;
     private final double BATTERY_LEVEL = 1;
     private final double DrivePower = 0.75;
 
@@ -179,7 +179,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         return invertedDirection;
     }
 
-    private void doWarehouseActions(StartingPositionEnum position, boolean emergency) {
+    private void doWarehouseActions(StartingPositionEnum position, boolean normal) {
         boolean needInvert = (position != StartingPositionEnum.BLUEWAREHOUSE);
 
         // Step 1: Strafe Left
@@ -190,8 +190,8 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 210);
 
         // Step 3: Drop Block
-        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), 0.8);
-        GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), 0.3);
+        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), 0.5);
+        GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), 0.6);
 
         sleep(2000);
         // Step 4: Backward
@@ -199,7 +199,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
 
         sleep(1000);
 
-        if (emergency) {
+        if (normal) {
             // ALTERNATIVELY: Step 5: Strafe Right
             strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 1200);
             strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(0.3), 1900);
@@ -251,8 +251,8 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
 
 
         // Step 4: Drop Block
-        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), 0.8);
-        GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), 0.3);
+        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), 0.5);
+        GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), 0.6);
 
         sleep(2000);
         // UNUSED! Step 5: Turn Left Slightly
