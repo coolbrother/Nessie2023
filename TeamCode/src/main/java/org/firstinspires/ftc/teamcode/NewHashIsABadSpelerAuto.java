@@ -37,9 +37,13 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         REDWAREHOUSE
     }
 
-    private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.REDWAREHOUSE;
+    private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.REDSTORAGEUNIT;
     private final double BATTERY_LEVEL = 1;
     private final double DrivePower = 0.75;
+    private final double GrabberLGrabPosition = 0.3;
+    private final double GrabberLReleasePosition = 0.55;
+    private final double GrabberRGrabPosition = 0.55;
+    private final double GrabberRReleasePosition = 0.3;
 
     private DcMotor FLMotor;
     private DcMotor FRMotor;
@@ -184,92 +188,108 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
 
         // Step 1: Strafe Left
         strafe(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 1750);
-
         sleep(500);
+
         // Step 2: Forward
         drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 210);
+        sleep(1000);
 
         // Step 3: Drop Block
-        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), 0.5);
-        GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), 0.6);
-
+        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberLReleasePosition);
+        GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberRReleasePosition);
         sleep(2000);
-        // Step 4: Backward
-        drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 175);
 
+        // Step 4: Backward
+        drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 210);
+        sleep(1000);
+
+        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberLGrabPosition);
+        GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberRGrabPosition);
         sleep(1000);
 
         if (normal) {
             // ALTERNATIVELY: Step 5: Strafe Right
             strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 1200);
             strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(0.3), 1900);
-
             sleep(500);
+
 
             // Step 5.5: Re-align by Strafing Left
             strafe(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(0.3), 200);
-
             sleep(500);
+
             // Step 6: Backward
             drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 900);
-
             sleep(500);
+
             // Step 7: Strafe Left
             strafe(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 1300);
-
             sleep(1000);
+
 
             // Step 7.5: Turn Right
             drive(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 620);
-
             sleep(500);
+
             // Step 8: Strafe Right
             strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 1000);
-
             sleep(500);
+
         } else {
             // Step 5: Strafe Right
             strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 600);
-
             sleep(1000);
+
             // Step 6: Backward
-//        drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 2000);
+            drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 2000);
         }
     }
 
     private void doStorageUnitActions(StartingPositionEnum position) {
         boolean needInvert = (position != StartingPositionEnum.BLUESTORAGEUNIT);
 
+        // Step 0: Grip Block Tightly
+        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberLGrabPosition);
+        GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberRGrabPosition);
+
         // Step 1: Forward
         drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 650);
+        sleep(500);
 
         // Step 2: Left 45
         drive(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 380);
+        sleep(500);
 
         // Step 3: Forward
         drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 450);
-
+        sleep(1000);
 
         // Step 4: Drop Block
-        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), 0.5);
-        GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), 0.6);
-
+        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberLReleasePosition);
+        GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberRReleasePosition);
         sleep(2000);
+
+
         // UNUSED! Step 5: Turn Left Slightly
         // drive(DriveDirection.LEFT, DrivePower, );
 
         // Step 6: Backward to Carousel
         drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
         drive(DriveDirection.BACKWARD, getDrivePower(0.15), 2400);
-
         sleep(2000);
+
         // Step 7: Spin Carousel
         if (needInvert)
             spinFlywheel(-0.3, 5000);
         else
             spinFlywheel(0.3, 5000);
 
-        sleep(250);
+        sleep(500);
+
+        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberLGrabPosition);
+        GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberRGrabPosition);
+        sleep(1000);
+
         // Step 8: Forward
         drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
 
@@ -279,13 +299,13 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         // Step 10: Strafe to Wall
         strafe(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 500);
         strafe(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(0.3), 1500);
-
         sleep(500);
+
         // Step 11: Strafe to Center
         strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 1150);
 
         // Step 12: Backward to Storage Unit
-        drive(DriveDirection.BACKWARD, getDrivePower(0.4), 1400);
+        drive(DriveDirection.BACKWARD, getDrivePower(0.4), 1500);
     }
 
     private int getDriveTime(int time) {

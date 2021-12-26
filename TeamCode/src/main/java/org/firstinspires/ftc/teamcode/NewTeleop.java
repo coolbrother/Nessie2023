@@ -54,9 +54,10 @@ public class NewTeleop extends LinearOpMode {
     private double drive;
     private double turn;
     private final double DriveSpeed = 0.9;
-    private final double GrabberOutPosition = 1;
-    private final double VSP_MAX_POSITION = 0;
-    private final double VSP_MIN_POSITION = 0;
+    private final double GrabberLGrabPosition = 0.3;
+    private final double GrabberLReleasePosition = 0.55;
+    private final double GrabberRGrabPosition = 0.55;
+    private final double GrabberRReleasePosition = 0.3;
 
     @Override
     public void runOpMode () {
@@ -83,7 +84,7 @@ public class NewTeleop extends LinearOpMode {
         BRMotor.setDirection(DcMotor.Direction.REVERSE);
         Flywheel.setDirection(DcMotor.Direction.FORWARD);
         GrabberL.setDirection(CRServo.Direction.FORWARD);
-        GrabberR.setDirection(CRServo.Direction.REVERSE);
+        GrabberR.setDirection(CRServo.Direction.FORWARD);
 //        HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
         VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
 //        EaterMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -131,8 +132,8 @@ public class NewTeleop extends LinearOpMode {
             }
 
             if (GrabberIn || GrabberOut) {
-                GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn ? 0.8 : 0.5);
-                GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberIn ? 0.3 : 0.6);
+                GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn ? GrabberLGrabPosition : GrabberLReleasePosition);
+                GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberIn ? GrabberRGrabPosition : GrabberRReleasePosition);
             }
 
             // if(gamepad2.a)
