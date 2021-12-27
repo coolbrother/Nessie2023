@@ -102,9 +102,35 @@ public class NewTeleop extends LinearOpMode {
 //            turn = gamepad1.right_stick_x;
 
             //TANK DRIVE
-            double LeftDrive = gamepad1.left_stick_y * DriveSpeed;
-            double RightDrive = gamepad1.right_stick_y * DriveSpeed;
+            double LeftDrive = gamepad1.left_stick_y;// * DriveSpeed;
+            double RightDrive = gamepad1.right_stick_y;// * DriveSpeed;
 
+            telemetry.addData("left_stick_y", LeftDrive);
+            telemetry.addData("right_stick_y", RightDrive);
+
+            if (LeftDrive > 0.8) {
+                LeftDrive = DriveSpeed;
+            } else if (LeftDrive > 0) {
+                LeftDrive = 0.3 * DriveSpeed;
+            } else if (LeftDrive < -0.8) {
+                LeftDrive = -DriveSpeed;
+            } else if (LeftDrive < 0) {
+                LeftDrive = 0.3 * -DriveSpeed;
+            } else {
+                LeftDrive = 0;
+            }
+
+            if (RightDrive > 0.8) {
+                RightDrive = DriveSpeed;
+            } else if (RightDrive > 0) {
+                RightDrive = 0.3 * DriveSpeed;
+            } else if (RightDrive < -0.8) {
+                RightDrive = -DriveSpeed;
+            } else if (RightDrive < 0) {
+                RightDrive = 0.3 * -DriveSpeed;
+            } else {
+                RightDrive = 0;
+            }
             // FLYWHEEL DIRECTION
 //            boolean FlyWheelR = gamepad1.right_bumper;
 //            boolean FlyWheelL = gamepad1.left_bumper;
@@ -114,12 +140,12 @@ public class NewTeleop extends LinearOpMode {
             //WHY ARE THERE TWO FLYWHEELS also strafe
             double FlywheelClockwise = gamepad1.left_bumper ? -1 : 0;
             double FlywheelCounterClockwise = gamepad1.right_bumper ? 1 : 0;
-            double LeftStrafe = gamepad1.left_trigger > 0 ? 1 : 0;
-            double RightStrafe = gamepad1.right_trigger > 0 ? 1 : 0;
+            double LeftStrafe = gamepad1.left_trigger;
+            double RightStrafe = gamepad1.right_trigger;
 //            double HorizontalSlidePackForward = gamepad2.right_bumper ? 1 : 0;
 //            double HorizontalSlidePackBackward = gamepad2.right_trigger > 0 ? 1 : gamepad2.right_trigger < 0 ? -1 : 0;
 
-            //FOR DA CLAW
+            // THE CLAW
             double VerticalSlidePackForward = -gamepad2.left_stick_y * .75;
 //            double VerticalSlidePackBackward = gamepad2.dpad_down ? -1 : 0;
             boolean GrabberIn = gamepad2.a;
@@ -160,15 +186,29 @@ public class NewTeleop extends LinearOpMode {
                 FRMotor.setPower(RightDrive);
                 BRMotor.setPower(RightDrive);
             } else if (LeftStrafe > 0) {
-                FLMotor.setPower(-1);
-                BLMotor.setPower(1);
-                FRMotor.setPower(-1);
-                BRMotor.setPower(1);
+                if (LeftStrafe > 0.8) {
+                    FLMotor.setPower(-1);
+                    BLMotor.setPower(1);
+                    FRMotor.setPower(-1);
+                    BRMotor.setPower(1);
+                } else {
+                    FLMotor.setPower(-0.3);
+                    BLMotor.setPower(0.3);
+                    FRMotor.setPower(-0.3);
+                    BRMotor.setPower(0.3);
+                }
             } else if (RightStrafe > 0) {
-                FLMotor.setPower(1);
-                BLMotor.setPower(-1);
-                FRMotor.setPower(1);
-                BRMotor.setPower(-1);
+                if (RightStrafe > 0.8) {
+                    FLMotor.setPower(1);
+                    BLMotor.setPower(-1);
+                    FRMotor.setPower(1);
+                    BRMotor.setPower(-1);
+                } else {
+                    FLMotor.setPower(0.3);
+                    BLMotor.setPower(-0.3);
+                    FRMotor.setPower(0.3);
+                    BRMotor.setPower(-0.3);
+                }
             }
 
 //             if (LeftDrive != 0 && RightDrive != 0) {

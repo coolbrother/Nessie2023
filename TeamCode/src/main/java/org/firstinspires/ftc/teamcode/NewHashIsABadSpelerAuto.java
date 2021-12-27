@@ -37,12 +37,12 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         REDWAREHOUSE
     }
 
-    private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.REDSTORAGEUNIT;
+    private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.BLUEWAREHOUSE;
     private final double BATTERY_LEVEL = 1;
     private final double DrivePower = 0.75;
-    private final double GrabberLGrabPosition = 0.3;
+    private final double GrabberLGrabPosition = 0.25;
     private final double GrabberLReleasePosition = 0.55;
-    private final double GrabberRGrabPosition = 0.55;
+    private final double GrabberRGrabPosition = 0.6;
     private final double GrabberRReleasePosition = 0.3;
 
     private DcMotor FLMotor;
@@ -185,6 +185,10 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
 
     private void doWarehouseActions(StartingPositionEnum position, boolean normal) {
         boolean needInvert = (position != StartingPositionEnum.BLUEWAREHOUSE);
+
+        // Step 0: Grip Block Tightly
+        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberLGrabPosition);
+        GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberRGrabPosition);
 
         // Step 1: Strafe Left
         strafe(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 1750);
