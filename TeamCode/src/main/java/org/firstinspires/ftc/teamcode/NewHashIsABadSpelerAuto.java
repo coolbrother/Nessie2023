@@ -279,6 +279,11 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
 
         // Step 6: Backward to Carousel
         drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
+        
+        if (position == StartingPositionEnum.BLUESTORAGEUNIT) {
+            drive(DriveDirection.LEFT, getDrivePower(DrivePower), 200);
+        }
+        
         drive(DriveDirection.BACKWARD, getDrivePower(0.15), 2400);
         sleep(2000);
 
