@@ -870,4 +870,23 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         }
         return ShippingHubLevel.BOTTOM;
     }
+    // private void getCameraReading() {
+//         VuforiaLocalizer.CloseableFrame frame = vuforia.getFrameQueue().take(); //takes the frame at the head of the queue
+//         long numImages = frame.getNumImages();
+//         Image imageRGB565 = null;
+//         for (int i = 0; i < numImages; i++) {
+//             if (frame.getImage(i).getFormat() == PIXEL_FORMAT.RGB565) {
+//                 imageRGB565 = frame.getImage(i);
+//                 break;
+//             }
+//         }
+//         if (imageRGB565 != null) {
+//             ByteBuffer pixels = imageRGB565.getPixels();
+//             byte[] pixelArray = new byte[pixels.remaining()];
+//             pixels.get(pixelArray, 0, pixelArray.length());
+//             telemetry.addData("Image", "First pixel byte: " + pixelArray[0]);
+//             telemetry.update();
+//         }
+//         frame.close();
+    // }
 }
