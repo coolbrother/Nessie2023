@@ -65,6 +65,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
     }
 
     private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.REDWAREHOUSE;
+    private final int numberOfRowsToScanInImage = 20;
     private final double BATTERY_LEVEL = 1;
     private final double DrivePower = 0.75;
     private final double SlidePackPower = 0.5;
@@ -903,9 +904,9 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
             int imgWidth = image.getWidth();
             int imgHeight = image.getHeight();
             int[] counter = new int[3];
-            int[] startingIndexes = getRowStartingIndexes(imgHeight, imgWidth, 10);
-            for (int i = 3; i < 7; i++) {
-                for (int j = startingIndexes[i]; j < startingIndexes[i] + imgWidth * 2; j += 2) {
+            int[] startingIndexes = getRowStartingIndexes(imgHeight, imgWidth, numberOfRowsToScanInImage);
+            for (int i = numberOfRowsToScanInImage / 3; i < numberOfRowsToScanInImage * 2 / 3; i++) {
+                for (int j = startingIndexes[i]; j < startingIndexes[i] + imgWidth * 2; j += 4) {
                     if (j % (2 * imgWidth) <= 2 * imgWidth / 3) {
                         // LEFT!
                         counter[0]++;
