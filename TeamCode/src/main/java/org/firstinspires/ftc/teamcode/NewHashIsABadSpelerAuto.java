@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.vuforia.PIXEL_FORMAT;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -28,6 +29,9 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.vuforia.Image;
+import com.vuforia.Vuforia;
+import java.nio.ByteBuffer;
 
 import java.util.List;
 
@@ -176,7 +180,9 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
 
         telemetry.addData("shippingHubLevel", shippingHubLevel);
         telemetry.update();
-
+        
+        // moveSlidePack(SlidePackDirection.UP, -getDrivePower(SlidePackPower), convertShippingHubLevelToMs(shippingHubLevel));
+        // sleep(200);
         // pickUpBlock(shippingHubLevel);
 //        switch (STARTING_POSITION) {
 //            case REDSTORAGEUNIT:
@@ -768,6 +774,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
      * Initialize the Vuforia localization engine.
      */
     private void initVuforia() {
+        Vuforia.setFrameFormat(PIXEL_FORMAT.RGB888, true);
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
@@ -778,7 +785,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
+        vuforia.setFrameQueueCapacity(10);
         // Loading trackables is not necessary for the TensorFlow Object Detection engine.
     }
 
@@ -814,7 +821,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(2.5, 16.0/9.0);
+            tfod.setZoom(1, 16.0/9.0);
         }
 
         if (tfod == null) {
@@ -826,67 +833,219 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
     }
 
     // @SuppressLint("DefaultLocale")
-    private ShippingHubLevel getCameraReading() {
-        eTime.reset();
+//     private ShippingHubLevel getCameraReading() {
+//         eTime.reset();
 
-        int count = 0;
-        while (eTime.milliseconds() < 5000) {
-            // getUpdatedRecognitions() will return null if no new information is available since
-            // the last time that call was made.
-//            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-            List<Recognition> recognitions = tfod.getRecognitions();
-            telemetry.addData("count", count);
-            count++;
-            if (recognitions.size() != 0) {
-                telemetry.addData("# Object Detected", recognitions.size());
+//         int count = 0;
+//         while (eTime.milliseconds() < 5000) {
+//             // getUpdatedRecognitions() will return null if no new information is available since
+//             // the last time that call was made.
+// //            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+//             List<Recognition> recognitions = tfod.getRecognitions();
+//             telemetry.addData("count", count);
+//             count++;
+//             if (recognitions.size() != 0) {
+//                 telemetry.addData("# Object Detected", recognitions.size());
 
-                // step through the list of recognitions and display boundary info.
-                int i = 0;
-                double center = 0;
-                for (Recognition recognition : recognitions) {
-                    center = (recognition.getLeft() + recognition.getRight())/2;
-                    telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                    telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                            recognition.getLeft(), recognition.getTop());
-                    telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                            recognition.getRight(), recognition.getBottom());
-                    i++;
+//                 // step through the list of recognitions and display boundary info.
+//                 int i = 0;
+//                 double center = 0;
+//                 for (Recognition recognition : recognitions) {
+//                     center = (recognition.getLeft() + recognition.getRight())/2;
+//                     telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+//                     telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+//                             recognition.getLeft(), recognition.getTop());
+//                     telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+//                             recognition.getRight(), recognition.getBottom());
+//                     i++;
 
-                    telemetry.addData("Object Detected", recognition.getLabel());
-                    if (center > 300)
-                        return ShippingHubLevel.TOP;
-                    else if (center > 200)
-                        return ShippingHubLevel.MIDDLE;
-                    //  ** ADDED **
-                }
-            } else {
-                telemetry.addData("getRecognitions returns null", "");
-            }
-            telemetry.addData("recognition size", recognitions.size());
-            telemetry.update();
-        }
-        if (tfod != null) {
-            tfod.shutdown();
-        }
-        return ShippingHubLevel.BOTTOM;
-    }
-    // private void getCameraReading() {
-//         VuforiaLocalizer.CloseableFrame frame = vuforia.getFrameQueue().take(); //takes the frame at the head of the queue
-//         long numImages = frame.getNumImages();
-//         Image imageRGB565 = null;
-//         for (int i = 0; i < numImages; i++) {
-//             if (frame.getImage(i).getFormat() == PIXEL_FORMAT.RGB565) {
-//                 imageRGB565 = frame.getImage(i);
-//                 break;
+//                     telemetry.addData("Object Detected", recognition.getLabel());
+//                     if (center > 300)
+//                         return ShippingHubLevel.TOP;
+//                     else if (center > 200)
+//                         return ShippingHubLevel.MIDDLE;
+//                     //  ** ADDED **
+//                 }
+//             } else {
+//                 telemetry.addData("getRecognitions returns null", "");
 //             }
-//         }
-//         if (imageRGB565 != null) {
-//             ByteBuffer pixels = imageRGB565.getPixels();
-//             byte[] pixelArray = new byte[pixels.remaining()];
-//             pixels.get(pixelArray, 0, pixelArray.length());
-//             telemetry.addData("Image", "First pixel byte: " + pixelArray[0]);
+//             telemetry.addData("recognition size", recognitions.size());
 //             telemetry.update();
 //         }
-//         frame.close();
-    // }
+//         if (tfod != null) {
+//             tfod.shutdown();
+//         }
+//         return ShippingHubLevel.BOTTOM;
+//     }
+    private ShippingHubLevel getCameraReading() {
+        VuforiaLocalizer.CloseableFrame frame = null;
+        try {
+            frame = vuforia.getFrameQueue().take(); //takes the frame at the head of the queue
+        } catch(Exception e) {
+            telemetry.addData("e", "E");
+            telemetry.update();
+        }
+        if (frame == null) return ShippingHubLevel.BOTTOM;
+        long numImages = frame.getNumImages();
+        Image image = null;
+        for (int i = 0; i < numImages; i++) {
+            if (frame.getImage(i).getFormat() == PIXEL_FORMAT.RGB565) {
+                image = frame.getImage(i);
+            }
+        }
+
+        int[] yellow = {0, 0, 0};
+
+        if (image != null) {
+            ByteBuffer pixels = image.getPixels();
+            byte[] pixelArray = new byte[pixels.remaining()];
+            pixels.get(pixelArray, 0, pixelArray.length);
+            int imgWidth = image.getWidth();
+            int imgHeight = image.getHeight();
+            int[] counter = new int[3];
+            int[] startingIndexes = getRowStartingIndexes(imgHeight, imgWidth, 10);
+            for (int i = 3; i < 7; i++) {
+                for (int j = startingIndexes[i]; j < startingIndexes[i] + imgWidth * 2; j += 2) {
+                    if (j % (2 * imgWidth) <= 2 * imgWidth / 3) {
+                        // LEFT!
+                        counter[0]++;
+                        if (isYellow(pixelArray[j], pixelArray[j+1]))
+                            yellow[0]++;
+                    } else if (j % (2 * imgWidth) <= 2 * imgWidth * 2 / 3) {
+                        // MIDDLE!
+                        counter[1]++;
+                        if (isYellow(pixelArray[j], pixelArray[j+1]))
+                            yellow[1]++;
+                    } else {
+                        // RIGHT!
+                        counter[2]++;
+                        if (isYellow(pixelArray[j], pixelArray[j+1])) {
+                            yellow[2]++;
+                            // telemetry.addData("x", i % (2 * imgWidth));
+                            // telemetry.addData("y", i / imgWidth);
+                        }
+                    }
+                    telemetry.addData("LEFT", counter[0]);
+                    telemetry.addData("MIDDLE", counter[1]);
+                    telemetry.addData("RIGHT", counter[2]);
+                    telemetry.addData("width", imgWidth);
+                    telemetry.addData("height", imgHeight);
+                    telemetry.addData("startingIndexes[i]", startingIndexes[i]);
+                    telemetry.addData("yellow", yellow[0]);
+                    telemetry.addData("yellow", yellow[1]);
+                    telemetry.addData("yellow", yellow[2]);
+                    telemetry.update();
+                    // sleep(30000);
+                }
+            }
+            // sleep(5000);
+            // telemetry.addData("b1", pixelArray[0]);
+            // telemetry.addData("b2", pixelArray[1]);
+            // telemetry.addData("isYellow", isYellow(pixelArray[0], pixelArray[1]));
+            // telemetry.update();
+            for (int i = 0; i < startingIndexes.length; i++)
+                telemetry.addData("startingIndexes[i]", startingIndexes[i]);
+            telemetry.update();
+            // sleep(30000);
+        }
+
+        frame.close();
+        int max_index = 0;
+        for (int i = 0; i < yellow.length; i++) {
+            if (yellow[i] > yellow[max_index])
+                max_index = i;
+        }
+
+        if (max_index == 0)
+            return ShippingHubLevel.BOTTOM;
+        if (max_index == 1)
+            return ShippingHubLevel.MIDDLE;
+        return ShippingHubLevel.TOP;
+    }
+
+    private int[] getRowStartingIndexes(int height, int width, int numRows) {
+        int[] newArr = new int[numRows];
+        int stepSize = 2 * height / numRows * width;
+        for (int i = 1; i < numRows; i++) {
+            newArr[i] = i * stepSize;
+        }
+        return newArr;
+    }
+
+    private boolean isYellow(byte b1, byte b2) {
+        // GGGBBBBB RRRRRGGG;
+        String s1 = String.format("%8s", Integer.toBinaryString(b2 & 0xFF)).replace(' ', '0');
+        String s2 = String.format("%8s", Integer.toBinaryString(b1 & 0xFF)).replace(' ', '0');
+        // RRRRRGGG GGGBBBBB;
+        int[] color = new int[3];
+        String r = s1.substring(0, 5);
+        String g = s1.substring(5) + s2.substring(0, 3);
+        String b = s2.substring(3);
+        color[0] = convertBitStringToInt(r);
+        color[1] = convertBitStringToInt(g);
+        color[2] = convertBitStringToInt(b);
+        double[] hsv = convertRGBtoHSV(color);
+        telemetry.addData("hsv", hsv[0]);
+        telemetry.addData("hsv", hsv[1]);
+        telemetry.addData("hsv", hsv[2]);
+        telemetry.addData("b1", b1);
+        telemetry.addData("b2", b2);
+        return hsv[0] >= 45 && hsv[0] <= 70 && hsv[1] > 0.15 && hsv[2] > 0.5;
+    }
+
+    private double[] convertRGBtoHSV(int[] rgb) {
+        double rPrime = (double) rgb[0]/31;
+        double gPrime = (double) rgb[1]/63;
+        double bPrime = (double) rgb[2]/31;
+        double cMax = Math.max(rPrime, Math.max(gPrime, bPrime));
+        double cMin = Math.min(rPrime, Math.min(gPrime, bPrime));
+        double delta = cMax - cMin;
+        double[] hsv = new double[3];
+
+        // calculate hue
+        if (delta == 0)
+            hsv[0] = 0;
+        else if (cMax == rPrime) {
+            double temp = ((gPrime - bPrime) / delta) % 6;
+            if (temp < 0)
+                temp += 6;
+            hsv[0] = 60 * temp;
+        }
+        else if (cMax == gPrime)
+            hsv[0] = 60 * (((bPrime - rPrime) / delta) + 2);
+        else
+            hsv[0] = 60 * (((rPrime - gPrime) / delta) + 4);
+
+        // calculate saturation
+        if (cMax == 0)
+            hsv[1] = 0;
+        else
+            hsv[1] = delta / cMax;
+
+        // calculate value
+        hsv[2] = cMax;
+
+        return hsv;
+    }
+
+    private int convertBitStringToInt(String s) {
+        int sum = 0;
+        // Little Endian
+        // int digit = 0;
+        // for (char c : s.toCharArray()) {
+        //     if (c == '1') {
+        //         sum += Math.pow(2, digit);
+        //     }
+        //     digit++;
+        // }
+        // Big Endian
+        int digit = s.length() - 1;
+        for (char c : s.toCharArray()) {
+            if (c == '1') {
+                sum += Math.pow(2, digit);
+            }
+            digit--;
+        }
+        return sum;
+    }
 }
