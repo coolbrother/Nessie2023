@@ -54,10 +54,11 @@ public class NewTeleop extends LinearOpMode {
     private double drive;
     private double turn;
     private final double DriveSpeed = 0.9;
+    private final double SlidePackSpeed = 0.5;
     private final double GrabberLGrabPosition = 0.3;
-    private final double GrabberLReleasePosition = 0.55;
+    private final double GrabberLReleasePosition = 0.64;
     private final double GrabberRGrabPosition = 0.55;
-    private final double GrabberRReleasePosition = 0.3;
+    private final double GrabberRReleasePosition = 0.24;
 
     @Override
     public void runOpMode () {
@@ -86,7 +87,7 @@ public class NewTeleop extends LinearOpMode {
         GrabberL.setDirection(CRServo.Direction.FORWARD);
         GrabberR.setDirection(CRServo.Direction.FORWARD);
 //        HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
-        VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
+        VerticalSlidePack.setDirection(DcMotor.Direction.REVERSE);
 //        EaterMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // wait for the coach to press start
@@ -146,7 +147,7 @@ public class NewTeleop extends LinearOpMode {
 //            double HorizontalSlidePackBackward = gamepad2.right_trigger > 0 ? 1 : gamepad2.right_trigger < 0 ? -1 : 0;
 
             // THE CLAW
-            double VerticalSlidePackForward = -gamepad2.left_stick_y * .75;
+            double VerticalSlidePackForward = -gamepad2.left_stick_y * SlidePackSpeed;
 //            double VerticalSlidePackBackward = gamepad2.dpad_down ? -1 : 0;
             boolean GrabberIn = gamepad2.a;
             boolean GrabberOut = gamepad2.b;
