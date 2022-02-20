@@ -69,10 +69,10 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
     private final double BATTERY_LEVEL = 1;
     private final double DrivePower = 0.75;
     private final double SlidePackPower = 0.5;
-    private final double GrabberLGrabPosition = 0.55;
-    private final double GrabberLReleasePosition = 0.25;
-    private final double GrabberRGrabPosition = 0.3;
-    private final double GrabberRReleasePosition = 0.6;
+    private final double GrabberLGrabPosition = 0.3;
+    private final double GrabberLReleasePosition = 0.64;
+    private final double GrabberRGrabPosition = 0.55;
+    private final double GrabberRReleasePosition = 0.24;
     private ShippingHubLevel shippingHubLevel = ShippingHubLevel.BOTTOM;
 
     private DcMotor FLMotor;
@@ -107,54 +107,41 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException
     {
         //Maps hardware for all parts
-        // FLMotor = hardwareMap.dcMotor.get("1");
-        // FRMotor = hardwareMap.dcMotor.get("0");
-        // BLMotor = hardwareMap.dcMotor.get("2");
-        // BRMotor = hardwareMap.dcMotor.get("3");
-        // Flywheel = hardwareMap.dcMotor.get("Fly");
-        // GrabberL = hardwareMap.crservo.get("GL");
-        // GrabberR = hardwareMap.crservo.get("GR");
-        // VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
-        // VerticalSlidePack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // HorizontalSlidePack = hardwareMap.dcMotor.get("HorizontalSlidePack");
-        // VerticalSlidePack = hardwareMap.dcMotor.get("VerticalSlidePack");
-        // EaterMotor = hardwareMap.dcMotor.get("Eater");
+        FLMotor = hardwareMap.dcMotor.get("1");
+        FRMotor = hardwareMap.dcMotor.get("0");
+        BLMotor = hardwareMap.dcMotor.get("2");
+        BRMotor = hardwareMap.dcMotor.get("3");
+        Flywheel = hardwareMap.dcMotor.get("Fly");
+        GrabberL = hardwareMap.crservo.get("GL");
+        GrabberR = hardwareMap.crservo.get("GR");
+        VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
 
-        // FLMotor.setDirection(DcMotor.Direction.REVERSE);
-        // FRMotor.setDirection(DcMotor.Direction.FORWARD);
-        // BLMotor.setDirection(DcMotor.Direction.REVERSE);
-        // BRMotor.setDirection(DcMotor.Direction.FORWARD);
-        // Flywheel.setDirection(DcMotor.Direction.FORWARD);
-        // GrabberL.setDirection(CRServo.Direction.FORWARD);
-        // GrabberR.setDirection(CRServo.Direction.REVERSE);
-        // VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
-        // HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
-        // VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
-        // EaterMotor.setDirection(DcMotor.Direction.FORWARD);
+        FLMotor.setDirection(DcMotor.Direction.REVERSE);
+        FRMotor.setDirection(DcMotor.Direction.FORWARD);
+        BLMotor.setDirection(DcMotor.Direction.REVERSE);
+        BRMotor.setDirection(DcMotor.Direction.FORWARD);
+        Flywheel.setDirection(DcMotor.Direction.FORWARD);
+        GrabberL.setDirection(CRServo.Direction.FORWARD);
+        GrabberR.setDirection(CRServo.Direction.REVERSE);
+        VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
 
         telemetry.addData("Status","Auto");
         telemetry.update();
 
         //Configures settings for different parts
-        // FLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // BLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // FRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // BRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // Flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // VerticalSlidePack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // HorizontalSlidePack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // VerticalSlidePack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // EaterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        VerticalSlidePack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // FLMotor.setMode(DcMotor.RunMode.RUN);
         // BRMotor.setMode(DcMotor.RunMode.RUN);
         // FRMotor.setMode(DcMotor.RunMode.RUN);
         // BLMotor.setMode(DcMotor.RunMode.RUN);
         // Flywheel.setMode(DcMotor.RunMode.RUN);
-        // HorizontalSlidePack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // VerticalSlidePack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // EaterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        VerticalSlidePack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addData("Mode", "waiting for start");
         telemetry.update();
@@ -184,33 +171,23 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         
         // moveSlidePack(SlidePackDirection.UP, -getDrivePower(SlidePackPower), convertShippingHubLevelToMs(shippingHubLevel));
         // sleep(200);
-        // pickUpBlock(shippingHubLevel);
-//        switch (STARTING_POSITION) {
-//            case REDSTORAGEUNIT:
-//                doStorageUnitActions(StartingPositionEnum.REDSTORAGEUNIT);
-//                break;
-//            case REDWAREHOUSE:
-//                doWarehouseActions(StartingPositionEnum.REDWAREHOUSE, true);
-////                drive(DriveDirection.FORWARD, DrivePower, 700);
-////                sleep(500); // For Testing Purposes
-////                drive(DriveDirection.RIGHT, DrivePower, 700);
-////                sleep(500);
-////                drive(DriveDirection.FORWARD, .9, 1500);
-//                break;
-//            case BLUESTORAGEUNIT:
-//                doStorageUnitActions(StartingPositionEnum.BLUESTORAGEUNIT);
-//                break;
-//            case BLUEWAREHOUSE:
-//                doWarehouseActions(StartingPositionEnum.BLUEWAREHOUSE, true);
-////                drive(DriveDirection.FORWARD, DrivePower, 700);
-////                sleep(500); // For Testing Purposes
-////                drive(DriveDirection.LEFT, DrivePower, 700);
-////                sleep(500);
-////                drive(DriveDirection.FORWARD, .9, 1500);
-//                break;
-//            default:
-//                break;
-//        }
+        pickUpBlock(shippingHubLevel);
+        switch (STARTING_POSITION) {
+            case REDSTORAGEUNIT:
+                doStorageUnitActions(StartingPositionEnum.REDSTORAGEUNIT);
+                break;
+            case REDWAREHOUSE:
+                doWarehouseActions(StartingPositionEnum.REDWAREHOUSE, true);
+                break;
+            case BLUESTORAGEUNIT:
+                doStorageUnitActions(StartingPositionEnum.BLUESTORAGEUNIT);
+                break;
+            case BLUEWAREHOUSE:
+                doWarehouseActions(StartingPositionEnum.BLUEWAREHOUSE, true);
+                break;
+            default:
+                break;
+        }
     }
 
 //    private ShippingHubLevel getCameraReading() {
@@ -245,7 +222,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
     private int convertShippingHubLevelToMs(ShippingHubLevel shl) {
         switch (shl) {
             case TOP:
-                return 900;
+                return 930;
             case MIDDLE:
                 return 610;
             case BOTTOM:
@@ -367,7 +344,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
 
         // Step 4: Drop Block
         openClaw();
-        sleep(2000);
+        sleep(1000);
 
 
         // UNUSED! Step 5: Turn Left Slightly
@@ -389,7 +366,7 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
 //
 //        drive(DriveDirection.BACKWARD, getDrivePower(0.15), 2400);
         drive(DriveDirection.BACKWARD, getDrivePower(0.15), 2200);
-        sleep(2000);
+        sleep(1000);
 
         // Step 7: Spin Carousel
         if (needInvert)
@@ -833,51 +810,6 @@ public class NewHashIsABadSpelerAuto extends LinearOpMode {
         return true;
     }
 
-    // @SuppressLint("DefaultLocale")
-//     private ShippingHubLevel getCameraReading() {
-//         eTime.reset();
-
-//         int count = 0;
-//         while (eTime.milliseconds() < 5000) {
-//             // getUpdatedRecognitions() will return null if no new information is available since
-//             // the last time that call was made.
-// //            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-//             List<Recognition> recognitions = tfod.getRecognitions();
-//             telemetry.addData("count", count);
-//             count++;
-//             if (recognitions.size() != 0) {
-//                 telemetry.addData("# Object Detected", recognitions.size());
-
-//                 // step through the list of recognitions and display boundary info.
-//                 int i = 0;
-//                 double center = 0;
-//                 for (Recognition recognition : recognitions) {
-//                     center = (recognition.getLeft() + recognition.getRight())/2;
-//                     telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-//                     telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-//                             recognition.getLeft(), recognition.getTop());
-//                     telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-//                             recognition.getRight(), recognition.getBottom());
-//                     i++;
-
-//                     telemetry.addData("Object Detected", recognition.getLabel());
-//                     if (center > 300)
-//                         return ShippingHubLevel.TOP;
-//                     else if (center > 200)
-//                         return ShippingHubLevel.MIDDLE;
-//                     //  ** ADDED **
-//                 }
-//             } else {
-//                 telemetry.addData("getRecognitions returns null", "");
-//             }
-//             telemetry.addData("recognition size", recognitions.size());
-//             telemetry.update();
-//         }
-//         if (tfod != null) {
-//             tfod.shutdown();
-//         }
-//         return ShippingHubLevel.BOTTOM;
-//     }
     private ShippingHubLevel getCameraReading() {
         VuforiaLocalizer.CloseableFrame frame = null;
         try {
