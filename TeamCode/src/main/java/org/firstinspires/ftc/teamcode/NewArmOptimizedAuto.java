@@ -36,8 +36,8 @@ import java.nio.ByteBuffer;
 import java.util.List;
 
 
-@Autonomous(name="NewArmOptimizedAuto")
-public class NewArmOptimizedAuto extends LinearOpMode {
+@Autonomous(name="NewArmAutoSTORAGEUNIT")
+public class NewArmOptimizedAuto_Copy extends LinearOpMode {
 
     enum DriveDirection {
         FORWARD,
@@ -163,7 +163,8 @@ public class NewArmOptimizedAuto extends LinearOpMode {
         eTime.reset();
 
         if (isCameraReady) {
-            shippingHubLevel = getCameraReading();
+            // shippingHubLevel = getCameraReading();
+            shippingHubLevel = ShippingHubLevel.TOP;
         }
 
         telemetry.addData("shippingHubLevel", shippingHubLevel);
@@ -335,7 +336,7 @@ public class NewArmOptimizedAuto extends LinearOpMode {
         GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberRGrabPosition);
 
         // Step 1: Forward
-        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 650);
+        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 720);
         sleep(500);
 
         // Step 2: Left 45
@@ -347,7 +348,10 @@ public class NewArmOptimizedAuto extends LinearOpMode {
         sleep(200);
 
         // Step 3: Forward
-        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 450);
+        if (position == StartingPositionEnum.BLUESTORAGEUNIT)
+            drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 550);
+        else
+            drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 400);
         sleep(1000);
 
         // Step 4: Drop Block
@@ -360,20 +364,20 @@ public class NewArmOptimizedAuto extends LinearOpMode {
 
         // Step 6: Backward to Carousel
         if (position == StartingPositionEnum.BLUESTORAGEUNIT) {
-            drive(DriveDirection.LEFT, getDrivePower(DrivePower), 75);
+            drive(DriveDirection.LEFT, getDrivePower(DrivePower), 35);
         } else {
             drive(DriveDirection.RIGHT, getDrivePower(DrivePower), 65);
         }
         sleep(500);
 
-        drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
+        drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1200);
 
 //        if (position == StartingPositionEnum.BLUESTORAGEUNIT) {
 //            drive(DriveDirection.LEFT, getDrivePower(DrivePower), 200);
 //        }
 //
 //        drive(DriveDirection.BACKWARD, getDrivePower(0.15), 2400);
-        drive(DriveDirection.BACKWARD, getDrivePower(0.15), 2200);
+        drive(DriveDirection.BACKWARD, getDrivePower(0.15), 2400);
         sleep(1000);
 
         // Step 7: Spin Carousel
@@ -391,7 +395,7 @@ public class NewArmOptimizedAuto extends LinearOpMode {
         drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
 
         // Step 9: Turn Left Slightly
-        drive(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 300);
+        drive(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 200);
 
         // Step 10: Strafe to Wall
         strafe(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 500);
@@ -402,7 +406,7 @@ public class NewArmOptimizedAuto extends LinearOpMode {
         strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 1150);
 
         // Step 12: Backward to Storage Unit
-        drive(DriveDirection.BACKWARD, getDrivePower(0.4), 1350);
+        drive(DriveDirection.BACKWARD, getDrivePower(0.4), 1500);
     }
 
     private void openClaw() {
