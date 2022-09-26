@@ -73,7 +73,7 @@ public class NessieAuto extends LinearOpMode {
     private final double GrabberLReleasePosition = 0.64;
     private final double GrabberRGrabPosition = 0.55;
     private final double GrabberRReleasePosition = 0.24;
-    private ParkingSpace shippingHubLevel = ParkingSpace.UNO;
+    private ParkingSpace ParkingSpace = ParkingSpace.UNO;
 
     private DcMotor FLMotor;
     private DcMotor FRMotor;
@@ -163,36 +163,12 @@ public class NessieAuto extends LinearOpMode {
         eTime.reset();
 
         if (isCameraReady) {
-            shippingHubLevel = getCameraReading();
+            ParkingSpace = getCameraReading();
         }
 
-        telemetry.addData("shippingHubLevel", shippingHubLevel);
+        telemetry.addData("ParkingSpace", ParkingSpace);
         telemetry.update();
-        
-        // moveSlidePack(SlidePackDirection.UP, -getDrivePower(SlidePackPower), convertShippingHubLevelToMs(shippingHubLevel));
-        // sleep(200);
-        // pickUpBlock(shippingHubLevel);
-        // switch (STARTING_POSITION) {
-        //     case REDSTORAGEUNIT:
-        //         doStorageUnitActions(StartingPositionEnum.REDSTORAGEUNIT);
-        //         break;
-        //     case REDWAREHOUSE:
-        //         doWarehouseActions(StartingPositionEnum.REDWAREHOUSE, true);
-        //         break;
-        //     case BLUESTORAGEUNIT:
-        //         doStorageUnitActions(StartingPositionEnum.BLUESTORAGEUNIT);
-        //         break;
-        //     case BLUEWAREHOUSE:
-        //         doWarehouseActions(StartingPositionEnum.BLUEWAREHOUSE, true);
-        //         break;
-        //     default:
-        //         break;
-        // }
     }
-
-//    private ShippingHubLevel getCameraReading() {
-//        return ShippingHubLevel.MIDDLE;
-//    }
 
     private DriveDirection getCorrectDirection(DriveDirection direction, boolean needInvert) {
         if (!needInvert)
@@ -217,184 +193,6 @@ public class NessieAuto extends LinearOpMode {
         }
 
         return invertedDirection;
-    }
-
-    // private int convertShippingHubLevelToMs(ShippingHubLevel shl) {
-    //     switch (shl) {
-    //         case TOP:
-    //             return 930;
-    //         case MIDDLE:
-    //             return 610;
-    //         case BOTTOM:
-    //             return 290;
-    //     }
-    //     return 290;
-    // }
-
-    // private void pickUpBlock(ShippingHubLevel shl) {
-    //     moveSlidePack(SlidePackDirection.UP, -getDrivePower(SlidePackPower), 500);
-    //     sleep(200);
-
-    //     openClaw();
-    //     sleep(200);
-
-    //     // Step 1: Drive Forward (Push Block Forward)
-    //     drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 190);
-    //     sleep(200);
-
-    //     // Step 2: Drive Backward
-    //     drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 180);
-    //     sleep(200);
-
-    //     // Step 3: Move Slide Pack Down
-    //     moveSlidePack(SlidePackDirection.DOWN, -getDrivePower(SlidePackPower), 500);
-    //     sleep(200);
-
-    //     // // Step 4: Grab Block
-    //     closeClaw();
-    //     sleep(800);
-
-    //     // Step 5: Move Slide Pack Up
-    //     moveSlidePack(SlidePackDirection.UP, -getDrivePower(SlidePackPower), convertShippingHubLevelToMs(shl));
-    //     sleep(200);
-    // }
-
-    private void doWarehouseActions(StartingPositionEnum position, boolean normal) {
-        boolean needInvert = (position != StartingPositionEnum.BLUEWAREHOUSE);
-
-        // Step 1: Forward
-        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1300);
-        sleep(500);
-
-        // Step 1.5: Turn toward carousel
-        drive(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 650);
-        sleep(500);
-
-        // Step 2: Forward
-        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 230);
-        sleep(1000);
-
-        // Step 3: Drop Block
-        openClaw();
-        sleep(2000);
-
-        // Step 4: Backward
-        drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 210);
-        sleep(1000);
-
-        closeClaw();
-        sleep(1000);
-
-        if (normal) {
-            // ALTERNATIVELY: Step 5: Strafe Right
-            strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 1400);
-            strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(0.3), 1900);
-            sleep(500);
-
-
-            // Step 5.5: Re-align by Strafing Left
-            strafe(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(0.3), 200);
-            sleep(500);
-
-            // Step 6: Backward
-            drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1100);
-            sleep(500);
-
-            // Step 7: Strafe Left
-            strafe(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 1100);
-            sleep(1000);
-
-
-            // Step 7.5: Turn Right
-            drive(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 620);
-            sleep(500);
-
-            // Step 8: Strafe Right
-            strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 800);
-            sleep(500);
-
-        } else {
-            // Step 5: Strafe Right
-            strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 600);
-            sleep(1000);
-
-            // Step 6: Backward
-            drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 2000);
-        }
-    }
-
-    private void doStorageUnitActions(StartingPositionEnum position) {
-        boolean needInvert = (position != StartingPositionEnum.BLUESTORAGEUNIT);
-
-        // Step 0: Grip Block Tightly
-        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberLGrabPosition);
-        GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberRGrabPosition);
-
-        // Step 1: Forward
-        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 650);
-        sleep(500);
-
-        // Step 2: Left 45
-        drive(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 380);
-        sleep(500);
-
-        // Step 3: Forward
-        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 450);
-        sleep(1000);
-
-        // Step 4: Drop Block
-        openClaw();
-        sleep(1000);
-
-
-        // UNUSED! Step 5: Turn Left Slightly
-        // drive(DriveDirection.LEFT, DrivePower, );
-
-        // Step 6: Backward to Carousel
-        if (position == StartingPositionEnum.BLUESTORAGEUNIT) {
-            drive(DriveDirection.LEFT, getDrivePower(DrivePower), 75);
-        } else {
-            drive(DriveDirection.RIGHT, getDrivePower(DrivePower), 65);
-        }
-        sleep(500);
-
-        drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
-
-//        if (position == StartingPositionEnum.BLUESTORAGEUNIT) {
-//            drive(DriveDirection.LEFT, getDrivePower(DrivePower), 200);
-//        }
-//
-//        drive(DriveDirection.BACKWARD, getDrivePower(0.15), 2400);
-        drive(DriveDirection.BACKWARD, getDrivePower(0.15), 2200);
-        sleep(1000);
-
-        // Step 7: Spin Carousel
-        if (needInvert)
-            spinFlywheel(-0.3, 5000);
-        else
-            spinFlywheel(0.3, 5000);
-
-        sleep(500);
-
-        closeClaw();
-        sleep(1000);
-
-        // Step 8: Forward
-        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
-
-        // Step 9: Turn Left Slightly
-        drive(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 300);
-
-        // Step 10: Strafe to Wall
-        strafe(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 500);
-        strafe(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(0.3), 1500);
-        sleep(500);
-
-        // Step 11: Strafe to Center
-        strafe(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 1150);
-
-        // Step 12: Backward to Storage Unit
-        drive(DriveDirection.BACKWARD, getDrivePower(0.4), 1350);
     }
 
     private void openClaw() {
@@ -523,44 +321,6 @@ public class NessieAuto extends LinearOpMode {
         BLMotor.setPower(0);
         BRMotor.setPower(0);
     }
-    private void leftturn(double power, double time){
-        eTime.reset();
-        while(opModeIsActive() && eTime.milliseconds() < time){
-            FLMotor.setPower(-1 * power);
-            FRMotor.setPower(1 * power);
-            BLMotor.setPower(-1 * power);
-            BRMotor.setPower(1 * power);
-        }
-        FLMotor.setPower(0);
-        FRMotor.setPower(0);
-        BLMotor.setPower(0);
-        BRMotor.setPower(0);
-    }
-    private void rightturn(double power, double time){
-        eTime.reset();
-        while(opModeIsActive() && eTime.milliseconds() < time){
-            FLMotor.setPower(-1 * power);
-            FRMotor.setPower(1 * power);
-            BLMotor.setPower(-1 * power);
-            BRMotor.setPower(1 *power);
-        }
-        FLMotor.setPower(0);
-        FRMotor.setPower(0);
-        BLMotor.setPower(0);
-        BRMotor.setPower(0);
-    }
-
-
-
-
-    /*(gamepad2.a){
-            LGServo.setPosition(0);
-            RGServo.setPosition(0.75);
-        }else if (gamepad2.b){
-            LGServo.setPosition(0.75);
-            RGServo.setPosition(0);
-        }
-    */
     private void resetAngle()
     {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -927,7 +687,7 @@ public class NessieAuto extends LinearOpMode {
         telemetry.addData("hsv", hsv[2]);
         telemetry.addData("b1", b1);
         telemetry.addData("b2", b2);
-        return hsv[0] >= 45 && hsv[0] <= 70 && hsv[1] > 0.15 && hsv[2] > 0.5;
+        return hsv[0] >= 80 && hsv[0] <= 130 && hsv[1] > 0.15 && hsv[2] > 0.5;
     }
     
     private boolean isBlack(byte b1, byte b2) {
@@ -948,7 +708,7 @@ public class NessieAuto extends LinearOpMode {
         telemetry.addData("hsv", hsv[2]);
         telemetry.addData("b1", b1);
         telemetry.addData("b2", b2);
-        return hsv[0] >= 45 && hsv[0] <= 70 && hsv[1] > 0.15 && hsv[2] > 0.5;
+        return hsv[2] > 0.2;
     }
 
     private double[] convertRGBtoHSV(int[] rgb) {
