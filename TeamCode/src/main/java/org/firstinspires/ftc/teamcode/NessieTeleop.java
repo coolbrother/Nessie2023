@@ -68,14 +68,14 @@ public class NewTeleop extends LinearOpMode {
         FRMotor = hardwareMap.dcMotor.get("0");
         BLMotor = hardwareMap.dcMotor.get("2");
         BRMotor = hardwareMap.dcMotor.get("3");
-        Flywheel = hardwareMap.dcMotor.get("Fly");
-        GrabberL = hardwareMap.crservo.get("GL");
-        GrabberR = hardwareMap.crservo.get("GR");
+//         Flywheel = hardwareMap.dcMotor.get("Fly");
+//         GrabberL = hardwareMap.crservo.get("GL");
+//         GrabberR = hardwareMap.crservo.get("GR");
 //        GrabberL = hardwareMap.crservo.get("GL");
 //        GrabberR = hardwareMap.crservo.get("GR");
 //        DcMotor HorizontalSlidePack = hardwareMap.dcMotor.get("HorizontalSlidePack");
-        VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
-        VerticalSlidePack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//         VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
+//         VerticalSlidePack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        DcMotor EaterMotor = hardwareMap.dcMotor.get("Eater");
 
         // Set Directions
@@ -83,11 +83,11 @@ public class NewTeleop extends LinearOpMode {
         FRMotor.setDirection(DcMotor.Direction.REVERSE);
         BLMotor.setDirection(DcMotor.Direction.FORWARD);
         BRMotor.setDirection(DcMotor.Direction.REVERSE);
-        Flywheel.setDirection(DcMotor.Direction.FORWARD);
-        GrabberL.setDirection(CRServo.Direction.FORWARD);
-        GrabberR.setDirection(CRServo.Direction.FORWARD);
+//         Flywheel.setDirection(DcMotor.Direction.FORWARD);
+//         GrabberL.setDirection(CRServo.Direction.FORWARD);
+//         GrabberR.setDirection(CRServo.Direction.FORWARD);
 //        HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
-        VerticalSlidePack.setDirection(DcMotor.Direction.REVERSE);
+//         VerticalSlidePack.setDirection(DcMotor.Direction.REVERSE);
 //        EaterMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // wait for the coach to press start
@@ -139,29 +139,29 @@ public class NewTeleop extends LinearOpMode {
 //            double RightDrive = Range.clip(drive - turn, -1.0, 1.0) * DriveSpeed;
 
             //WHY ARE THERE TWO FLYWHEELS also strafe
-            double FlywheelClockwise = gamepad1.left_bumper ? -1 : 0;
-            double FlywheelCounterClockwise = gamepad1.right_bumper ? 1 : 0;
+//             double FlywheelClockwise = gamepad1.left_bumper ? -1 : 0;
+//             double FlywheelCounterClockwise = gamepad1.right_bumper ? 1 : 0;
             double LeftStrafe = gamepad1.left_trigger;
             double RightStrafe = gamepad1.right_trigger;
 //            double HorizontalSlidePackForward = gamepad2.right_bumper ? 1 : 0;
 //            double HorizontalSlidePackBackward = gamepad2.right_trigger > 0 ? 1 : gamepad2.right_trigger < 0 ? -1 : 0;
 
             // THE CLAW
-            double VerticalSlidePackForward = -gamepad2.left_stick_y * SlidePackSpeed;
+//             double VerticalSlidePackForward = -gamepad2.left_stick_y * SlidePackSpeed;
 //            double VerticalSlidePackBackward = gamepad2.dpad_down ? -1 : 0;
-            boolean GrabberIn = gamepad2.a;
-            boolean GrabberOut = gamepad2.b;
+//             boolean GrabberIn = gamepad2.a;
+//             boolean GrabberOut = gamepad2.b;
 
-            if (FlywheelClockwise != 0 || FlywheelCounterClockwise != 0) {
-                Flywheel.setPower(0.3 * (FlywheelCounterClockwise + FlywheelClockwise));
-            } else {
-                Flywheel.setPower(0);
-            }
+//             if (FlywheelClockwise != 0 || FlywheelCounterClockwise != 0) {
+//                 Flywheel.setPower(0.3 * (FlywheelCounterClockwise + FlywheelClockwise));
+//             } else {
+//                 Flywheel.setPower(0);
+//             }
 
-            if (GrabberIn || GrabberOut) {
-                GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn ? GrabberLGrabPosition : GrabberLReleasePosition);
-                GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberIn ? GrabberRGrabPosition : GrabberRReleasePosition);
-            }
+//             if (GrabberIn || GrabberOut) {
+//                 GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn ? GrabberLGrabPosition : GrabberLReleasePosition);
+//                 GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberIn ? GrabberRGrabPosition : GrabberRReleasePosition);
+//             }
 
             // if(gamepad2.a)
             //     GrabberL.setPower(0.25);
@@ -173,7 +173,7 @@ public class NewTeleop extends LinearOpMode {
 //
 //            if (VerticalSlidePack.getCurrentPosition() > VSP_MAX_POSITION
 //                || VerticalSlidePack.getCurrentPosition() < VSP_MIN_POSITION) {
-                VerticalSlidePack.setPower(VerticalSlidePackForward);
+//                 VerticalSlidePack.setPower(VerticalSlidePackForward);
 //            }
 //            if (EaterBackward != 0 || EaterForward != 0) {
 //                EaterMotor.setPower(- EaterBackward + EaterForward);
@@ -238,14 +238,14 @@ public class NewTeleop extends LinearOpMode {
             // add random telemetry stuff (shows up on driver station app) cuz why not
             telemetry.addData("LeftDrive", LeftDrive);
             telemetry.addData("RightDrive", RightDrive);
-            telemetry.addData("Flywheel", FlywheelCounterClockwise + FlywheelClockwise);
+//             telemetry.addData("Flywheel", FlywheelCounterClockwise + FlywheelClockwise);
 //            telemetry.addData("HorizontalSlidePack", -HorizontalSlidePackBackward + HorizontalSlidePackForward);
-            telemetry.addData("VerticalSlidePack", VerticalSlidePackForward);
-            telemetry.addData("VerticalSlidePackPosition", VerticalSlidePack.getCurrentPosition());
-            telemetry.addData("GrabberIn", GrabberIn);
-            telemetry.addData("GrabberOut", GrabberOut);
-            telemetry.addData("GrabberLPosition", GrabberL.getController().getServoPosition(GrabberL.getPortNumber()));
-            telemetry.addData("GrabberRPosition", GrabberR.getController().getServoPosition(GrabberR.getPortNumber()));
+//             telemetry.addData("VerticalSlidePack", VerticalSlidePackForward);
+//             telemetry.addData("VerticalSlidePackPosition", VerticalSlidePack.getCurrentPosition());
+//             telemetry.addData("GrabberIn", GrabberIn);
+//             telemetry.addData("GrabberOut", GrabberOut);
+//             telemetry.addData("GrabberLPosition", GrabberL.getController().getServoPosition(GrabberL.getPortNumber()));
+//             telemetry.addData("GrabberRPosition", GrabberR.getController().getServoPosition(GrabberR.getPortNumber()));
             telemetry.update();
         }
     }
