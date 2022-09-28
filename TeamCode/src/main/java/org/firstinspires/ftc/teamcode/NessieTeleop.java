@@ -39,9 +39,9 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-@TeleOp(name="NewHashIsABadSpelerTeleop")
+@TeleOp(name="NessieTeleop")
 //@Disabled
-public class NewTeleop extends LinearOpMode {
+public class NessieTeleop extends LinearOpMode {
 
     private DcMotor FLMotor;
     private DcMotor FRMotor;
@@ -99,21 +99,24 @@ public class NewTeleop extends LinearOpMode {
         while(opModeIsActive()) {
 
             //Driver 1
-//            drive = -gamepad1.left_stick_y;
-//            turn = gamepad1.right_stick_x;
+            drive = -gamepad1.left_stick_y;
+            turn = gamepad1.right_stick_x;
 
             //TANK DRIVE
-            double LeftDrive = gamepad1.left_stick_y;// * DriveSpeed;
-            double RightDrive = gamepad1.right_stick_y;// * DriveSpeed;
+            // double LeftDrive = -gamepad1.left_stick_y;// * DriveSpeed;
+            // double RightDrive = -gamepad1.right_stick_y;// * DriveSpeed;
+            
+            double LeftDrive = Range.clip(drive + turn, -1.0, 1.0);
+            double RightDrive = Range.clip(drive - turn, -1.0, 1.0);
 
             telemetry.addData("left_stick_y", LeftDrive);
             telemetry.addData("right_stick_y", RightDrive);
 
-            if (LeftDrive > 0.8) {
+            if (LeftDrive > 0.9) {
                 LeftDrive = DriveSpeed;
             } else if (LeftDrive > 0) {
                 LeftDrive = 0.3 * DriveSpeed;
-            } else if (LeftDrive < -0.8) {
+            } else if (LeftDrive < -0.9) {
                 LeftDrive = -DriveSpeed;
             } else if (LeftDrive < 0) {
                 LeftDrive = 0.3 * -DriveSpeed;
@@ -121,11 +124,11 @@ public class NewTeleop extends LinearOpMode {
                 LeftDrive = 0;
             }
 
-            if (RightDrive > 0.8) {
+            if (RightDrive > 0.9) {
                 RightDrive = DriveSpeed;
             } else if (RightDrive > 0) {
                 RightDrive = 0.3 * DriveSpeed;
-            } else if (RightDrive < -0.8) {
+            } else if (RightDrive < -0.9) {
                 RightDrive = -DriveSpeed;
             } else if (RightDrive < 0) {
                 RightDrive = 0.3 * -DriveSpeed;
@@ -135,8 +138,6 @@ public class NewTeleop extends LinearOpMode {
             // FLYWHEEL DIRECTION
 //            boolean FlyWheelR = gamepad1.right_bumper;
 //            boolean FlyWheelL = gamepad1.left_bumper;
-//            double LeftDrive = Range.clip(drive + turn, -1.0, 1.0) * DriveSpeed;
-//            double RightDrive = Range.clip(drive - turn, -1.0, 1.0) * DriveSpeed;
 
             //WHY ARE THERE TWO FLYWHEELS also strafe
 //             double FlywheelClockwise = gamepad1.left_bumper ? -1 : 0;
@@ -179,36 +180,36 @@ public class NewTeleop extends LinearOpMode {
 //                EaterMotor.setPower(- EaterBackward + EaterForward);
 //            }
 
-//            LeftDrive = DriveSpeed * (gamepad1.left_stick_y);
-//            RightDrive = DriveSpeed * (gamepad1.right_stick_y);
+            // LeftDrive = DriveSpeed * (gamepad1.left_stick_y);
+            // RightDrive = DriveSpeed * (gamepad1.right_stick_y);
             if (LeftStrafe == 0 && RightStrafe == 0) {
                 FLMotor.setPower(LeftDrive);
                 BLMotor.setPower(LeftDrive);
                 FRMotor.setPower(RightDrive);
                 BRMotor.setPower(RightDrive);
             } else if (LeftStrafe > 0) {
-                if (LeftStrafe > 0.8) {
+                if (LeftStrafe > 0.9) {
                     FLMotor.setPower(-1);
                     BLMotor.setPower(1);
-                    FRMotor.setPower(-1);
-                    BRMotor.setPower(1);
-                } else {
-                    FLMotor.setPower(-0.3);
-                    BLMotor.setPower(0.3);
-                    FRMotor.setPower(-0.3);
-                    BRMotor.setPower(0.3);
-                }
-            } else if (RightStrafe > 0) {
-                if (RightStrafe > 0.8) {
-                    FLMotor.setPower(1);
-                    BLMotor.setPower(-1);
                     FRMotor.setPower(1);
                     BRMotor.setPower(-1);
                 } else {
-                    FLMotor.setPower(0.3);
-                    BLMotor.setPower(-0.3);
+                    FLMotor.setPower(-0.3);
+                    BLMotor.setPower(0.3);
                     FRMotor.setPower(0.3);
                     BRMotor.setPower(-0.3);
+                }
+            } else if (RightStrafe > 0) {
+                if (RightStrafe > 0.9) {
+                    FLMotor.setPower(1);
+                    BLMotor.setPower(-1);
+                    FRMotor.setPower(-1);
+                    BRMotor.setPower(1);
+                } else {
+                    FLMotor.setPower(0.3);
+                    BLMotor.setPower(-0.3);
+                    FRMotor.setPower(-0.3);
+                    BRMotor.setPower(0.3);
                 }
             }
 
