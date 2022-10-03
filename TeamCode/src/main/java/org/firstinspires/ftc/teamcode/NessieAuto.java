@@ -73,7 +73,7 @@ public class NessieAuto extends LinearOpMode {
     private final double GrabberLReleasePosition = 0.64;
     private final double GrabberRGrabPosition = 0.55;
     private final double GrabberRReleasePosition = 0.24;
-    private ParkingSpace ParkingSpace = ParkingSpace.UNO;
+    private ParkingSpace parkingSpace = ParkingSpace.UNO;
 
     private DcMotor FLMotor;
     private DcMotor FRMotor;
@@ -92,13 +92,6 @@ public class NessieAuto extends LinearOpMode {
     private Orientation lastAngles = new Orientation();
     double globalAngle, power = .30, correction;
     private ElapsedTime eTime = new ElapsedTime();
-    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
-    private static final String[] LABELS = {
-//            "Ball",
-//            "Cube",
-            "Duck",
-//            "Marker"
-    };
     private static final String VUFORIA_KEY = "AVPRW+T/////AAABmYg0Njwhc0n/teI+7Sz8f/Baxyp0o6W48fBEflz8RZs3G/bVjI/5PyebGV6SkXhE1unHTRVzOVCo2cuuePhML8YCeHWm1dHZ2KbshLfc/yne7rfe2VaKPR3rrJXPF5CdMTWj4nTxm6w7KxiqvtvF2p2si1FrculcXUwbHeZ9X3O6VSntXMuNJDxXJEC3O5hT5kb7ZzsSWlot9YfUqJRxttrYYz8Xu1D2IhtOs26a2A9FC8afgGouyHucBDfl+WP59+H6wYaXRbyvcFdytq9Fp7mlSsA9RA6DV70PtJWDmehLO5hhOKq4ihVNCjJcgG38UefDAyDhWWMdjRwsiaVctq6QkmG1oMuTfIF1Dun2lDpZ";
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
@@ -163,10 +156,10 @@ public class NessieAuto extends LinearOpMode {
         eTime.reset();
 
         if (isCameraReady) {
-            ParkingSpace = getCameraReading();
+            parkingSpace = getCameraReading();
         }
 
-        telemetry.addData("ParkingSpace", ParkingSpace);
+        telemetry.addData("parkingSpace", parkingSpace);
         telemetry.update();
     }
 
@@ -538,7 +531,6 @@ public class NessieAuto extends LinearOpMode {
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 320;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
     }
 
     private boolean getCameraReady() {
@@ -661,9 +653,9 @@ public class NessieAuto extends LinearOpMode {
         telemetry.addData("hsv", hsv[2]);
         telemetry.addData("b1", b1);
         telemetry.addData("b2", b2);
-        if hsv[0] >= 45 && hsv[0] <= 70 && hsv[1] > 0.15 && hsv[2] > 0.5:
+        if (hsv[0] >= 45 && hsv[0] <= 70 && hsv[1] > 0.15 && hsv[2] > 0.5)
             return 0;
-        if hsv[0] >= 80 && hsv[0] <= 130 && hsv[1] > 0.15 && hsv[2] > 0.5:
+        if (hsv[0] >= 80 && hsv[0] <= 130 && hsv[1] > 0.15 && hsv[2] > 0.5)
             return 1;
         return 2;
     }
