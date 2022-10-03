@@ -55,10 +55,10 @@ public class NessieTeleop extends LinearOpMode {
     private double turn;
     private final double DriveSpeed = 0.9;
     private final double SlidePackSpeed = 0.5;
-    private final double GrabberLGrabPosition = 0.3;
-    private final double GrabberLReleasePosition = 0.64;
-    private final double GrabberRGrabPosition = 0.55;
-    private final double GrabberRReleasePosition = 0.24;
+    private final double GrabberLGrabPosition = 0.2;
+    private final double GrabberLReleasePosition = 0.4;
+    // private final double GrabberRGrabPosition = 0.55;
+    // private final double GrabberRReleasePosition = 0.24;
 
     @Override
     public void runOpMode () {
@@ -69,13 +69,13 @@ public class NessieTeleop extends LinearOpMode {
         BLMotor = hardwareMap.dcMotor.get("2");
         BRMotor = hardwareMap.dcMotor.get("3");
 //         Flywheel = hardwareMap.dcMotor.get("Fly");
-//         GrabberL = hardwareMap.crservo.get("GL");
-//         GrabberR = hardwareMap.crservo.get("GR");
+        GrabberL = hardwareMap.crservo.get("GL");
+        // GrabberR = hardwareMap.crservo.get("GR");
 //        GrabberL = hardwareMap.crservo.get("GL");
 //        GrabberR = hardwareMap.crservo.get("GR");
 //        DcMotor HorizontalSlidePack = hardwareMap.dcMotor.get("HorizontalSlidePack");
-//         VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
-//         VerticalSlidePack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
+        // VerticalSlidePack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        DcMotor EaterMotor = hardwareMap.dcMotor.get("Eater");
 
         // Set Directions
@@ -84,10 +84,10 @@ public class NessieTeleop extends LinearOpMode {
         BLMotor.setDirection(DcMotor.Direction.FORWARD);
         BRMotor.setDirection(DcMotor.Direction.REVERSE);
 //         Flywheel.setDirection(DcMotor.Direction.FORWARD);
-//         GrabberL.setDirection(CRServo.Direction.FORWARD);
-//         GrabberR.setDirection(CRServo.Direction.FORWARD);
+        GrabberL.setDirection(CRServo.Direction.FORWARD);
+        // GrabberR.setDirection(CRServo.Direction.FORWARD);
 //        HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
-//         VerticalSlidePack.setDirection(DcMotor.Direction.REVERSE);
+        VerticalSlidePack.setDirection(DcMotor.Direction.REVERSE);
 //        EaterMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // wait for the coach to press start
@@ -111,6 +111,8 @@ public class NessieTeleop extends LinearOpMode {
 
             telemetry.addData("left_stick_y", LeftDrive);
             telemetry.addData("right_stick_y", RightDrive);
+            telemetry.addData("x", gamepad1.left_stick_x);
+            telemetry.addData("y", gamepad1.left_stick_y);
 
             if (LeftDrive > 0.9) {
                 LeftDrive = DriveSpeed;
@@ -135,53 +137,26 @@ public class NessieTeleop extends LinearOpMode {
             } else {
                 RightDrive = 0;
             }
-            // FLYWHEEL DIRECTION
-//            boolean FlyWheelR = gamepad1.right_bumper;
-//            boolean FlyWheelL = gamepad1.left_bumper;
-
-            //WHY ARE THERE TWO FLYWHEELS also strafe
-//             double FlywheelClockwise = gamepad1.left_bumper ? -1 : 0;
-//             double FlywheelCounterClockwise = gamepad1.right_bumper ? 1 : 0;
+            
             double LeftStrafe = gamepad1.left_trigger;
             double RightStrafe = gamepad1.right_trigger;
-//            double HorizontalSlidePackForward = gamepad2.right_bumper ? 1 : 0;
-//            double HorizontalSlidePackBackward = gamepad2.right_trigger > 0 ? 1 : gamepad2.right_trigger < 0 ? -1 : 0;
 
             // THE CLAW
-//             double VerticalSlidePackForward = -gamepad2.left_stick_y * SlidePackSpeed;
+            double VerticalSlidePackForward = -gamepad2.left_stick_y * SlidePackSpeed;
 //            double VerticalSlidePackBackward = gamepad2.dpad_down ? -1 : 0;
-//             boolean GrabberIn = gamepad2.a;
-//             boolean GrabberOut = gamepad2.b;
+            boolean GrabberIn = gamepad2.a;
+            boolean GrabberOut = gamepad2.b;
 
-//             if (FlywheelClockwise != 0 || FlywheelCounterClockwise != 0) {
-//                 Flywheel.setPower(0.3 * (FlywheelCounterClockwise + FlywheelClockwise));
-//             } else {
-//                 Flywheel.setPower(0);
-//             }
+            if (GrabberIn || GrabberOut) {
+                GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn ? GrabberLGrabPosition : GrabberLReleasePosition);
+            //     GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberIn ? GrabberRGrabPosition : GrabberRReleasePosition);
+            }
+            
+            // if (VerticalSlidePack.getCurrentPosition() > VSP_MAX_POSITION
+                // || VerticalSlidePack.getCurrentPosition() < VSP_MIN_POSITION) {
+                VerticalSlidePack.setPower(VerticalSlidePackForward);
+            // }
 
-//             if (GrabberIn || GrabberOut) {
-//                 GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn ? GrabberLGrabPosition : GrabberLReleasePosition);
-//                 GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberIn ? GrabberRGrabPosition : GrabberRReleasePosition);
-//             }
-
-            // if(gamepad2.a)
-            //     GrabberL.setPower(0.25);
-
-
-//            if (HorizontalSlidePackBackward != 0 || HorizontalSlidePackForward != 0) {
-//                HorizontalSlidePack.setPower(- HorizontalSlidePackBackward + HorizontalSlidePackForward);
-//            }
-//
-//            if (VerticalSlidePack.getCurrentPosition() > VSP_MAX_POSITION
-//                || VerticalSlidePack.getCurrentPosition() < VSP_MIN_POSITION) {
-//                 VerticalSlidePack.setPower(VerticalSlidePackForward);
-//            }
-//            if (EaterBackward != 0 || EaterForward != 0) {
-//                EaterMotor.setPower(- EaterBackward + EaterForward);
-//            }
-
-            // LeftDrive = DriveSpeed * (gamepad1.left_stick_y);
-            // RightDrive = DriveSpeed * (gamepad1.right_stick_y);
             if (LeftStrafe == 0 && RightStrafe == 0) {
                 FLMotor.setPower(LeftDrive);
                 BLMotor.setPower(LeftDrive);
@@ -213,40 +188,18 @@ public class NessieTeleop extends LinearOpMode {
                 }
             }
 
-//             if (LeftDrive != 0 && RightDrive != 0) {
-//            FLMotor.setPower(LeftDrive);
-//            BLMotor.setPower(LeftDrive);
-//            FRMotor.setPower(RightDrive);
-//            BRMotor.setPower(RightDrive);
-            // }
-            // else if (LeftDrive > 0) {
-            //     FLMotor.setPower(LeftDrive);
-            //     BLMotor.setPower(LeftDrive);
-            //     FRMotor.setPower(LeftDrive * 0.5);
-            //     BRMotor.setPower(LeftDrive * 0.5);
-            // } else if (RightDrive > 0) {
-            //     FLMotor.setPower(RightDrive * 0.5);
-            //     BLMotor.setPower(RightDrive * 0.5);
-            //     FRMotor.setPower(RightDrive);
-            //     BRMotor.setPower(RightDrive);
-            // } else {
-            //     FLMotor.setPower(0 * 0.5);
-            //     BLMotor.setPower(0 * 0.5);
-            //     FRMotor.setPower(0);
-            //     BRMotor.setPower(0);
-            // }
 
             // add random telemetry stuff (shows up on driver station app) cuz why not
             telemetry.addData("LeftDrive", LeftDrive);
             telemetry.addData("RightDrive", RightDrive);
 //             telemetry.addData("Flywheel", FlywheelCounterClockwise + FlywheelClockwise);
 //            telemetry.addData("HorizontalSlidePack", -HorizontalSlidePackBackward + HorizontalSlidePackForward);
-//             telemetry.addData("VerticalSlidePack", VerticalSlidePackForward);
-//             telemetry.addData("VerticalSlidePackPosition", VerticalSlidePack.getCurrentPosition());
-//             telemetry.addData("GrabberIn", GrabberIn);
-//             telemetry.addData("GrabberOut", GrabberOut);
-//             telemetry.addData("GrabberLPosition", GrabberL.getController().getServoPosition(GrabberL.getPortNumber()));
-//             telemetry.addData("GrabberRPosition", GrabberR.getController().getServoPosition(GrabberR.getPortNumber()));
+            telemetry.addData("VerticalSlidePack", VerticalSlidePackForward);
+            telemetry.addData("VerticalSlidePackPosition", VerticalSlidePack.getCurrentPosition());
+            telemetry.addData("GrabberIn", GrabberIn);
+            telemetry.addData("GrabberOut", GrabberOut);
+            telemetry.addData("GrabberLPosition", GrabberL.getController().getServoPosition(GrabberL.getPortNumber()));
+            // telemetry.addData("GrabberRPosition", GrabberR.getController().getServoPosition(GrabberR.getPortNumber()));
             telemetry.update();
         }
     }
