@@ -65,7 +65,7 @@ public class NessieAuto extends LinearOpMode {
     }
 
     private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.REDWAREHOUSE;
-    private final int numberOfRowsToScanInImage = 20;
+    private final int numberOfRowsToScanInImage = 30;
     private final double BATTERY_LEVEL = 1;
     private final double DrivePower = 0.75;
     private final double SlidePackPower = 0.5;
@@ -597,13 +597,8 @@ public class NessieAuto extends LinearOpMode {
             int imgHeight = image.getHeight();
             int[] startingIndexes = getRowStartingIndexes(imgHeight, imgWidth, numberOfRowsToScanInImage);
             for (int i = numberOfRowsToScanInImage / 3; i < numberOfRowsToScanInImage * 2 / 3; i++) {
-                for (int j = startingIndexes[i]; j < startingIndexes[i] + imgWidth * 2; j += 4) {
-                    if (isYellow(pixelArray[j], pixelArray[j+1]))
-                        colors[0]++;
-                    else if (isGreen(pixelArray[j], pixelArray[j+1]))
-                        colors[1]++;
-                    else if (isBlack(pixelArray[j], pixelArray[j+1]))
-                        colors[2]++;
+                for (int j = startingIndexes[i] + imgWidth * 2 / 3; j < startingIndexes[i] + imgWidth * 2 * 2/3; j += 4) {
+                    colors[getColor(pixelArray[j], pixelArray[j+1])]++;
                     telemetry.addData("width", imgWidth);
                     telemetry.addData("height", imgHeight);
                     telemetry.addData("startingIndexes[i]", startingIndexes[i]);
@@ -648,7 +643,7 @@ public class NessieAuto extends LinearOpMode {
         return newArr;
     }
 
-    private boolean isYellow(byte b1, byte b2) {
+    private int getColor(byte b1, byte b2) {
         // GGGBBBBB RRRRRGGG;
         String s1 = String.format("%8s", Integer.toBinaryString(b2 & 0xFF)).replace(' ', '0');
         String s2 = String.format("%8s", Integer.toBinaryString(b1 & 0xFF)).replace(' ', '0');
@@ -666,49 +661,11 @@ public class NessieAuto extends LinearOpMode {
         telemetry.addData("hsv", hsv[2]);
         telemetry.addData("b1", b1);
         telemetry.addData("b2", b2);
-        return hsv[0] >= 45 && hsv[0] <= 70 && hsv[1] > 0.15 && hsv[2] > 0.5;
-    }
-    
-    private boolean isGreen(byte b1, byte b2) {
-        // GGGBBBBB RRRRRGGG;
-        String s1 = String.format("%8s", Integer.toBinaryString(b2 & 0xFF)).replace(' ', '0');
-        String s2 = String.format("%8s", Integer.toBinaryString(b1 & 0xFF)).replace(' ', '0');
-        // RRRRRGGG GGGBBBBB;
-        int[] color = new int[3];
-        String r = s1.substring(0, 5);
-        String g = s1.substring(5) + s2.substring(0, 3);
-        String b = s2.substring(3);
-        color[0] = convertBitStringToInt(r);
-        color[1] = convertBitStringToInt(g);
-        color[2] = convertBitStringToInt(b);
-        double[] hsv = convertRGBtoHSV(color);
-        telemetry.addData("hsv", hsv[0]);
-        telemetry.addData("hsv", hsv[1]);
-        telemetry.addData("hsv", hsv[2]);
-        telemetry.addData("b1", b1);
-        telemetry.addData("b2", b2);
-        return hsv[0] >= 80 && hsv[0] <= 130 && hsv[1] > 0.15 && hsv[2] > 0.5;
-    }
-    
-    private boolean isBlack(byte b1, byte b2) {
-        // GGGBBBBB RRRRRGGG;
-        String s1 = String.format("%8s", Integer.toBinaryString(b2 & 0xFF)).replace(' ', '0');
-        String s2 = String.format("%8s", Integer.toBinaryString(b1 & 0xFF)).replace(' ', '0');
-        // RRRRRGGG GGGBBBBB;
-        int[] color = new int[3];
-        String r = s1.substring(0, 5);
-        String g = s1.substring(5) + s2.substring(0, 3);
-        String b = s2.substring(3);
-        color[0] = convertBitStringToInt(r);
-        color[1] = convertBitStringToInt(g);
-        color[2] = convertBitStringToInt(b);
-        double[] hsv = convertRGBtoHSV(color);
-        telemetry.addData("hsv", hsv[0]);
-        telemetry.addData("hsv", hsv[1]);
-        telemetry.addData("hsv", hsv[2]);
-        telemetry.addData("b1", b1);
-        telemetry.addData("b2", b2);
-        return hsv[2] > 0.2;
+        if hsv[0] >= 45 && hsv[0] <= 70 && hsv[1] > 0.15 && hsv[2] > 0.5:
+            return 0;
+        if hsv[0] >= 80 && hsv[0] <= 130 && hsv[1] > 0.15 && hsv[2] > 0.5:
+            return 1;
+        return 2;
     }
 
     private double[] convertRGBtoHSV(int[] rgb) {
