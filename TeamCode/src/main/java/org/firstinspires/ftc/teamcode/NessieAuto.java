@@ -579,7 +579,7 @@ public class NessieAuto extends LinearOpMode {
             }
         }
 
-        int[] colors = {0, 0, 0};
+        int[] colors = {0, 0, 0, 0};
 
         if (image != null) {
             ByteBuffer pixels = image.getPixels();
@@ -657,7 +657,9 @@ public class NessieAuto extends LinearOpMode {
             return 0;
         if (hsv[0] >= 80 && hsv[0] <= 130 && hsv[1] > 0.15 && hsv[2] > 0.5)
             return 1;
-        return 2;
+        if (hsv[2] < 0.2)
+            return 2;
+        return 3;
     }
 
     private double[] convertRGBtoHSV(int[] rgb) {
