@@ -614,7 +614,7 @@ public class NessieAuto extends LinearOpMode {
 
         frame.close();
         int max_index = 0;
-        for (int i = 0; i < colors.length; i++) {
+        for (int i = 0; i < 3; i++) {
             if (colors[i] > colors[max_index])
                 max_index = i;
         }
