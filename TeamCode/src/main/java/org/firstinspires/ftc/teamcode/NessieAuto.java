@@ -36,8 +36,8 @@ import java.nio.ByteBuffer;
 import java.util.List;
 
 
-@Autonomous(name="NessieAuto")
-public class NessieAuto extends LinearOpMode {
+@Autonomous(name="CameraTest")
+public class CameraTest extends LinearOpMode {
 
     enum DriveDirection {
         FORWARD,
@@ -589,7 +589,7 @@ public class NessieAuto extends LinearOpMode {
             int imgHeight = image.getHeight();
             int[] startingIndexes = getRowStartingIndexes(imgHeight, imgWidth, numberOfRowsToScanInImage);
             for (int i = numberOfRowsToScanInImage / 3; i < numberOfRowsToScanInImage * 2 / 3; i++) {
-                for (int j = startingIndexes[i] + imgWidth * 2 / 3; j < startingIndexes[i] + imgWidth * 2 * 2/3; j += 4) {
+                for (int j = startingIndexes[i] + imgWidth * 2 / 3; j < startingIndexes[i] + imgWidth * 2 * 2/3; j += 2) {
                     colors[getColor(pixelArray[j], pixelArray[j+1])]++;
                     telemetry.addData("width", imgWidth);
                     telemetry.addData("height", imgHeight);
@@ -604,8 +604,11 @@ public class NessieAuto extends LinearOpMode {
             // sleep(5000);
             // telemetry.addData("b1", pixelArray[0]);
             // telemetry.addData("b2", pixelArray[1]);
-            // telemetry.addData("isYellow", isYellow(pixelArray[0], pixelArray[1]));
-            // telemetry.update();
+            telemetry.addData("yellow", colors[0]);
+            telemetry.addData("green", colors[1]);
+            telemetry.addData("black", colors[2]);
+            sleep(30000);
+            telemetry.update();
             for (int i = 0; i < startingIndexes.length; i++)
                 telemetry.addData("startingIndexes[i]", startingIndexes[i]);
             telemetry.update();
@@ -653,12 +656,13 @@ public class NessieAuto extends LinearOpMode {
         telemetry.addData("hsv", hsv[2]);
         telemetry.addData("b1", b1);
         telemetry.addData("b2", b2);
+        telemetry.addData("hsv[2]", hsv[2]);
+        if (hsv[2] < 0.3)
+            return 2;
         if (hsv[0] >= 45 && hsv[0] <= 70 && hsv[1] > 0.15 && hsv[2] > 0.5)
             return 0;
-        if (hsv[0] >= 80 && hsv[0] <= 130 && hsv[1] > 0.15 && hsv[2] > 0.5)
+        if (hsv[0] >= 70 && hsv[0] <= 140 && hsv[1] > 0.15 && hsv[2] > 0.5)
             return 1;
-        if (hsv[2] < 0.2)
-            return 2;
         return 3;
     }
 
