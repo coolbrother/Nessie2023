@@ -659,7 +659,7 @@ public class CameraTest extends LinearOpMode {
         telemetry.addData("hsv[2]", hsv[2]);
         if (hsv[2] < 0.3)
             return 2;
-        if (hsv[0] >= 70 && hsv[0] <= 140 && hsv[1] > 0.15 && hsv[2] > 0.5)
+        if (hsv[0] >= 70 && hsv[0] <= 155 && hsv[1] > 0.15 && hsv[2] > 0.2)
             return 1;
         if (hsv[0] >= 45 && hsv[0] <= 70 && hsv[1] > 0.15 && hsv[2] > 0.5)
             return 0;
