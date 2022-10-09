@@ -169,25 +169,50 @@ public class NessieAuto extends LinearOpMode {
         
         switch (STARTING_POSITION) {
             case LEFT:
-                doActions(StartingPositionEnum.LEFT);
+                doActions(StartingPositionEnum.LEFT, parkingSpace);
                 break;
             case RIGHT:
-                doActions(StartingPositionEnum.RIGHT);
+                doActions(StartingPositionEnum.RIGHT, parkingSpace);
                 break;
             default:
                 break;
         }
     }
     
-    private void doActions(StartingPositionEnum position) {
+    private void doActions(StartingPositionEnum position, ParkingSpace ps) {
         boolean needInvert = (position != StartingPositionEnum.LEFT);
 
-        // Step 1: Forward
-        // drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 650);
-        // sleep(500);
+        // Step 0: Forward
+        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 650);
         telemetry.addData("Forward move", "");
         telemetry.update();
         sleep(500);
+        
+        // Step 1: Strafe Right
+        // Step 1.1: Turn Left
+        // Step 1.2: Strafe Left
+        // Step 2: Strafe Right
+        // for (int i = 0; i < 4; i++) {
+            // Step 3: Forward
+            // Step 3.5: Pick Up Block
+            // Step 4: Backward
+            // Step 5: Strafe Left
+            // Step 5.5: Score Cone
+            // Step 6: Strafe Right
+        // }
+        // Step 7: Backward
+        // Step 8: Strafe Left
+        // Step 8.5: Score Cone
+        // Step 9: Strafe Left
+        // Step 10: Move To Correct Parking Space
+        switch (ps) {
+            case UNO:
+                return;
+            case TRES:
+                return;
+            default:
+                return;
+        }
     }
 
     private DriveDirection getCorrectDirection(DriveDirection direction, boolean needInvert) {
