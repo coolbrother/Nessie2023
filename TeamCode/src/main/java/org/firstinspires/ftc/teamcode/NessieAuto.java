@@ -183,7 +183,10 @@ public class NessieAuto extends LinearOpMode {
         boolean needInvert = (position != StartingPositionEnum.LEFT);
 
         // Step 1: Forward
-        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 650);
+        // drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 650);
+        // sleep(500);
+        telemetry.addData("Forward move", "");
+        telemetry.update();
         sleep(500);
     }
 
@@ -225,7 +228,6 @@ public class NessieAuto extends LinearOpMode {
             default:
                 return 290;
         }
-        return 290;
     }
     
     private void pickUpCone(PoleHeight ph) {
@@ -238,7 +240,17 @@ public class NessieAuto extends LinearOpMode {
         telemetry.addData("Picking up Block", "");
         telemetry.update();
     }
+    
+    private void scoreCone(PoleHeight ph) {
+//         Step 4: Grab Block
+//         closeClaw();
+        sleep(2000);
 
+//         Step 5: Move Slide Pack Up
+//         moveSlidePack(SlidePackDirection.UP, -getDrivePower(SlidePackPower), convertPoleHeightToMs(ph));
+        telemetry.addData("Scoring Block", "");
+        telemetry.update();
+    }
     
     private void openClaw() {
         GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberLReleasePosition);
@@ -644,7 +656,6 @@ public class NessieAuto extends LinearOpMode {
             telemetry.addData("yellow", colors[0]);
             telemetry.addData("green", colors[1]);
             telemetry.addData("black", colors[2]);
-            sleep(30000);
             telemetry.update();
             for (int i = 0; i < startingIndexes.length; i++)
                 telemetry.addData("startingIndexes[i]", startingIndexes[i]);
