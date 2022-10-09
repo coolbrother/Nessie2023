@@ -183,32 +183,110 @@ public class NessieAuto extends LinearOpMode {
         boolean needInvert = (position != StartingPositionEnum.LEFT);
 
         // Step 0: Forward
-        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 650);
-        telemetry.addData("Forward move", "");
+        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 100);
+        telemetry.addData("Forward", "");
         telemetry.update();
         sleep(500);
         
         // Step 1: Strafe Right
+        strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 650);
+        telemetry.addData("Strafe Right", "");
+        telemetry.update();
+        sleep(500);
+        
         // Step 1.1: Turn Left
+        drive(DriveDirection.LEFT, getDrivePower(DrivePower), 650);
+        telemetry.addData("Turn Left", "");
+        telemetry.update();
+        sleep(500);
+        
         // Step 1.2: Strafe Left
+        strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 650);
+        telemetry.addData("Strafe Left", "");
+        telemetry.update();
+        sleep(500);
+        
         // Step 2: Strafe Right
-        // for (int i = 0; i < 4; i++) {
-            // Step 3: Forward
-            // Step 3.5: Pick Up Block
-            // Step 4: Backward
-            // Step 5: Strafe Left
-            // Step 5.5: Score Cone
-            // Step 6: Strafe Right
-        // }
+        strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 650);
+        telemetry.addData("Strafe Right", "");
+        telemetry.update();
+        sleep(500);
+        
+        for (int i = 0; i < 4; i++) {
+//             Step 3: Forward
+            drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 650);
+            telemetry.addData("Forward", "");
+            telemetry.update();
+            sleep(500);
+//             Step 3.5: Pick Up Block
+            pickUpCone(PoleHeight.MEDIUM);
+            telemetry.addData("Pick Up Block", "");
+            telemetry.update();
+            sleep(500);
+//             Step 4: Backward
+            drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 650);
+            telemetry.addData("Backward", "");
+            telemetry.update();
+            sleep(500);
+//             Step 5: Strafe Left
+            strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 650);
+            telemetry.addData("Strafe Left", "");
+            telemetry.update();
+            sleep(500);
+//             Step 5.5: Score Cone
+            scoreCone(PoleHeight.MEDIUM);
+            telemetry.addData("Score Cone", "");
+            telemetry.update();
+            sleep(500);
+//             Step 6: Strafe Right
+            strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 650);
+            telemetry.addData("Strafe Right", "");
+            telemetry.update();
+            sleep(500);
+        }
+    //  Step 3: Forward
+        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 650);
+        telemetry.addData("Forward", "");
+        telemetry.update();
+        sleep(500);
+//      Step 3.5: Pick Up Block
+        pickUpCone(PoleHeight.MEDIUM);
+        telemetry.addData("Pick Up Block", "");
+        telemetry.update();
+        sleep(500);
         // Step 7: Backward
+        drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 650);
+        telemetry.addData("Backward", "");
+        telemetry.update();
+        sleep(500);
         // Step 8: Strafe Left
+        strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 650);
+        telemetry.addData("Strafe Left", "");
+        telemetry.update();
+        sleep(500);
         // Step 8.5: Score Cone
+        scoreCone(PoleHeight.MEDIUM);
+        telemetry.addData("Score Cone", "");
+        telemetry.update();
+        sleep(500);
         // Step 9: Strafe Left
+        strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 650);
+        telemetry.addData("Strafe Left", "");
+        telemetry.update();
+        sleep(500);
         // Step 10: Move To Correct Parking Space
         switch (ps) {
             case UNO:
+                drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 650);
+                telemetry.addData("Move To Correct Parking Space", "");
+                telemetry.update();
+                sleep(500);
                 return;
             case TRES:
+                drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 650);
+                telemetry.addData("Move To Correct Parking Space", "");
+                telemetry.update();
+                sleep(500);
                 return;
             default:
                 return;
