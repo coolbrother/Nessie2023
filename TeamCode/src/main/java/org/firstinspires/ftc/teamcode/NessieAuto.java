@@ -64,7 +64,7 @@ public class NessieAuto extends LinearOpMode {
     
     enum PoleHeight {
         HIGH,
-        MIDDLE,
+        MEDIUM,
         LOW,
         GROUND
     }
@@ -115,9 +115,9 @@ public class NessieAuto extends LinearOpMode {
         // VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
 
         FLMotor.setDirection(DcMotor.Direction.REVERSE);
-        FRMotor.setDirection(DcMotor.Direction.FORWARD);
+        FRMotor.setDirection(DcMotor.Direction.REVERSE);
         BLMotor.setDirection(DcMotor.Direction.REVERSE);
-        BRMotor.setDirection(DcMotor.Direction.FORWARD);
+        BRMotor.setDirection(DcMotor.Direction.REVERSE);
         // Flywheel.setDirection(DcMotor.Direction.FORWARD);
         // GrabberL.setDirection(CRServo.Direction.FORWARD);
         // GrabberR.setDirection(CRServo.Direction.REVERSE);
@@ -144,7 +144,7 @@ public class NessieAuto extends LinearOpMode {
         telemetry.addData("Mode", "waiting for start");
         telemetry.update();
 
-        boolean isCameraReady = getCameraReady();
+        boolean isCameraReady = true; //getCameraReady();
 
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
@@ -161,7 +161,7 @@ public class NessieAuto extends LinearOpMode {
         eTime.reset();
 
         if (isCameraReady) {
-            parkingSpace = getCameraReading();
+            parkingSpace = ParkingSpace.UNO; //getCameraReading();
         }
 
         telemetry.addData("parkingSpace", parkingSpace);
@@ -183,114 +183,114 @@ public class NessieAuto extends LinearOpMode {
         boolean needInvert = (position != StartingPositionEnum.LEFT);
 
         // Step 0: Forward
-        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 100);
-        telemetry.addData("Forward", "");
-        telemetry.update();
-        sleep(500);
+        // drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 200);
+        // telemetry.addData("Forward", "");
+        // telemetry.update();
+        // sleep(500);
         
         // Step 1: Strafe Right
-        strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 650);
-        telemetry.addData("Strafe Right", "");
-        telemetry.update();
-        sleep(500);
+        // strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 800);
+        // telemetry.addData("Strafe Right", "");
+        // telemetry.update();
+        // sleep(500);
         
         // Step 1.1: Turn Left
-        drive(DriveDirection.LEFT, getDrivePower(DrivePower), 650);
-        telemetry.addData("Turn Left", "");
-        telemetry.update();
-        sleep(500);
+        // drive(DriveDirection.LEFT, getDrivePower(DrivePower), 500);
+        // telemetry.addData("Turn Left", "");
+        // telemetry.update();
+        // sleep(500);
         
         // Step 1.2: Strafe Left
-        strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 650);
-        telemetry.addData("Strafe Left", "");
-        telemetry.update();
-        sleep(500);
+        // strafe(DriveDirection.LEFT, 0.4 * getDrivePower(DrivePower), 800);
+        // telemetry.addData("Strafe Left", "");
+        // telemetry.update();
+        // sleep(500);
         
         // Step 2: Strafe Right
-        strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 650);
-        telemetry.addData("Strafe Right", "");
-        telemetry.update();
-        sleep(500);
+        // strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 1500);
+        // telemetry.addData("Strafe Right", "");
+        // telemetry.update();
+        // sleep(500);
         
-        for (int i = 0; i < 4; i++) {
+//         for (int i = 0; i < 4; i++) {
 //             Step 3: Forward
-            drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 650);
-            telemetry.addData("Forward", "");
-            telemetry.update();
-            sleep(500);
+            // drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1000);
+            // telemetry.addData("Forward", "");
+            // telemetry.update();
+            // sleep(500);
 //             Step 3.5: Pick Up Block
-            pickUpCone(PoleHeight.MEDIUM);
-            telemetry.addData("Pick Up Block", "");
-            telemetry.update();
-            sleep(500);
+            // pickUpCone(PoleHeight.MEDIUM);
+            // telemetry.addData("Pick Up Block", "");
+            // telemetry.update();
+            // sleep(500);
 //             Step 4: Backward
-            drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 650);
-            telemetry.addData("Backward", "");
-            telemetry.update();
-            sleep(500);
+            // drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
+            // telemetry.addData("Backward", "");
+            // telemetry.update();
+            // sleep(500);
 //             Step 5: Strafe Left
-            strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 650);
-            telemetry.addData("Strafe Left", "");
-            telemetry.update();
-            sleep(500);
+            // strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
+            // telemetry.addData("Strafe Left", "");
+            // telemetry.update();
+            // sleep(500);
 //             Step 5.5: Score Cone
-            scoreCone(PoleHeight.MEDIUM);
-            telemetry.addData("Score Cone", "");
-            telemetry.update();
-            sleep(500);
+            // scoreCone(PoleHeight.MEDIUM);
+            // telemetry.addData("Score Cone", "");
+            // telemetry.update();
+            // sleep(500);
 //             Step 6: Strafe Right
-            strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 650);
-            telemetry.addData("Strafe Right", "");
-            telemetry.update();
-            sleep(500);
-        }
-    //  Step 3: Forward
-        drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 650);
-        telemetry.addData("Forward", "");
-        telemetry.update();
-        sleep(500);
-//      Step 3.5: Pick Up Block
-        pickUpCone(PoleHeight.MEDIUM);
-        telemetry.addData("Pick Up Block", "");
-        telemetry.update();
-        sleep(500);
-        // Step 7: Backward
-        drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 650);
-        telemetry.addData("Backward", "");
-        telemetry.update();
-        sleep(500);
-        // Step 8: Strafe Left
-        strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 650);
-        telemetry.addData("Strafe Left", "");
-        telemetry.update();
-        sleep(500);
-        // Step 8.5: Score Cone
-        scoreCone(PoleHeight.MEDIUM);
-        telemetry.addData("Score Cone", "");
-        telemetry.update();
-        sleep(500);
-        // Step 9: Strafe Left
-        strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 650);
-        telemetry.addData("Strafe Left", "");
-        telemetry.update();
-        sleep(500);
+            // strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 450);
+            // telemetry.addData("Strafe Right", "");
+            // telemetry.update();
+            // sleep(500);
+//         }
+//     //  Step 3: Forward
+//         drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1000);
+//         telemetry.addData("Forward", "");
+//         telemetry.update();
+//         sleep(500);
+// //      Step 3.5: Pick Up Block
+//         pickUpCone(PoleHeight.MEDIUM);
+//         telemetry.addData("Pick Up Block", "");
+//         telemetry.update();
+//         sleep(500);
+//         // Step 7: Backward
+        // drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 600);
+        // telemetry.addData("Backward", "");
+        // telemetry.update();
+        // sleep(500);
+//         // Step 8: Strafe Left
+//         strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
+//         telemetry.addData("Strafe Left", "");
+//         telemetry.update();
+//         sleep(500);
+//         // Step 8.5: Score Cone
+//         scoreCone(PoleHeight.MEDIUM);
+//         telemetry.addData("Score Cone", "");
+//         telemetry.update();
+//         sleep(500);
+//         // Step 9: Strafe Left
+//         strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
+//         telemetry.addData("Strafe Left", "");
+//         telemetry.update();
+//         sleep(500);
         // Step 10: Move To Correct Parking Space
-        switch (ps) {
-            case UNO:
-                drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 650);
-                telemetry.addData("Move To Correct Parking Space", "");
-                telemetry.update();
-                sleep(500);
-                return;
-            case TRES:
-                drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 650);
-                telemetry.addData("Move To Correct Parking Space", "");
-                telemetry.update();
-                sleep(500);
-                return;
-            default:
-                return;
-        }
+//         switch (ps) {
+//             case UNO:
+                // drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
+                // telemetry.addData("Move To Correct Parking Space", "");
+                // telemetry.update();
+                // sleep(500);
+                // return;
+//             case TRES:
+//                 drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 600);
+//                 telemetry.addData("Move To Correct Parking Space", "");
+//                 telemetry.update();
+//                 sleep(500);
+//                 return;
+//             default:
+//                 return;
+//         }
     }
 
     private DriveDirection getCorrectDirection(DriveDirection direction, boolean needInvert) {
@@ -322,7 +322,7 @@ public class NessieAuto extends LinearOpMode {
         switch (ph) {
             case HIGH:
                 return 930;
-            case MIDDLE:
+            case MEDIUM:
                 return 610;
             case LOW:
                 return 290;
@@ -442,9 +442,9 @@ public class NessieAuto extends LinearOpMode {
         switch (driveDirection) {
             case LEFT:
                 while(opModeIsActive() && eTime.milliseconds() < time){
-                    FLMotor.setPower(power);
+                    FLMotor.setPower(-power);
                     FRMotor.setPower(power);
-                    BLMotor.setPower(-power);
+                    BLMotor.setPower(power);
                     BRMotor.setPower(-power);
                     telemetry.addData("Time:", eTime);
                     telemetry.update();
@@ -452,9 +452,9 @@ public class NessieAuto extends LinearOpMode {
                 break;
             case RIGHT:
                 while(opModeIsActive() && eTime.milliseconds() < time){
-                    FLMotor.setPower(-power);
+                    FLMotor.setPower(power);
                     FRMotor.setPower(-power);
-                    BLMotor.setPower(power);
+                    BLMotor.setPower(-power);
                     BRMotor.setPower(power);
                     telemetry.addData("Time:", eTime);
                     telemetry.update();
