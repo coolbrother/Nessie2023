@@ -80,6 +80,7 @@ public class NessieAuto extends LinearOpMode {
     private final double GrabberRReleasePosition = 0.24;
     private final boolean useRegularFunctions = false;
     private ParkingSpace parkingSpace = ParkingSpace.UNO;
+    private PoleHeight CurrentPoleHeight = PoleHeight.GROUND;
 
     private DcMotor FLMotor;
     private DcMotor FRMotor;
@@ -365,19 +366,33 @@ public class NessieAuto extends LinearOpMode {
 
         return invertedDirection;
     }
+    
+    private void moveSlidePackToPosition(PoleHeight curPoleHeight, PoleHeight targetPoleHeight) {
+        int timeToMove = getMoveTimeOfSlidePack(curPoleHeight, targetPoleHeight);
+        // if (timeToMove >= 0)
+        // moveSlidePack(SlidePackDirection.UP, -getDrivePower(SlidePackPower), timeToMove);
+        // else
+        // moveSlidePack(SlidePackDirection.DOWN, -getDrivePower(SlidePackPower), timeToMove);
+        telemetry.addData("Moving To", targetPoleHeight);
+        telemetry.update();
+    }
+    
+    private int getMoveTimeOfSlidePack(PoleHeight curPoleHeight, PoleHeight targetPoleHeight) {
+        return convertPoleHeightToMs(targetPoleHeight) - convertPoleHeightToMs(curPoleHeight);
+    }
 
     private int convertPoleHeightToMs(PoleHeight ph) {
         switch (ph) {
             case HIGH:
-                return 930;
+                return 400;
             case MEDIUM:
-                return 610;
+                return 300;
             case LOW:
-                return 290;
+                return 200;
             case GROUND:
                 return 100;
             default:
-                return 290;
+                return 0;
         }
     }
     
