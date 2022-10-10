@@ -78,7 +78,7 @@ public class NessieAuto extends LinearOpMode {
     private final double GrabberLReleasePosition = 0.64;
     private final double GrabberRGrabPosition = 0.55;
     private final double GrabberRReleasePosition = 0.24;
-    private final boolean useRegularFunctions = true;
+    private final boolean useRegularFunctions = false;
     private ParkingSpace parkingSpace = ParkingSpace.UNO;
 
     private DcMotor FLMotor;
@@ -186,44 +186,46 @@ public class NessieAuto extends LinearOpMode {
         // Step 0: Forward
         // if (useRegularFunctions)
         //     drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 200);
-        // else
-        //     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 0.5);
+        // else {
+        //     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 0.3);
+        //     telemetry.addData("Tile Functions", "");
+        // }
         // telemetry.addData("Forward", "");
         // telemetry.update();
         // sleep(500);
         
         // Step 1: Strafe Right
         // if (useRegularFunctions)
-        // strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 800);
+        //     strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 800);
         // else
-        // strafeTiles(DriveDirection.RIGHT, getDrivePower(DrivePower), 1);
+        //     strafeTiles(DriveDirection.RIGHT, getDrivePower(DrivePower), 1);
         // telemetry.addData("Strafe Right", "");
         // telemetry.update();
         // sleep(500);
         
         // Step 1.1: Turn Left
         // if (useRegularFunctions)
-        // drive(DriveDirection.LEFT, getDrivePower(DrivePower), 500);
+        //     drive(DriveDirection.LEFT, getDrivePower(DrivePower), 500);
         // else
-        // turn(DriveDirection.LEFT, getDrivePower(DrivePower), 1);
+        //     turn(DriveDirection.LEFT, getDrivePower(DrivePower), 1);
         // telemetry.addData("Turn Left", "");
         // telemetry.update();
         // sleep(500);
         
         // Step 1.2: Strafe Left
         // if (useRegularFunctions)
-        // strafe(DriveDirection.LEFT, 0.4 * getDrivePower(DrivePower), 800);
+        //     strafe(DriveDirection.LEFT, 0.4 * getDrivePower(DrivePower), 800);
         // else
-        // strafeTiles(DriveDirection.LEFT, 0.4 * getDrivePower(DrivePower), 0.5);
+        //     strafeTiles(DriveDirection.LEFT, 0.4 * getDrivePower(DrivePower), 1.5);
         // telemetry.addData("Strafe Left", "");
         // telemetry.update();
         // sleep(500);
         
         // Step 2: Strafe Right
         // if (useRegularFunctions)
-        // strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 1500);
+        //     strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 1500);
         // else
-        // strafeTiles(DriveDirection.RIGHT, getDrivePower(DrivePower), 2.5);
+        //     strafeTiles(DriveDirection.RIGHT, getDrivePower(DrivePower), 2);
         // telemetry.addData("Strafe Right", "");
         // telemetry.update();
         // sleep(500);
@@ -231,9 +233,9 @@ public class NessieAuto extends LinearOpMode {
 //         for (int i = 0; i < 4; i++) {
 //             Step 3: Forward
             // if (useRegularFunctions)
-            // drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1000);
+            //     drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1000);
             // else
-            // driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 2);
+            //     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 2);
             // telemetry.addData("Forward", "");
             // telemetry.update();
             // sleep(500);
@@ -244,17 +246,17 @@ public class NessieAuto extends LinearOpMode {
             // sleep(500);
 //             Step 4: Backward
             // if (useRegularFunctions)
-            // drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
+            //     drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
             // else
-            // driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower), 2);
+            //     driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower), 2);
             // telemetry.addData("Backward", "");
             // telemetry.update();
             // sleep(500);
 //             Step 5: Strafe Left
             // if (useRegularFunctions)
-            // strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
+            //     strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
             // else
-            // strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower), 0.5);
+            //     strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower), 0.5);
             // telemetry.addData("Strafe Left", "");
             // telemetry.update();
             // sleep(500);
@@ -265,18 +267,18 @@ public class NessieAuto extends LinearOpMode {
             // sleep(500);
 //             Step 6: Strafe Right
             // if (useRegularFunctions)
-            // strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 450);
+            //     strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 450);
             // else
-            // strafeTiles(DriveDirection.RIGHT, getDrivePower(DrivePower), 0.5);
+            //     strafeTiles(DriveDirection.RIGHT, getDrivePower(DrivePower), 0.5);
             // telemetry.addData("Strafe Right", "");
             // telemetry.update();
             // sleep(500);
 //         }
 //     //  Step 3: Forward
-        // if (useRegularFunctions)
-//         drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1000);
-           // else
-        // driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 2);
+            // if (useRegularFunctions)
+            //     drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1000);
+            // else
+            //     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 2);
 //         telemetry.addData("Forward", "");
 //         telemetry.update();
 //         sleep(500);
@@ -287,20 +289,20 @@ public class NessieAuto extends LinearOpMode {
 //         sleep(500);
 //         // Step 7: Backward
         // if (useRegularFunctions)
-        // drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 600);
+        //     drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 600);
         // else
-        // driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1);
+        //     driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1);
         // telemetry.addData("Backward", "");
         // telemetry.update();
         // sleep(500);
 //         // Step 8: Strafe Left
-           // if (useRegularFunctions)
-//         strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
-           // else
-//         strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower), 0.5);
-//         telemetry.addData("Strafe Left", "");
-//         telemetry.update();
-//         sleep(500);
+            // if (useRegularFunctions)
+            //     strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
+            // else
+            //     strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower), 0.5);
+            // telemetry.addData("Strafe Left", "");
+            // telemetry.update();
+            // sleep(500);
 //         // Step 8.5: Score Cone
 //         scoreCone(PoleHeight.MEDIUM);
 //         telemetry.addData("Score Cone", "");
@@ -308,9 +310,9 @@ public class NessieAuto extends LinearOpMode {
 //         sleep(500);
 //         // Step 9: Strafe Left
 //         if (useRegularFunctions)
-//         strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
+//              strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
 //         else
-//         strafeTiles(DriveDirection.RIGHT, getDrivePower(DrivePower), 0.5);
+//              strafeTiles(DriveDirection.RIGHT, getDrivePower(DrivePower), 0.5);
 //         telemetry.addData("Strafe Left", "");
 //         telemetry.update();
 //         sleep(500);
@@ -318,22 +320,22 @@ public class NessieAuto extends LinearOpMode {
 //         switch (ps) {
 //             case UNO:
                 // if (useRegularFunctions)
-                // drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
+                //      drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
                 // else
-                // driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 1);
+                //      driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 1);
                 // telemetry.addData("Move To Correct Parking Space", "");
                 // telemetry.update();
                 // sleep(500);
                 // return;
 //             case TRES:
-                    // if (useRegularFunctions)
-//                 drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 600);
-                    // else
-                // driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1);
-//                 telemetry.addData("Move To Correct Parking Space", "");
-//                 telemetry.update();
-//                 sleep(500);
-//                 return;
+                // if (useRegularFunctions)
+                //     drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 600);
+                // else
+                //     driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1);
+                // telemetry.addData("Move To Correct Parking Space", "");
+                // telemetry.update();
+                // sleep(500);
+                // return;
 //             default:
 //                 return;
 //         }
