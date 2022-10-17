@@ -61,7 +61,8 @@ public class NessieTeleop extends LinearOpMode {
     private DcMotor BRMotor;
     private DcMotor Flywheel;
     private CRServo GrabberL;
-    private CRServo GrabberR;
+    private Servo GrabberR;
+    private CRServo Spinner;
     private DcMotor VerticalSlidePack;
     private double drive;
     private double turn;
@@ -69,10 +70,10 @@ public class NessieTeleop extends LinearOpMode {
     private final double SlidePackSpeed = 0.5;
 //     private final double GrabberLGrabPosition = 0.2;
 //     private final double GrabberLReleasePosition = 0.4;
-    private final double GrabberRGrabPosition = 0.55;
-    private final double GrabberRReleasePosition = 0.24;
-    private final double SpinnerForwardPosition = 0.2;
-    private final double SpinnerBackwardPosition = 0.8;
+    private final double GrabberRGrabPosition = 1.0;
+    private final double GrabberRReleasePosition = 0.8;
+    private final double SpinnerForwardPosition = 0.9;
+    private final double SpinnerBackwardPosition = 0.2;
     private PoleHeight CurrentPoleHeight = PoleHeight.GROUND;
 
     @Override
@@ -85,7 +86,7 @@ public class NessieTeleop extends LinearOpMode {
         BRMotor = hardwareMap.dcMotor.get("3");
 //         Flywheel = hardwareMap.dcMotor.get("Fly");
 //         GrabberL = hardwareMap.crservo.get("GL");
-        GrabberR = hardwareMap.crservo.get("GR");
+        GrabberR = hardwareMap.servo.get("GR");
         Spinner = hardwareMap.crservo.get("SP");
 //        GrabberL = hardwareMap.crservo.get("GL");
 //        GrabberR = hardwareMap.crservo.get("GR");
@@ -101,7 +102,7 @@ public class NessieTeleop extends LinearOpMode {
         BRMotor.setDirection(DcMotor.Direction.REVERSE);
 //         Flywheel.setDirection(DcMotor.Direction.FORWARD);
 //         GrabberL.setDirection(CRServo.Direction.FORWARD);
-        GrabberR.setDirection(CRServo.Direction.FORWARD);
+        GrabberR.setDirection(Servo.Direction.FORWARD);
         Spinner.setDirection(CRServo.Direction.FORWARD);
 //        HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
         VerticalSlidePack.setDirection(DcMotor.Direction.REVERSE);
@@ -163,15 +164,15 @@ public class NessieTeleop extends LinearOpMode {
 //            double VerticalSlidePackBackward = gamepad2.dpad_down ? -1 : 0;
             boolean GrabberIn = gamepad2.a;
             boolean GrabberOut = gamepad2.b;
-            boolean SpinnerForward = gamepad2.right_stick_y;
-            boolean GroundSlidePack = gamepad2.dpad_down;
-            boolean LowSlidePack = gamepad2.dpad_left;
-            boolean MediumSlidePack = gamepad2.dpad_right;
+            double SpinnerForward = gamepad2.right_stick_y;
+            boolean GroundPoleHeight = gamepad2.dpad_down;
+            boolean LowPoleHeight = gamepad2.dpad_left;
+            boolean MediumPoleHeight = gamepad2.dpad_right;
             boolean HighPoleHeight = gamepad2.dpad_up;
 
             if (GrabberIn || GrabberOut) {
 //                 GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn ? GrabberLGrabPosition : GrabberLReleasePosition);
-                GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberIn ? GrabberRGrabPosition : GrabberRReleasePosition);
+                GrabberR.setPosition(GrabberIn ? GrabberRGrabPosition : GrabberRReleasePosition);
             }
             
             if (SpinnerForward != 0) {
@@ -182,13 +183,13 @@ public class NessieTeleop extends LinearOpMode {
                 // || VerticalSlidePack.getCurrentPosition() < VSP_MIN_POSITION) {
                 VerticalSlidePack.setPower(VerticalSlidePackForward);
             // }
-            if (GroundSlidePack)
+            if (GroundPoleHeight)
                 moveSlidePackToPosition(CurrentPoleHeight, PoleHeight.GROUND);
-            else if (LowSlidePack)
+            else if (LowPoleHeight)
                 moveSlidePackToPosition(CurrentPoleHeight, PoleHeight.LOW);
-            else if (MediumSlidePack)
+            else if (MediumPoleHeight)
                 moveSlidePackToPosition(CurrentPoleHeight, PoleHeight.MEDIUM);
-            else if (HighSlidePack)
+            else if (HighPoleHeight)
                 moveSlidePackToPosition(CurrentPoleHeight, PoleHeight.HIGH);
 
             if (LeftStrafe == 0 && RightStrafe == 0) {
@@ -232,8 +233,9 @@ public class NessieTeleop extends LinearOpMode {
             telemetry.addData("VerticalSlidePackPosition", VerticalSlidePack.getCurrentPosition());
             telemetry.addData("GrabberIn", GrabberIn);
             telemetry.addData("GrabberOut", GrabberOut);
-            telemetry.addData("GrabberLPosition", GrabberL.getController().getServoPosition(GrabberL.getPortNumber()));
-            // telemetry.addData("GrabberRPosition", GrabberR.getController().getServoPosition(GrabberR.getPortNumber()));
+            // telemetry.addData("GrabberLPosition", GrabberL.getController().getServoPosition(GrabberL.getPortNumber()));
+            telemetry.addData("GrabberRPosition", GrabberR.getController().getServoPosition(GrabberR.getPortNumber()));
+            telemetry.addData("SpinnerPosition", Spinner.getController().getServoPosition(Spinner.getPortNumber()));
             telemetry.update();
         }
     }
