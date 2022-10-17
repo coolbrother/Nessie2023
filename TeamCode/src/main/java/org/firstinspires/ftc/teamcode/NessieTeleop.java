@@ -67,10 +67,12 @@ public class NessieTeleop extends LinearOpMode {
     private double turn;
     private final double DriveSpeed = 0.9;
     private final double SlidePackSpeed = 0.5;
-    private final double GrabberLGrabPosition = 0.2;
-    private final double GrabberLReleasePosition = 0.4;
-    // private final double GrabberRGrabPosition = 0.55;
-    // private final double GrabberRReleasePosition = 0.24;
+//     private final double GrabberLGrabPosition = 0.2;
+//     private final double GrabberLReleasePosition = 0.4;
+    private final double GrabberRGrabPosition = 0.55;
+    private final double GrabberRReleasePosition = 0.24;
+    private final double SpinnerForwardPosition = 0.2;
+    private final double SpinnerBackwardPosition = 0.8;
     private PoleHeight CurrentPoleHeight = PoleHeight.GROUND;
 
     @Override
@@ -82,8 +84,9 @@ public class NessieTeleop extends LinearOpMode {
         BLMotor = hardwareMap.dcMotor.get("2");
         BRMotor = hardwareMap.dcMotor.get("3");
 //         Flywheel = hardwareMap.dcMotor.get("Fly");
-        GrabberL = hardwareMap.crservo.get("GL");
-        // GrabberR = hardwareMap.crservo.get("GR");
+//         GrabberL = hardwareMap.crservo.get("GL");
+        GrabberR = hardwareMap.crservo.get("GR");
+        Spinner = hardwareMap.crservo.get("SP");
 //        GrabberL = hardwareMap.crservo.get("GL");
 //        GrabberR = hardwareMap.crservo.get("GR");
 //        DcMotor HorizontalSlidePack = hardwareMap.dcMotor.get("HorizontalSlidePack");
@@ -97,8 +100,9 @@ public class NessieTeleop extends LinearOpMode {
         BLMotor.setDirection(DcMotor.Direction.FORWARD);
         BRMotor.setDirection(DcMotor.Direction.REVERSE);
 //         Flywheel.setDirection(DcMotor.Direction.FORWARD);
-        GrabberL.setDirection(CRServo.Direction.FORWARD);
-        // GrabberR.setDirection(CRServo.Direction.FORWARD);
+//         GrabberL.setDirection(CRServo.Direction.FORWARD);
+        GrabberR.setDirection(CRServo.Direction.FORWARD);
+        Spinner.setDirection(CRServo.Direction.FORWARD);
 //        HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
         VerticalSlidePack.setDirection(DcMotor.Direction.REVERSE);
 //        EaterMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -159,19 +163,24 @@ public class NessieTeleop extends LinearOpMode {
 //            double VerticalSlidePackBackward = gamepad2.dpad_down ? -1 : 0;
             boolean GrabberIn = gamepad2.a;
             boolean GrabberOut = gamepad2.b;
+            boolean SpinnerForward = gamepad2.right_stick_y;
             boolean GroundSlidePack = gamepad2.dpad_down;
             boolean LowSlidePack = gamepad2.dpad_left;
             boolean MediumSlidePack = gamepad2.dpad_right;
             boolean HighPoleHeight = gamepad2.dpad_up;
 
             if (GrabberIn || GrabberOut) {
-                GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn ? GrabberLGrabPosition : GrabberLReleasePosition);
-            //     GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberIn ? GrabberRGrabPosition : GrabberRReleasePosition);
+//                 GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn ? GrabberLGrabPosition : GrabberLReleasePosition);
+                GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberIn ? GrabberRGrabPosition : GrabberRReleasePosition);
+            }
+            
+            if (SpinnerForward != 0) {
+                Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerForward > 0 ? SpinnerForwardPosition : SpinnerBackwardPosition);
             }
             
             // if (VerticalSlidePack.getCurrentPosition() > VSP_MAX_POSITION
                 // || VerticalSlidePack.getCurrentPosition() < VSP_MIN_POSITION) {
-//                 VerticalSlidePack.setPower(VerticalSlidePackForward);
+                VerticalSlidePack.setPower(VerticalSlidePackForward);
             // }
             if (GroundSlidePack)
                 moveSlidePackToPosition(CurrentPoleHeight, PoleHeight.GROUND);
