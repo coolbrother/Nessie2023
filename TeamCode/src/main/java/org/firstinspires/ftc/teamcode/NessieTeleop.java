@@ -70,10 +70,10 @@ public class NessieTeleop extends LinearOpMode {
     private final double SlidePackSpeed = 0.5;
 //     private final double GrabberLGrabPosition = 0.2;
 //     private final double GrabberLReleasePosition = 0.4;
-    private final double GrabberRGrabPosition = 1.0;
-    private final double GrabberRReleasePosition = 0.8;
-    private final double SpinnerForwardPosition = 0.9;
-    private final double SpinnerBackwardPosition = 0.2;
+    private final double GrabberRGrabPosition = 0.23;
+    private final double GrabberRReleasePosition = 0.0;
+    private final double SpinnerForwardPosition = 0.91;
+    private final double SpinnerBackwardPosition = 0.25;
     private PoleHeight CurrentPoleHeight = PoleHeight.GROUND;
 
     @Override
@@ -92,7 +92,9 @@ public class NessieTeleop extends LinearOpMode {
 //        GrabberR = hardwareMap.crservo.get("GR");
 //        DcMotor HorizontalSlidePack = hardwareMap.dcMotor.get("HorizontalSlidePack");
         VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
-        // VerticalSlidePack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // VerticalSlidePack.setTargetPosition(0);
+        // VerticalSlidePack.setPower(0.3);
+        // VerticalSlidePack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        DcMotor EaterMotor = hardwareMap.dcMotor.get("Eater");
 
         // Set Directions
@@ -169,6 +171,9 @@ public class NessieTeleop extends LinearOpMode {
             boolean LowPoleHeight = gamepad2.dpad_left;
             boolean MediumPoleHeight = gamepad2.dpad_right;
             boolean HighPoleHeight = gamepad2.dpad_up;
+            
+            if (HighPoleHeight)
+                VerticalSlidePack.setTargetPosition(20);
 
             if (GrabberIn || GrabberOut) {
 //                 GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn ? GrabberLGrabPosition : GrabberLReleasePosition);
@@ -233,6 +238,10 @@ public class NessieTeleop extends LinearOpMode {
             telemetry.addData("VerticalSlidePackPosition", VerticalSlidePack.getCurrentPosition());
             telemetry.addData("GrabberIn", GrabberIn);
             telemetry.addData("GrabberOut", GrabberOut);
+            telemetry.addData("GroundPoleHeight", GroundPoleHeight);
+            telemetry.addData("LowPoleHeight", LowPoleHeight);
+            telemetry.addData("MediumPoleHeight", MediumPoleHeight);
+            telemetry.addData("HighPoleHeight", HighPoleHeight);
             // telemetry.addData("GrabberLPosition", GrabberL.getController().getServoPosition(GrabberL.getPortNumber()));
             telemetry.addData("GrabberRPosition", GrabberR.getController().getServoPosition(GrabberR.getPortNumber()));
             telemetry.addData("SpinnerPosition", Spinner.getController().getServoPosition(Spinner.getPortNumber()));
