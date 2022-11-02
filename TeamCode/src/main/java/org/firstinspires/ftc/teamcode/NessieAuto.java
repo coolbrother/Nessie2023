@@ -88,7 +88,7 @@ public class NessieAuto extends LinearOpMode {
     private DcMotor BRMotor;
     private DcMotor Flywheel;
     private CRServo GrabberL;
-    private CRServo GrabberR;
+    private Servo GrabberR;
     private DcMotor VerticalSlidePack;
     // private DcMotor HorizontalSlidePack;
     // private DcMotor VerticalSlidePack;
@@ -113,8 +113,8 @@ public class NessieAuto extends LinearOpMode {
         BRMotor = hardwareMap.dcMotor.get("3");
         // Flywheel = hardwareMap.dcMotor.get("Fly");
         // GrabberL = hardwareMap.crservo.get("GL");
-        // GrabberR = hardwareMap.crservo.get("GR");
-        // VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
+        GrabberR = hardwareMap.servo.get("GR");
+        VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
 
         FLMotor.setDirection(DcMotor.Direction.FORWARD);
         FRMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -122,8 +122,8 @@ public class NessieAuto extends LinearOpMode {
         BRMotor.setDirection(DcMotor.Direction.REVERSE);
         // Flywheel.setDirection(DcMotor.Direction.FORWARD);
         // GrabberL.setDirection(CRServo.Direction.FORWARD);
-        // GrabberR.setDirection(CRServo.Direction.REVERSE);
-        // VerticalSlidePack.setDirection(DcMotor.Direction.FORWARD);
+        GrabberR.setDirection(Servo.Direction.REVERSE);
+        VerticalSlidePack.setDirection(DcMotor.Direction.REVERSE);
 
         telemetry.addData("Status","Auto");
         telemetry.update();
@@ -134,7 +134,7 @@ public class NessieAuto extends LinearOpMode {
         FRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // VerticalSlidePack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        VerticalSlidePack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // FLMotor.setMode(DcMotor.RunMode.RUN);
         // BRMotor.setMode(DcMotor.RunMode.RUN);
@@ -183,7 +183,10 @@ public class NessieAuto extends LinearOpMode {
     
     private void doActions(StartingPositionEnum position, ParkingSpace ps) {
         boolean needInvert = (position != StartingPositionEnum.LEFT);
-
+        openClaw();
+        sleep(5000);
+        closeClaw();
+        sleep(10000);
         // Step 0: Forward
         if (useRegularFunctions)
             drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 200);
@@ -371,30 +374,38 @@ public class NessieAuto extends LinearOpMode {
         return invertedDirection;
     }
     
+    
     private void moveSlidePackToPosition(PoleHeight curPoleHeight, PoleHeight targetPoleHeight) {
         int timeToMove = getMoveTimeOfSlidePack(curPoleHeight, targetPoleHeight);
-        // if (timeToMove >= 0)
-        // moveSlidePack(SlidePackDirection.UP, -getDrivePower(SlidePackPower), timeToMove);
-        // else
-        // moveSlidePack(SlidePackDirection.DOWN, -getDrivePower(SlidePackPower), timeToMove);
+        // VerticalSlidePack.setTargetPosition(getMoveTimeOfSlidePack(curPoleHeight, targetPoleHeight));
+        // VerticalSlidePack.setPower(1);
+        if (timeToMove >= 0)
+            moveSlidePack(SlidePackDirection.UP, getDrivePower(SlidePackPower), timeToMove);
+        else {
+            timeToMove *= 0.8;
+            moveSlidePack(SlidePackDirection.DOWN, getDrivePower(SlidePackPower), -timeToMove);
+        }
+        CurrentPoleHeight = targetPoleHeight;
         telemetry.addData("Moving To", targetPoleHeight);
         telemetry.update();
     }
     
     private int getMoveTimeOfSlidePack(PoleHeight curPoleHeight, PoleHeight targetPoleHeight) {
+        telemetry.addData("target pole height", convertPoleHeightToMs(targetPoleHeight));
+        telemetry.addData("cur pole height", convertPoleHeightToMs(curPoleHeight));
         return convertPoleHeightToMs(targetPoleHeight) - convertPoleHeightToMs(curPoleHeight);
     }
 
     private int convertPoleHeightToMs(PoleHeight ph) {
         switch (ph) {
             case HIGH:
-                return 400;
+                return 3600;
             case MEDIUM:
-                return 300;
+                return 2400;
             case LOW:
-                return 200;
+                return 1200;
             case GROUND:
-                return 100;
+                return 0;
             default:
                 return 0;
         }
@@ -402,33 +413,33 @@ public class NessieAuto extends LinearOpMode {
     
     private void pickUpCone(PoleHeight ph) {
 //         Step 4: Grab Block
-//         closeClaw();
+        closeClaw();
         sleep(2000);
 
 //         Step 5: Move Slide Pack Up
-//         moveSlidePack(SlidePackDirection.UP, -getDrivePower(SlidePackPower), convertPoleHeightToMs(ph));
+        moveSlidePackToPosition(CurrentPoleHeight, ph);
         telemetry.addData("Picking up Block", "");
         telemetry.update();
     }
     
     private void scoreCone(PoleHeight ph) {
 //         Step 4: Grab Block
-//         closeClaw();
+        openClaw();
         sleep(2000);
 
-//         Step 5: Move Slide Pack Up
-//         moveSlidePack(SlidePackDirection.UP, -getDrivePower(SlidePackPower), convertPoleHeightToMs(ph));
+//         Step 5: Move Slide Pack DOWN
+        moveSlidePackToPosition(CurrentPoleHeight, ph);
         telemetry.addData("Scoring Block", "");
         telemetry.update();
     }
     
     private void openClaw() {
-        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberLReleasePosition);
+        // GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberLReleasePosition);
         GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberRReleasePosition);
     }
 
     private void closeClaw() {
-        GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberLGrabPosition);
+        // GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberLGrabPosition);
         GrabberR.getController().setServoPosition(GrabberR.getPortNumber(), GrabberRGrabPosition);
     }
 
