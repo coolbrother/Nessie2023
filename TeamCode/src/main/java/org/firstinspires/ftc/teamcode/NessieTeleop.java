@@ -31,6 +31,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -69,7 +70,7 @@ public class NessieTeleop extends LinearOpMode {
     private double drive;
     private double turn;
     private final double DriveSpeed = 0.9;
-    private final double SlidePackSpeed = 0.5;
+    private final double SlidePackSpeed = 0.7;
 //     private final double GrabberLGrabPosition = 0.2;
 //     private final double GrabberLReleasePosition = 0.4;
     private final double GrabberRGrabPosition = 0.23;
@@ -77,6 +78,8 @@ public class NessieTeleop extends LinearOpMode {
     private final double SpinnerForwardPosition = 0.91;
     private final double SpinnerBackwardPosition = 0.25;
     private PoleHeight CurrentPoleHeight = PoleHeight.GROUND;
+    private final double BATTERY_LEVEL = 1;
+    private ElapsedTime eTime = new ElapsedTime();
 
     @Override
     public void runOpMode () {
@@ -110,11 +113,13 @@ public class NessieTeleop extends LinearOpMode {
         Spinner.setDirection(CRServo.Direction.FORWARD);
 //        HorizontalSlidePack.setDirection(DcMotor.Direction.FORWARD);
         VerticalSlidePack.setDirection(DcMotor.Direction.REVERSE);
+        // VerticalSlidePack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        VerticalSlidePack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //        EaterMotor.setDirection(DcMotor.Direction.FORWARD);
-        VerticalSlidePack.setTargetPosition(0);
-        VerticalSlidePack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // VerticalSlidePack.setTargetPosition(0);
+        // VerticalSlidePack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         
-        VerticalSlidePack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // VerticalSlidePack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         
         // wait for the coach to press start
         waitForStart();
@@ -190,19 +195,18 @@ public class NessieTeleop extends LinearOpMode {
                 Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerForward > 0 ? SpinnerForwardPosition : SpinnerBackwardPosition);
             }
             
-            // if (VerticalSlidePack.getCurrentPosition() > VSP_MAX_POSITION
-                // || VerticalSlidePack.getCurrentPosition() < VSP_MIN_POSITION) {
-                // VerticalSlidePack.setPower(VerticalSlidePackForward);
-            // }
-            if (GroundPoleHeight)
+            if (GroundPoleHeight) {
                 moveSlidePackToPosition(CurrentPoleHeight, PoleHeight.GROUND);
-            else if (LowPoleHeight)
+            } else if (LowPoleHeight) {
                 moveSlidePackToPosition(CurrentPoleHeight, PoleHeight.LOW);
-            else if (MediumPoleHeight)
+            } else if (MediumPoleHeight) {
                 moveSlidePackToPosition(CurrentPoleHeight, PoleHeight.MEDIUM);
-            else if (HighPoleHeight)
+            } else if (HighPoleHeight) {
                 moveSlidePackToPosition(CurrentPoleHeight, PoleHeight.HIGH);
-
+            }
+            
+            VerticalSlidePack.setPower(VerticalSlidePackForward);
+            
             if (LeftStrafe == 0 && RightStrafe == 0) {
                 FLMotor.setPower(LeftDrive);
                 BLMotor.setPower(LeftDrive);
@@ -244,6 +248,7 @@ public class NessieTeleop extends LinearOpMode {
             telemetry.addData("VerticalSlidePackPosition", VerticalSlidePack.getCurrentPosition());
             telemetry.addData("GrabberIn", GrabberIn);
             telemetry.addData("GrabberOut", GrabberOut);
+            telemetry.addData("CurPolePosition", CurrentPoleHeight);
             telemetry.addData("GroundPoleHeight", GroundPoleHeight);
             telemetry.addData("LowPoleHeight", LowPoleHeight);
             telemetry.addData("MediumPoleHeight", MediumPoleHeight);
@@ -256,33 +261,60 @@ public class NessieTeleop extends LinearOpMode {
     }
     
     private void moveSlidePackToPosition(PoleHeight curPoleHeight, PoleHeight targetPoleHeight) {
-        // int timeToMove = getMoveTimeOfSlidePack(curPoleHeight, targetPoleHeight);
-        VerticalSlidePack.setTargetPosition(getMoveTimeOfSlidePack(curPoleHeight, targetPoleHeight));
-        VerticalSlidePack.setPower(1);
-        // if (timeToMove >= 0)
-        // moveSlidePack(SlidePackDirection.UP, -getDrivePower(SlidePackPower), timeToMove);
-        // else
-        // moveSlidePack(SlidePackDirection.DOWN, -getDrivePower(SlidePackPower), timeToMove);
+        int timeToMove = getMoveTimeOfSlidePack(curPoleHeight, targetPoleHeight);
+        // VerticalSlidePack.setTargetPosition(getMoveTimeOfSlidePack(curPoleHeight, targetPoleHeight));
+        // VerticalSlidePack.setPower(1);
+        if (timeToMove >= 0)
+            moveSlidePack(SlidePackDirection.UP, getDrivePower(SlidePackSpeed), timeToMove);
+        else {
+            timeToMove *= 0.8;
+            moveSlidePack(SlidePackDirection.DOWN, getDrivePower(SlidePackSpeed), -timeToMove);
+        }
+        CurrentPoleHeight = targetPoleHeight;
         telemetry.addData("Moving To", targetPoleHeight);
         telemetry.update();
     }
     
     private int getMoveTimeOfSlidePack(PoleHeight curPoleHeight, PoleHeight targetPoleHeight) {
-        return convertPoleHeightToMs(targetPoleHeight);// - convertPoleHeightToMs(curPoleHeight);
+        telemetry.addData("target pole height", convertPoleHeightToMs(targetPoleHeight));
+        telemetry.addData("cur pole height", convertPoleHeightToMs(curPoleHeight));
+        return convertPoleHeightToMs(targetPoleHeight) - convertPoleHeightToMs(curPoleHeight);
     }
 
     private int convertPoleHeightToMs(PoleHeight ph) {
         switch (ph) {
             case HIGH:
-                return 40;
+                return 3600;
             case MEDIUM:
-                return 30;
+                return 2400;
             case LOW:
-                return 20;
+                return 1200;
             case GROUND:
-                return 10;
+                return 0;
             default:
                 return 0;
         }
     }
+    
+    private double getDrivePower(double power) {
+        return power * (1 + (0.1 - BATTERY_LEVEL * 0.1));
+    }
+    
+    private void moveSlidePack(SlidePackDirection spd, double power, double time) {
+        eTime.reset();
+        switch(spd) {
+            case UP:
+                VerticalSlidePack.setPower(power);
+                break;
+            case DOWN:
+                VerticalSlidePack.setPower(-power);
+                break;
+        }
+        while(opModeIsActive() && eTime.milliseconds() < time){
+            telemetry.addData("Time:", eTime);
+            telemetry.update();
+        }
+        VerticalSlidePack.setPower(0);
+    }
+
 }
