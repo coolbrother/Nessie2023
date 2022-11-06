@@ -75,8 +75,8 @@ public class NessieTeleop extends LinearOpMode {
 //     private final double GrabberLReleasePosition = 0.4;
     private final double GrabberRGrabPosition = 0.23;
     private final double GrabberRReleasePosition = 0.0;
-    private final double SpinnerForwardPosition = 0.91;
-    private final double SpinnerBackwardPosition = 0.25;
+    private final double SpinnerForwardPosition = 0.25;
+    private final double SpinnerBackwardPosition = 0.91;
     private PoleHeight CurrentPoleHeight = PoleHeight.GROUND;
     private final double BATTERY_LEVEL = 1;
     private ElapsedTime eTime = new ElapsedTime();
@@ -177,7 +177,7 @@ public class NessieTeleop extends LinearOpMode {
 //            double VerticalSlidePackBackward = gamepad2.dpad_down ? -1 : 0;
             boolean GrabberIn = gamepad2.a;
             boolean GrabberOut = gamepad2.b;
-            double SpinnerForward = gamepad2.right_stick_y;
+            double SpinnerForward = -gamepad2.right_stick_y;
             boolean GroundPoleHeight = gamepad2.dpad_down;
             boolean LowPoleHeight = gamepad2.dpad_left;
             boolean MediumPoleHeight = gamepad2.dpad_right;
@@ -253,7 +253,7 @@ public class NessieTeleop extends LinearOpMode {
             telemetry.addData("LowPoleHeight", LowPoleHeight);
             telemetry.addData("MediumPoleHeight", MediumPoleHeight);
             telemetry.addData("HighPoleHeight", HighPoleHeight);
-            // telemetry.addData("GrabberLPosition", GrabberL.getController().getServoPosition(GrabberL.getPortNumber()));
+            telemetry.addData("SpinnerForward", SpinnerForward);
             telemetry.addData("GrabberRPosition", GrabberR.getController().getServoPosition(GrabberR.getPortNumber()));
             telemetry.addData("SpinnerPosition", Spinner.getController().getServoPosition(Spinner.getPortNumber()));
             telemetry.update();
