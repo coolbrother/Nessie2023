@@ -184,10 +184,11 @@ public class NessieAuto extends LinearOpMode {
             default:
                 break;
         }
+        // sleep(5000);
     }
     
     private void doActions(StartingPositionEnum position, ParkingSpace ps) {
-        ps = ParkingSpace.DOS;
+//         ps = ParkingSpace.UNO;
         boolean needInvert = (position != StartingPositionEnum.LEFT);
         closeClaw();
         sleep(500);
@@ -236,7 +237,7 @@ public class NessieAuto extends LinearOpMode {
         if (useRegularFunctions)
             strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 1500);
         else
-            strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower) * 0.5, 3.45);
+            strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower) * 0.5, 3.5);
         telemetry.addData("Strafe LEFT", "");
         telemetry.update();
         sleep(200);
@@ -251,7 +252,7 @@ public class NessieAuto extends LinearOpMode {
             driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.5, 0.4);
         }
         Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerForwardPosition);
-        sleep(1000);
+        sleep(1500);
 //             Step 2.7: Score Cone
         scoreCone();
         // if (i == 0) {
@@ -333,7 +334,7 @@ public class NessieAuto extends LinearOpMode {
             if (useRegularFunctions)
                 strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 450);
             else
-                strafeTiles(DriveDirection.RIGHT, getDrivePower(DrivePower) * 0.5, 1.15);
+                strafeTiles(DriveDirection.RIGHT, getDrivePower(DrivePower) * 0.5, 1.1);
             telemetry.addData("Strafe RIGHT", "");
             telemetry.update();
             sleep(300);
@@ -425,39 +426,87 @@ public class NessieAuto extends LinearOpMode {
         // telemetry.addData("Score Cone", "");
         // telemetry.update();
         // sleep(1000);
-//         // Step 9: Strafe Left
+        
+        // Step 9.5: Ram into Wall
         if (useRegularFunctions)
-             strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
+             drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 600);
         else
-             strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower), 0.3);
-        telemetry.addData("Strafe Left", "");
+             driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower) * 0.5, 2);
+        telemetry.addData("Move To Correct Parking Space", "");
         telemetry.update();
         sleep(200);
+        
         // Step 10: Move To Correct Parking Space
         switch (ps) {
             case UNO:
                 if (useRegularFunctions)
-                     drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 600);
+                     drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
                 else
-                     driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower) * 0.5, 0.5);
+                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 0.3);
                 telemetry.addData("Move To Correct Parking Space", "");
                 telemetry.update();
                 sleep(200);
+                
+                // Step 9.7: Strafe Left
+                if (useRegularFunctions)
+                     strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
+                else
+                     strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower) * 0.5, 0.4);
+                telemetry.addData("Strafe Left", "");
+                telemetry.update();
+                sleep(200);
+                
                 return;
             case DOS:
                 if (useRegularFunctions)
                      drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
                 else
-                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.8, 1.7);
+                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 0.3);
+                telemetry.addData("Move To Correct Parking Space", "");
+                telemetry.update();
+                sleep(200);
+                
+                // Step 9.7: Strafe Left
+                if (useRegularFunctions)
+                     strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
+                else
+                     strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower) * 0.5, 0.4);
+                telemetry.addData("Strafe Left", "");
+                telemetry.update();
+                sleep(200);
+                
+                // 
+                if (useRegularFunctions)
+                     drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
+                else
+                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.8, 1.73);
                 telemetry.addData("Move To Correct Parking Space", "");
                 telemetry.update();
                 sleep(200);
                 return;
             case TRES:
                 if (useRegularFunctions)
+                     drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
+                else
+                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 0.3);
+                telemetry.addData("Move To Correct Parking Space", "");
+                telemetry.update();
+                sleep(200);
+                
+                // Step 9.7: Strafe Left
+                if (useRegularFunctions)
+                     strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
+                else
+                     strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower) * 0.5, 0.4);
+                telemetry.addData("Strafe Left", "");
+                telemetry.update();
+                sleep(200);
+                
+                // 
+                if (useRegularFunctions)
                     drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
                 else
-                    driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.8, 3.2);
+                    driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.8, 3.4);
                 telemetry.addData("Move To Correct Parking Space", "");
                 telemetry.update();
                 sleep(200);
