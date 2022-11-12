@@ -41,6 +41,8 @@ import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import java.lang.Math;
+
 
 @TeleOp(name="NessieTeleop")
 //@Disabled
@@ -73,8 +75,8 @@ public class NessieTeleop extends LinearOpMode {
     private final double SlidePackSpeed = 0.7;
 //     private final double GrabberLGrabPosition = 0.2;
 //     private final double GrabberLReleasePosition = 0.4;
-    private final double GrabberRGrabPosition = 0.23;
-    private final double GrabberRReleasePosition = 0.0;
+    private final double GrabberRGrabPosition = 0.0;
+    private final double GrabberRReleasePosition = 0.23;
     private final double SpinnerForwardPosition = 0.25;
     private final double SpinnerBackwardPosition = 0.91;
     private PoleHeight CurrentPoleHeight = PoleHeight.GROUND;
@@ -125,7 +127,9 @@ public class NessieTeleop extends LinearOpMode {
         waitForStart();
         telemetry.addData("Status","TeleOp");
         telemetry.update();
-
+        
+        boolean OldGrabberPushed = false;
+        boolean OldSpinnerPushed = false;
 
         while(opModeIsActive()) {
 
@@ -175,9 +179,10 @@ public class NessieTeleop extends LinearOpMode {
             // THE CLAW
             double VerticalSlidePackForward = -gamepad2.left_stick_y * SlidePackSpeed;
 //            double VerticalSlidePackBackward = gamepad2.dpad_down ? -1 : 0;
-            boolean GrabberIn = gamepad2.a;
-            boolean GrabberOut = gamepad2.b;
-            double SpinnerForward = -gamepad2.right_stick_y;
+            boolean GrabberPushed = gamepad2.a;
+            // boolean GrabberOut = gamepad2.b;
+            // double SpinnerForward = -gamepad2.right_stick_y;
+            boolean SpinnerPushed = gamepad2.b;
             boolean GroundPoleHeight = gamepad2.dpad_down;
             boolean LowPoleHeight = gamepad2.dpad_left;
             boolean MediumPoleHeight = gamepad2.dpad_right;
@@ -186,13 +191,26 @@ public class NessieTeleop extends LinearOpMode {
             // if (HighPoleHeight)
             //     VerticalSlidePack.setTargetPosition(20);
 
-            if (GrabberIn || GrabberOut) {
+//             if (GrabberIn || GrabberOut) {
+// //                 GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn ? GrabberLGrabPosition : GrabberLReleasePosition);
+//                 GrabberR.setPosition(GrabberIn ? GrabberRGrabPosition : GrabberRReleasePosition);
+//             }
+            
+//             if (SpinnerForward != 0) {
+//                 Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerForward > 0 ? SpinnerForwardPosition : SpinnerBackwardPosition);
+//             }
+            
+            boolean temp1 = isWithinRange(GrabberR.getPosition(), GrabberRGrabPosition, 0.01);
+
+            if (GrabberPushed != OldGrabberPushed && GrabberPushed) {
 //                 GrabberL.getController().setServoPosition(GrabberL.getPortNumber(), GrabberIn ? GrabberLGrabPosition : GrabberLReleasePosition);
-                GrabberR.setPosition(GrabberIn ? GrabberRGrabPosition : GrabberRReleasePosition);
+                GrabberR.setPosition(temp1 ? GrabberRReleasePosition : GrabberRGrabPosition);
             }
             
-            if (SpinnerForward != 0) {
-                Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerForward > 0 ? SpinnerForwardPosition : SpinnerBackwardPosition);
+            boolean temp2 = isWithinRange(Spinner.getController().getServoPosition(Spinner.getPortNumber()), SpinnerForwardPosition, 0.2);
+            
+            if (SpinnerPushed != OldSpinnerPushed && SpinnerPushed) {
+                Spinner.getController().setServoPosition(Spinner.getPortNumber(), temp2 ? SpinnerBackwardPosition : SpinnerForwardPosition);
             }
             
             if (GroundPoleHeight) {
@@ -246,18 +264,27 @@ public class NessieTeleop extends LinearOpMode {
 //            telemetry.addData("HorizontalSlidePack", -HorizontalSlidePackBackward + HorizontalSlidePackForward);
             telemetry.addData("VerticalSlidePack", VerticalSlidePackForward);
             telemetry.addData("VerticalSlidePackPosition", VerticalSlidePack.getCurrentPosition());
-            telemetry.addData("GrabberIn", GrabberIn);
-            telemetry.addData("GrabberOut", GrabberOut);
+            telemetry.addData("GrabberIn", GrabberPushed);
+            // telemetry.addData("GrabberOut", GrabberOut);
             telemetry.addData("CurPolePosition", CurrentPoleHeight);
             telemetry.addData("GroundPoleHeight", GroundPoleHeight);
             telemetry.addData("LowPoleHeight", LowPoleHeight);
             telemetry.addData("MediumPoleHeight", MediumPoleHeight);
             telemetry.addData("HighPoleHeight", HighPoleHeight);
-            telemetry.addData("SpinnerForward", SpinnerForward);
-            telemetry.addData("GrabberRPosition", GrabberR.getController().getServoPosition(GrabberR.getPortNumber()));
+            telemetry.addData("SpinnerPushed", SpinnerPushed);
             telemetry.addData("SpinnerPosition", Spinner.getController().getServoPosition(Spinner.getPortNumber()));
             telemetry.update();
+            OldGrabberPushed = GrabberPushed;
+            OldSpinnerPushed = SpinnerPushed;
         }
+    }
+    
+    private boolean isWithinRange(double a, double b, double c) {
+        return Math.abs(a - b) <= c;
+    }
+    
+    private void switchForwardDirection() {
+        
     }
     
     private void moveSlidePackToPosition(PoleHeight curPoleHeight, PoleHeight targetPoleHeight) {
