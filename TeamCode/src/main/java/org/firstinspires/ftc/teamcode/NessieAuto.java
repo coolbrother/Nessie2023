@@ -36,8 +36,8 @@ import java.nio.ByteBuffer;
 import java.util.List;
 
 
-@Autonomous(name="NessieAuto")
-public class NessieAuto extends LinearOpMode {
+@Autonomous(name="NessieAutoRight")
+public class NessieAuto_Copy extends LinearOpMode {
 
     enum DriveDirection {
         FORWARD,
@@ -69,7 +69,7 @@ public class NessieAuto extends LinearOpMode {
         GROUND,
     }
 
-    private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.LEFT;
+    private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.RIGHT;
     private final int numberOfRowsToScanInImage = 30;
     private final double BATTERY_LEVEL = 1;
     private final double DrivePower = 0.85;
@@ -188,7 +188,7 @@ public class NessieAuto extends LinearOpMode {
     }
     
     private void doActions(StartingPositionEnum position, ParkingSpace ps) {
-//         ps = ParkingSpace.UNO;
+        ps = ParkingSpace.DOS;
         boolean needInvert = (position != StartingPositionEnum.LEFT);
         closeClaw();
         sleep(500);
@@ -210,7 +210,7 @@ public class NessieAuto extends LinearOpMode {
         if (useRegularFunctions)
             drive(DriveDirection.RIGHT, getDrivePower(DrivePower), 500);
         else
-            turn(DriveDirection.RIGHT, getDrivePower(DrivePower), 1);
+            turn(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 1);
         telemetry.addData("Turn RIGHT", "");
         telemetry.update();
         sleep(200);
@@ -228,7 +228,7 @@ public class NessieAuto extends LinearOpMode {
         if (useRegularFunctions)
             strafe(DriveDirection.RIGHT, 0.4 * getDrivePower(DrivePower), 800);
         else
-            strafeTiles(DriveDirection.RIGHT, 0.4 * getDrivePower(DrivePower), 2);
+            strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), 0.4 * getDrivePower(DrivePower), 2);
         telemetry.addData("Strafe RIGHT", "");
         telemetry.update();
         sleep(200);
@@ -237,7 +237,7 @@ public class NessieAuto extends LinearOpMode {
         if (useRegularFunctions)
             strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 1500);
         else
-            strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower) * 0.5, 3.5);
+            strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 3.5);
         telemetry.addData("Strafe LEFT", "");
         telemetry.update();
         sleep(200);
@@ -272,7 +272,7 @@ public class NessieAuto extends LinearOpMode {
         if (useRegularFunctions)
             strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 1500);
         else
-            strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower) * 0.5, 1);
+            strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 1);
         telemetry.addData("Strafe LEFT", "");
         telemetry.update();
         sleep(200);
@@ -334,7 +334,7 @@ public class NessieAuto extends LinearOpMode {
             if (useRegularFunctions)
                 strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 450);
             else
-                strafeTiles(DriveDirection.RIGHT, getDrivePower(DrivePower) * 0.5, 1.1);
+                strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower) * 0.5, 1.1);
             telemetry.addData("Strafe RIGHT", "");
             telemetry.update();
             sleep(300);
@@ -364,7 +364,7 @@ public class NessieAuto extends LinearOpMode {
             if (useRegularFunctions)
                 strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
             else
-                strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower) * 0.5, 1);
+                strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 1);
             telemetry.addData("Strafe LEFT", "");
             telemetry.update();
             sleep(200);
@@ -451,7 +451,7 @@ public class NessieAuto extends LinearOpMode {
                 if (useRegularFunctions)
                      strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
                 else
-                     strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower) * 0.5, 0.4);
+                     strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 0.4);
                 telemetry.addData("Strafe Left", "");
                 telemetry.update();
                 sleep(200);
@@ -470,7 +470,7 @@ public class NessieAuto extends LinearOpMode {
                 if (useRegularFunctions)
                      strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
                 else
-                     strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower) * 0.5, 0.4);
+                     strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 0.4);
                 telemetry.addData("Strafe Left", "");
                 telemetry.update();
                 sleep(200);
@@ -497,7 +497,7 @@ public class NessieAuto extends LinearOpMode {
                 if (useRegularFunctions)
                      strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
                 else
-                     strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower) * 0.5, 0.4);
+                     strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 0.4);
                 telemetry.addData("Strafe Left", "");
                 telemetry.update();
                 sleep(200);
