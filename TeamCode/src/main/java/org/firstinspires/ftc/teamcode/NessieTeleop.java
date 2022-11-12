@@ -130,11 +130,18 @@ public class NessieTeleop extends LinearOpMode {
         
         boolean OldGrabberPushed = false;
         boolean OldSpinnerPushed = false;
+        boolean currentDirectionForward = false;
 
         while(opModeIsActive()) {
+            telemetry.addData("currentDirectionForward", currentDirectionForward);
 
             //Driver 1
             drive = -gamepad1.left_stick_y;
+            
+            if (!currentDirectionForward) {
+                drive *= -1;
+            }
+            
             turn = gamepad1.right_stick_x;
 
             //TANK DRIVE
@@ -175,6 +182,11 @@ public class NessieTeleop extends LinearOpMode {
             
             double LeftStrafe = gamepad1.left_trigger;
             double RightStrafe = gamepad1.right_trigger;
+            
+            if (!currentDirectionForward) {
+                LeftStrafe = gamepad1.right_trigger;
+                RightStrafe = gamepad1.left_trigger;
+            }
 
             // THE CLAW
             double VerticalSlidePackForward = -gamepad2.left_stick_y * SlidePackSpeed;
@@ -182,7 +194,7 @@ public class NessieTeleop extends LinearOpMode {
             boolean GrabberPushed = gamepad2.a;
             // boolean GrabberOut = gamepad2.b;
             // double SpinnerForward = -gamepad2.right_stick_y;
-            boolean SpinnerPushed = gamepad2.b;
+            boolean SpinnerPushed = gamepad2.x;
             boolean GroundPoleHeight = gamepad2.dpad_down;
             boolean LowPoleHeight = gamepad2.dpad_left;
             boolean MediumPoleHeight = gamepad2.dpad_right;
@@ -210,6 +222,7 @@ public class NessieTeleop extends LinearOpMode {
             boolean temp2 = isWithinRange(Spinner.getController().getServoPosition(Spinner.getPortNumber()), SpinnerForwardPosition, 0.2);
             
             if (SpinnerPushed != OldSpinnerPushed && SpinnerPushed) {
+                currentDirectionForward = !currentDirectionForward;
                 Spinner.getController().setServoPosition(Spinner.getPortNumber(), temp2 ? SpinnerBackwardPosition : SpinnerForwardPosition);
             }
             
@@ -281,10 +294,6 @@ public class NessieTeleop extends LinearOpMode {
     
     private boolean isWithinRange(double a, double b, double c) {
         return Math.abs(a - b) <= c;
-    }
-    
-    private void switchForwardDirection() {
-        
     }
     
     private void moveSlidePackToPosition(PoleHeight curPoleHeight, PoleHeight targetPoleHeight) {
