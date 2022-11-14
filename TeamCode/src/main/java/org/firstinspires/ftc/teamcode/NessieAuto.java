@@ -219,7 +219,7 @@ public class NessieAuto_Copy extends LinearOpMode {
         if (useRegularFunctions)
             drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 200);
         else
-            driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1.25);
+            driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower), !needInvert ? 1.25 : 1.3);
         telemetry.addData("go bak", "");
         telemetry.update();
         sleep(200);
@@ -234,10 +234,17 @@ public class NessieAuto_Copy extends LinearOpMode {
         sleep(200);
         
         // // Step 2: Strafe LEFT
-        if (useRegularFunctions)
-            strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 1500);
-        else
-            strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 3.5);
+        if (!needInvert) {
+            if (useRegularFunctions)
+                strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 1500);
+            else
+                strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 3.5);
+        } else {
+            if (useRegularFunctions)
+                strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 1500);
+            else
+                strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 3.8);
+        }
         telemetry.addData("Strafe LEFT", "");
         telemetry.update();
         sleep(200);
@@ -249,7 +256,7 @@ public class NessieAuto_Copy extends LinearOpMode {
         if (useRegularFunctions)
             drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1000);
         else {
-            driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.5, 0.4);
+            driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.5, 0.5);
         }
         Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerForwardPosition);
         sleep(1500);
@@ -334,7 +341,7 @@ public class NessieAuto_Copy extends LinearOpMode {
             if (useRegularFunctions)
                 strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 450);
             else
-                strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower) * 0.5, 1.1);
+                strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower) * 0.5, !needInvert ? 1.1 : 0.9);
             telemetry.addData("Strafe RIGHT", "");
             telemetry.update();
             sleep(300);
@@ -364,7 +371,7 @@ public class NessieAuto_Copy extends LinearOpMode {
             if (useRegularFunctions)
                 strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
             else
-                strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 1);
+                strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 1.2);
             telemetry.addData("Strafe LEFT", "");
             telemetry.update();
             sleep(200);
@@ -436,45 +443,29 @@ public class NessieAuto_Copy extends LinearOpMode {
         telemetry.update();
         sleep(200);
         
+        if (useRegularFunctions)
+             drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
+        else
+             driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 0.3);
+        telemetry.addData("Move To Correct Parking Space", "");
+        telemetry.update();
+        sleep(200);
+        
+        // Step 9.7: Strafe Left
+        if (useRegularFunctions)
+             strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
+        else
+             strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, !needInvert ? 0.4 : 0);
+        telemetry.addData("Strafe Left", "");
+        telemetry.update();
+        sleep(200);
         // Step 10: Move To Correct Parking Space
         switch (ps) {
             case UNO:
-                if (useRegularFunctions)
-                     drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
-                else
-                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 0.3);
-                telemetry.addData("Move To Correct Parking Space", "");
-                telemetry.update();
-                sleep(200);
                 
-                // Step 9.7: Strafe Left
-                if (useRegularFunctions)
-                     strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
-                else
-                     strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 0.4);
-                telemetry.addData("Strafe Left", "");
-                telemetry.update();
-                sleep(200);
                 
                 return;
             case DOS:
-                if (useRegularFunctions)
-                     drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
-                else
-                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 0.3);
-                telemetry.addData("Move To Correct Parking Space", "");
-                telemetry.update();
-                sleep(200);
-                
-                // Step 9.7: Strafe Left
-                if (useRegularFunctions)
-                     strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
-                else
-                     strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 0.4);
-                telemetry.addData("Strafe Left", "");
-                telemetry.update();
-                sleep(200);
-                
                 // 
                 if (useRegularFunctions)
                      drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
@@ -484,25 +475,7 @@ public class NessieAuto_Copy extends LinearOpMode {
                 telemetry.update();
                 sleep(200);
                 return;
-            case TRES:
-                if (useRegularFunctions)
-                     drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
-                else
-                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 0.3);
-                telemetry.addData("Move To Correct Parking Space", "");
-                telemetry.update();
-                sleep(200);
-                
-                // Step 9.7: Strafe Left
-                if (useRegularFunctions)
-                     strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
-                else
-                     strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 0.4);
-                telemetry.addData("Strafe Left", "");
-                telemetry.update();
-                sleep(200);
-                
-                // 
+            case TRES:// 
                 if (useRegularFunctions)
                     drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
                 else
@@ -574,7 +547,7 @@ public class NessieAuto_Copy extends LinearOpMode {
             case MEDIUM:
                 return 2200;
             case LOW:
-                return 650;
+                return 720;
             case GROUND:
                 return 0;
             default:
