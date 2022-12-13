@@ -259,7 +259,7 @@ public class NessieAuto_Copy extends LinearOpMode {
             if (useRegularFunctions)
                 drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1000);
             else {
-                driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.5, 0.6);
+                driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.5, 0.63);
             }
             Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerForwardPosition);
             sleep(1500);
@@ -282,7 +282,7 @@ public class NessieAuto_Copy extends LinearOpMode {
         if (useRegularFunctions)
             strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 1500);
         else
-            strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 0.9);
+            strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 0.78);
         telemetry.addData("Strafe LEFT", "");
         telemetry.update();
         sleep(200);
@@ -303,7 +303,7 @@ public class NessieAuto_Copy extends LinearOpMode {
                 drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
             else {
                 // if (i == 0) {
-                    moveSlidePack(SlidePackDirection.UP, getDrivePower(SlidePackPower), 330 - i * 50);
+                    moveSlidePack(SlidePackDirection.UP, getDrivePower(SlidePackPower), 300 - i * 50);
                     sleep(200);
                     // driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 1.4);
                     // sleep(200);
@@ -347,7 +347,7 @@ public class NessieAuto_Copy extends LinearOpMode {
             if (useRegularFunctions)
                 strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 450);
             else
-                strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower) * 0.5, !needInvert ? 1.1 : 0.8);
+                strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower) * 0.5, !needInvert ? 1.1 : 0.75);
             telemetry.addData("Strafe RIGHT", "");
             telemetry.update();
             sleep(300);
@@ -355,7 +355,7 @@ public class NessieAuto_Copy extends LinearOpMode {
             if (useRegularFunctions)
                 drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1000);
             else {
-                driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.5, 0.4);
+                driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.5, 0.43);
             }
             moveSlidePack(SlidePackDirection.DOWN, getDrivePower(SlidePackPower), 330 - i * 50);
             sleep(1000);
@@ -379,7 +379,7 @@ public class NessieAuto_Copy extends LinearOpMode {
             if (useRegularFunctions)
                 strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
             else
-                strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 1);
+                strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 0.9);
             telemetry.addData("Strafe LEFT", "");
             telemetry.update();
             sleep(200);
@@ -478,7 +478,7 @@ public class NessieAuto_Copy extends LinearOpMode {
                 if (useRegularFunctions)
                      drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
                 else
-                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.8, 1.65);
+                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.8, 1.55);
                 telemetry.addData("Move To Correct Parking Space", "");
                 telemetry.update();
                 sleep(200);
@@ -621,7 +621,7 @@ public class NessieAuto_Copy extends LinearOpMode {
     }
     
     private void turn(DriveDirection direction, double power, double tiles) {
-        drive(direction, power, tiles * 670);
+        drive(direction, power, tiles * 630);
     }
 
     private void drive(DriveDirection direction, double power, double time) {
