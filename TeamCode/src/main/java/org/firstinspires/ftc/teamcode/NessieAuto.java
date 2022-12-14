@@ -72,7 +72,8 @@ public class NessieAuto extends LinearOpMode {
     private final StartingPositionEnum STARTING_POSITION = StartingPositionEnum.LEFT;
     private final int numberOfRowsToScanInImage = 30;
     private final double BATTERY_LEVEL = 1;
-    private final double DrivePower = 0.85;
+    private final double Multiplier = (435.0 / 2) / 312;
+    private final double DrivePower = 0.85 * Multiplier;
     private final double SlidePackPower = 0.75;
     private final double GrabberLGrabPosition = 0.3;
     private final double GrabberLReleasePosition = 0.64;
@@ -81,6 +82,7 @@ public class NessieAuto extends LinearOpMode {
     private final double SpinnerForwardPosition = 0.25;
     private final double SpinnerBackwardPosition = 0.91;
     private final boolean useRegularFunctions = false;
+    private final boolean usePlanB = false;
     private ParkingSpace parkingSpace = ParkingSpace.UNO;
     private PoleHeight CurrentPoleHeight = PoleHeight.GROUND;
 
@@ -120,10 +122,10 @@ public class NessieAuto extends LinearOpMode {
         VerticalSlidePack = hardwareMap.dcMotor.get("VSP");
         Spinner = hardwareMap.crservo.get("SP");
 
-        FLMotor.setDirection(DcMotor.Direction.FORWARD);
-        FRMotor.setDirection(DcMotor.Direction.REVERSE);
-        BLMotor.setDirection(DcMotor.Direction.FORWARD);
-        BRMotor.setDirection(DcMotor.Direction.REVERSE);
+        FLMotor.setDirection(DcMotor.Direction.REVERSE);
+        FRMotor.setDirection(DcMotor.Direction.FORWARD);
+        BLMotor.setDirection(DcMotor.Direction.REVERSE);
+        BRMotor.setDirection(DcMotor.Direction.FORWARD);
         // Flywheel.setDirection(DcMotor.Direction.FORWARD);
         // GrabberL.setDirection(CRServo.Direction.FORWARD);
         GrabberR.setDirection(Servo.Direction.REVERSE);
@@ -188,7 +190,7 @@ public class NessieAuto extends LinearOpMode {
     }
     
     private void doActions(StartingPositionEnum position, ParkingSpace ps) {
-        // ps = ParkingSpace.TRES;
+        ps = ParkingSpace.DOS;
         boolean needInvert = (position != StartingPositionEnum.LEFT);
         closeClaw();
         sleep(500);
@@ -228,7 +230,7 @@ public class NessieAuto extends LinearOpMode {
         if (useRegularFunctions)
             strafe(DriveDirection.RIGHT, 0.4 * getDrivePower(DrivePower), 800);
         else
-            strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), 0.4 * getDrivePower(DrivePower), 2);
+            strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), 0.5 * getDrivePower(DrivePower), 1.5);
         telemetry.addData("Strafe RIGHT", "");
         telemetry.update();
         sleep(200);
@@ -237,47 +239,51 @@ public class NessieAuto extends LinearOpMode {
         if (useRegularFunctions)
             strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 1500);
         else
-            strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 3.4);
+            strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 3.5);
         telemetry.addData("Strafe LEFT", "");
         telemetry.update();
         sleep(200);
         
-        pickUpCone(PoleHeight.LOW);
-        sleep(200);
-        
-        // Step 2.5: Go In Junction and Flip
-        if (useRegularFunctions)
-            drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1000);
-        else {
-            driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.5, 0.5);
+        if (!usePlanB) {
+            pickUpCone(PoleHeight.LOW);
+            sleep(200);
+            
+            // Step 2.5: Go In Junction and Flip
+            if (useRegularFunctions)
+                drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1000);
+            else {
+                driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.5, 0.6);
+            }
+            Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerForwardPosition);
+            sleep(1500);
+    //             Step 2.7: Score Cone
+            scoreCone();
+            // if (i == 0) {
+            //     moveSlidePack(SlidePackDirection.DOWN, getDrivePower(SlidePackPower), 100);
+            // }
+            // sleep(500);
+            telemetry.addData("Score Cone", "");
+            telemetry.update();
+            // // Step 5.7: Go out of Junction
+            if (useRegularFunctions)
+                drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
+            else {
+                driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower) * 0.5, 0.4);
+            }
+            Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerBackwardPosition);
         }
-        Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerForwardPosition);
-        sleep(1500);
-//             Step 2.7: Score Cone
-        scoreCone();
-        // if (i == 0) {
-        //     moveSlidePack(SlidePackDirection.DOWN, getDrivePower(SlidePackPower), 100);
-        // }
-        telemetry.addData("Score Cone", "");
-        telemetry.update();
-        // // Step 5.7: Go out of Junction
-        if (useRegularFunctions)
-            drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
-        else {
-            driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower) * 0.5, 0.3);
-        }
-        Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerBackwardPosition);
-    
         // Step 2.7: Strafe LEFT
         if (useRegularFunctions)
             strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 1500);
         else
-            strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 1.1);
+            strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 1.15);
         telemetry.addData("Strafe LEFT", "");
         telemetry.update();
         sleep(200);
         
         int cycles = 1;
+        if (usePlanB)
+            cycles = 0;
         
         for (int i = 0; i < cycles; i++) {
         // sleep(1000);
@@ -290,7 +296,7 @@ public class NessieAuto extends LinearOpMode {
                 drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
             else {
                 // if (i == 0) {
-                    moveSlidePack(SlidePackDirection.UP, getDrivePower(SlidePackPower), 330 - i * 50);
+                    moveSlidePack(SlidePackDirection.UP, getDrivePower(SlidePackPower), 300 - i * 50);
                     sleep(200);
                     // driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 1.4);
                     // sleep(200);
@@ -342,8 +348,9 @@ public class NessieAuto extends LinearOpMode {
             if (useRegularFunctions)
                 drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1000);
             else {
-                driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.5, 0.5);
+                driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.5, 0.6);
             }
+            moveSlidePack(SlidePackDirection.DOWN, getDrivePower(SlidePackPower), 100);
             sleep(1100);
 //             Step 5.5: Score Cone
             scoreCone();
@@ -353,13 +360,14 @@ public class NessieAuto extends LinearOpMode {
             telemetry.addData("Score Cone", "");
             telemetry.update();
             // Step 5.7: Go out of Junction
-            Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerBackwardPosition);
+            
             if (useRegularFunctions)
                 drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
             else {
-                driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower) * 0.5, 0.3);
+                driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower) * 0.5, 0.4);
             }
             sleep(300);
+            Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerBackwardPosition);
 //             Step 6: Strafe LEFT
             if (useRegularFunctions)
                 strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
@@ -427,6 +435,16 @@ public class NessieAuto extends LinearOpMode {
         // telemetry.update();
         // sleep(1000);
         
+        // if (usePlanB) {
+        //     if (useRegularFunctions)
+        //         strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
+        //     else
+        //         strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 1.1);
+        //     telemetry.addData("Strafe LEFT", "");
+        //     telemetry.update();
+        //     sleep(200);
+        // }
+        
         // Step 9.5: Ram into Wall
         if (useRegularFunctions)
              drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 600);
@@ -457,7 +475,7 @@ public class NessieAuto extends LinearOpMode {
                 if (useRegularFunctions)
                      strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
                 else
-                     strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 0.4);
+                     strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 0.2);
                 telemetry.addData("Strafe Left", "");
                 telemetry.update();
                 sleep(200);
@@ -580,7 +598,7 @@ public class NessieAuto extends LinearOpMode {
             case MEDIUM:
                 return 2200;
             case LOW:
-                return 650;
+                return 620;
             case GROUND:
                 return 0;
             default:
@@ -642,11 +660,11 @@ public class NessieAuto extends LinearOpMode {
     }
     
     private void strafeTiles(DriveDirection direction, double power, double tiles) {
-        strafe(direction, power, tiles * 920);
+        strafe(direction, power, tiles * 1060);
     }
     
     private void turn(DriveDirection direction, double power, double tiles) {
-        drive(direction, power, tiles * 670);
+        drive(direction, power, tiles * 720);
     }
 
     private void drive(DriveDirection direction, double power, double time) {
