@@ -192,8 +192,10 @@ public class NessieAuto extends LinearOpMode {
     private void doActions(StartingPositionEnum position, ParkingSpace ps) {
         ps = ParkingSpace.DOS;
         boolean needInvert = (position != StartingPositionEnum.LEFT);
+        Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerForwardPosition);
+        sleep(200);
         closeClaw();
-        sleep(500);
+        sleep(400);
         moveSlidePack(SlidePackDirection.UP, getDrivePower(SlidePackPower), 200);
         sleep(200);
         
@@ -230,7 +232,7 @@ public class NessieAuto extends LinearOpMode {
         if (useRegularFunctions)
             strafe(DriveDirection.RIGHT, 0.4 * getDrivePower(DrivePower), 800);
         else
-            strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), 0.5 * getDrivePower(DrivePower), 1.5);
+            strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), 0.5 * getDrivePower(DrivePower), 1.2);
         telemetry.addData("Strafe RIGHT", "");
         telemetry.update();
         sleep(200);
@@ -296,7 +298,7 @@ public class NessieAuto extends LinearOpMode {
                 drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
             else {
                 // if (i == 0) {
-                    moveSlidePack(SlidePackDirection.UP, getDrivePower(SlidePackPower), 300 - i * 50);
+                    moveSlidePack(SlidePackDirection.UP, getDrivePower(SlidePackPower), 230 - i * 50);
                     sleep(200);
                     // driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 1.4);
                     // sleep(200);
@@ -313,7 +315,7 @@ public class NessieAuto extends LinearOpMode {
             pickUpCone(PoleHeight.LOW);
             telemetry.addData("Pick Up Block", "");
             telemetry.update();
-            sleep(200);
+            sleep(500);
             Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerForwardPosition);
             sleep(200);
             
@@ -350,8 +352,8 @@ public class NessieAuto extends LinearOpMode {
             else {
                 driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.5, 0.6);
             }
-            moveSlidePack(SlidePackDirection.DOWN, getDrivePower(SlidePackPower), 100);
-            sleep(1100);
+            moveSlidePack(SlidePackDirection.DOWN, getDrivePower(SlidePackPower), 200);
+            sleep(1000);
 //             Step 5.5: Score Cone
             scoreCone();
             // if (i == 0) {
