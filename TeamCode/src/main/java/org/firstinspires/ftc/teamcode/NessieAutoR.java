@@ -282,7 +282,7 @@ public class NessieAuto_Copy extends LinearOpMode {
         if (useRegularFunctions)
             strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 1500);
         else
-            strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 0.78);
+            strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 1.1);
         telemetry.addData("Strafe LEFT", "");
         telemetry.update();
         sleep(200);
@@ -487,7 +487,7 @@ public class NessieAuto_Copy extends LinearOpMode {
                 if (useRegularFunctions)
                     drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
                 else
-                    driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.8, 3.4);
+                    driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.8, 3.2);
                 telemetry.addData("Move To Correct Parking Space", "");
                 telemetry.update();
                 sleep(200);
@@ -555,7 +555,7 @@ public class NessieAuto_Copy extends LinearOpMode {
             case MEDIUM:
                 return 2200;
             case LOW:
-                return 700;
+                return 650;
             case GROUND:
                 return 0;
             default:
