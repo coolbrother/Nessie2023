@@ -210,6 +210,14 @@ public class NessieAuto extends LinearOpMode {
         telemetry.update();
         sleep(200);
         
+        // if (useRegularFunctions)
+        //      drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
+        // else
+        //      driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 1.2);
+        // telemetry.addData("Move To Correct Parking Space", "");
+        // telemetry.update();
+        // sleep(200);
+        
         // // Step 1.2: Strafe RIGHT
         if (useRegularFunctions)
             strafe(DriveDirection.RIGHT, 0.4 * getDrivePower(DrivePower), 800);
@@ -307,7 +315,7 @@ public class NessieAuto extends LinearOpMode {
                 if (useRegularFunctions)
                     strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 1500);
                 else
-                    strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower) * 0.5, 1);
+                    strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower) * 0.5, 0.8);
                 telemetry.addData("Strafe LEFT", "");
                 telemetry.update();
                 sleep(200);
