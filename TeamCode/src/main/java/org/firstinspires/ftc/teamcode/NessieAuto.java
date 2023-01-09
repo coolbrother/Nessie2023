@@ -190,7 +190,7 @@ public class NessieAuto extends LinearOpMode {
     }
     
     private void doActions(StartingPositionEnum position, ParkingSpace ps) {
-        ps = ParkingSpace.DOS;
+        // ps = ParkingSpace.UNO;
         boolean needInvert = (position != StartingPositionEnum.LEFT);
         Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerForwardPosition);
         sleep(200);
@@ -203,46 +203,27 @@ public class NessieAuto extends LinearOpMode {
         if (useRegularFunctions)
             drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 200);
         else {
-            driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 0.33);
+            driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 0.2);
             telemetry.addData("Tile Functions", "");
         }
         telemetry.addData("Forward", "");
         telemetry.update();
         sleep(200);
         
-        // // Step 1: Turn RIGHT
-        if (useRegularFunctions)
-            drive(DriveDirection.RIGHT, getDrivePower(DrivePower), 500);
-        else
-            turn(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower), 1);
-        telemetry.addData("Turn RIGHT", "");
-        telemetry.update();
-        sleep(200);
-        
-        // // Step 1.1: Backward
-        if (useRegularFunctions)
-            drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 200);
-        else
-            driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1.35);
-        telemetry.addData("go bak", "");
-        telemetry.update();
-        sleep(200);
+        // if (useRegularFunctions)
+        //      drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
+        // else
+        //      driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 1.2);
+        // telemetry.addData("Move To Correct Parking Space", "");
+        // telemetry.update();
+        // sleep(200);
         
         // // Step 1.2: Strafe RIGHT
         if (useRegularFunctions)
             strafe(DriveDirection.RIGHT, 0.4 * getDrivePower(DrivePower), 800);
         else
-            strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), 0.5 * getDrivePower(DrivePower), 1.2);
+            strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), 0.5 * getDrivePower(DrivePower), 0.9);
         telemetry.addData("Strafe RIGHT", "");
-        telemetry.update();
-        sleep(200);
-        
-        // // Step 2: Strafe LEFT
-        if (useRegularFunctions)
-            strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 1500);
-        else
-            strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 3.7);
-        telemetry.addData("Strafe LEFT", "");
         telemetry.update();
         sleep(200);
         
@@ -270,269 +251,79 @@ public class NessieAuto extends LinearOpMode {
             if (useRegularFunctions)
                 drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
             else {
-                driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower) * 0.5, 0.4);
+                driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower) * 0.4, 1.5);
             }
-            Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerBackwardPosition);
+            // Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerBackwardPosition);
         }
-        // Step 2.7: Strafe LEFT
-        if (useRegularFunctions)
-            strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 1500);
-        else
-            strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 1.15);
-        telemetry.addData("Strafe LEFT", "");
-        telemetry.update();
         sleep(200);
         
-        int cycles = 1;
-        if (usePlanB)
-            cycles = 0;
-        
-        for (int i = 0; i < cycles; i++) {
-        // sleep(1000);
-            // Step 6.5: Lower Arm
-            moveSlidePackToPosition(CurrentPoleHeight, PoleHeight.GROUND);
-            moveSlidePack(SlidePackDirection.DOWN, getDrivePower(SlidePackPower), 300);
-            sleep(200);
-// //             Step 3: BACKWARD
-            if (useRegularFunctions)
-                drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
-            else {
-                // if (i == 0) {
-                    moveSlidePack(SlidePackDirection.UP, getDrivePower(SlidePackPower), 230 - i * 50);
-                    sleep(200);
-                    // driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 1.4);
-                    // sleep(200);
-                    driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower) * 0.3, 2.5);
-                    sleep(200);
-                    closeClaw();
-                // } 
-                // else
-                    // driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 2.4);
-            }
-            sleep(200);
-            
-            // Step 3.5: Pick Up Block
-            pickUpCone(PoleHeight.LOW);
-            telemetry.addData("Pick Up Block", "");
-            telemetry.update();
-            sleep(500);
-            Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerForwardPosition);
-            sleep(200);
-            
-            // Step 3.2: FORWARD
-            if (useRegularFunctions)
-                drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1000);
-            else {
-                driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.3, 1.2);
-            }
-            sleep(200);
-//         // sleep(1000);
-// //             Step 4: Backward
-//             if (useRegularFunctions)
-//                 drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
-//             else {
-//                 driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1.0); // 1 * 2 + 1/2 * 1 = 2.5
-//                 sleep(200);
-//                 driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower) * 0.5, 1);
-//             }
-//             telemetry.addData("Backward", "");
-//             telemetry.update();
-//             sleep(200);
-// //             Step 5: Strafe RIGHT
-            if (useRegularFunctions)
-                strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 450);
-            else
-                strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower) * 0.5, 1.1);
-            telemetry.addData("Strafe RIGHT", "");
-            telemetry.update();
-            sleep(300);
-            // Step 5.2: Go Into Junction ()
-            if (useRegularFunctions)
-                drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1000);
-            else {
-                driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.5, 0.6);
-            }
-            moveSlidePack(SlidePackDirection.DOWN, getDrivePower(SlidePackPower), 200);
-            sleep(1000);
-//             Step 5.5: Score Cone
-            scoreCone();
-            // if (i == 0) {
-            //     moveSlidePack(SlidePackDirection.DOWN, getDrivePower(SlidePackPower), 100);
-            // }
-            telemetry.addData("Score Cone", "");
-            telemetry.update();
-            // Step 5.7: Go out of Junction
-            
-            if (useRegularFunctions)
-                drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1000);
-            else {
-                driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower) * 0.5, 0.4);
-            }
-            sleep(300);
-            Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerBackwardPosition);
-//             Step 6: Strafe LEFT
-            if (useRegularFunctions)
-                strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
-            else
-                strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 1.1);
-            telemetry.addData("Strafe LEFT", "");
-            telemetry.update();
-            sleep(200);
-        }
-//         if (useRegularFunctions)
-//             drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1000);
-//         else {
-//             driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.5, 0.6);
-//             sleep(1100);
-//         }
-//         Spinner.getController().setServoPosition(Spinner.getPortNumber(), SpinnerForwardPosition);
-// //             Step 5.5: Score Cone
-//         scoreCone();
-//         telemetry.addData("Score Cone", "");
-//         telemetry.update();
-//         // Step 5.7: Go out of Junction
-//         driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower) * 0.5, 0.5);
-//         sleep(200);
-//     // sleep(1000);
-// //             Step 6: Strafe Right
-//         if (useRegularFunctions)
-//             strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 450);
-//         else
-//             strafeTiles(DriveDirection.RIGHT, getDrivePower(DrivePower), 0.5);
-//         telemetry.addData("Strafe Right", "");
-//         telemetry.update();
-//         sleep(200);
-    //  Step 3: Forward
-        // if (useRegularFunctions)
-        //     drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 1000);
-        // else
-        //     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 1.4);
-        // telemetry.addData("Forward", "");
-        // telemetry.update();
-        // sleep(200);
-//      Step 3.5: Pick Up Block
-        // pickUpCone(PoleHeight.MEDIUM);
-        // telemetry.addData("Pick Up Block", "");
-        // telemetry.update();
-        // sleep(1000);
-        // Step 7: Backward
-        // if (useRegularFunctions)
-        //     drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 600);
-        // else
-        //     driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower), 1.2);
-        // telemetry.addData("Backward", "");
-        // telemetry.update();
-        // sleep(200);
-        // Step 8: Strafe Left
-        // if (useRegularFunctions)
-        //     strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
-        // else
-        //     strafeTiles(DriveDirection.LEFT, getDrivePower(DrivePower), 0.5);
-        // telemetry.addData("Strafe Left", "");
-        // telemetry.update();
-        // sleep(200);
-        // Step 8.5: Score Cone
-        // scoreCone(PoleHeight.MEDIUM);
-        // telemetry.addData("Score Cone", "");
-        // telemetry.update();
-        // sleep(1000);
-        
-        // if (usePlanB) {
-        //     if (useRegularFunctions)
-        //         strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
-        //     else
-        //         strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 1.1);
-        //     telemetry.addData("Strafe LEFT", "");
-        //     telemetry.update();
-        //     sleep(200);
-        // }
-        
-        // Step 9.5: Ram into Wall
-        if (useRegularFunctions)
-             drive(DriveDirection.BACKWARD, getDrivePower(DrivePower), 600);
-        else
-             driveTiles(DriveDirection.BACKWARD, getDrivePower(DrivePower) * 0.5, 2);
-        telemetry.addData("Move To Correct Parking Space", "");
-        telemetry.update();
-        sleep(200);
-        
-        // Step 10: Move To Correct Parking Space
-        if (needInvert) {
-            if (ps == ParkingSpace.UNO)
-                ps = ParkingSpace.TRES;
-            else if (ps == ParkingSpace.TRES);
-                ps = ParkingSpace.UNO;
-        }
         switch (ps) {
             case UNO:
                 if (useRegularFunctions)
+                    strafe(DriveDirection.LEFT, 0.4 * getDrivePower(DrivePower), 800);
+                else
+                    strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower), 1);
+                telemetry.addData("Strafe RIGHT", "");
+                telemetry.update();
+                sleep(200);
+                
+                
+                if (useRegularFunctions)
+                    strafe(DriveDirection.LEFT, 0.4 * getDrivePower(DrivePower), 800);
+                else
+                    strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), 0.4 * getDrivePower(DrivePower), 2);
+                telemetry.addData("Strafe RIGHT", "");
+                telemetry.update();
+                sleep(200);
+                
+                if (useRegularFunctions)
+                    strafe(DriveDirection.RIGHT, 0.4 * getDrivePower(DrivePower), 800);
+                else
+                    strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), 0.5 * getDrivePower(DrivePower), 0.2);
+                telemetry.addData("Strafe RIGHT", "");
+                telemetry.update();
+                sleep(200);
+                
+                if (useRegularFunctions)
                      drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
                 else
-                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 0.3);
+                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 1.2);
                 telemetry.addData("Move To Correct Parking Space", "");
                 telemetry.update();
                 sleep(200);
-                
-                // Step 9.7: Strafe Left
-                if (useRegularFunctions)
-                     strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
-                else
-                     strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 0.2);
-                telemetry.addData("Strafe Left", "");
-                telemetry.update();
-                sleep(200);
-                
                 return;
             case DOS:
+                // Step 2.7: Strafe LEFT
                 if (useRegularFunctions)
-                     drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
+                    strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 1500);
                 else
-                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 0.3);
-                telemetry.addData("Move To Correct Parking Space", "");
+                    strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 1);
+                telemetry.addData("Strafe LEFT", "");
                 telemetry.update();
                 sleep(200);
-                
-                // Step 9.7: Strafe Left
-                if (useRegularFunctions)
-                     strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
-                else
-                     strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 0.2);
-                telemetry.addData("Strafe Left", "");
-                telemetry.update();
-                sleep(200);
-                
                 // 
                 if (useRegularFunctions)
                      drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
                 else
-                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.8, 1.6);
+                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 1.2);
                 telemetry.addData("Move To Correct Parking Space", "");
                 telemetry.update();
                 sleep(200);
                 return;
             case TRES:
+                // Step 2.7: Strafe LEFT
+                if (useRegularFunctions)
+                    strafe(DriveDirection.RIGHT, getDrivePower(DrivePower), 1500);
+                else
+                    strafeTiles(getCorrectDirection(DriveDirection.RIGHT, needInvert), getDrivePower(DrivePower) * 0.5, 0.8);
+                telemetry.addData("Strafe LEFT", "");
+                telemetry.update();
+                sleep(200);
+                // 
                 if (useRegularFunctions)
                      drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
                 else
-                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 0.3);
-                telemetry.addData("Move To Correct Parking Space", "");
-                telemetry.update();
-                sleep(200);
-                
-                // Step 9.7: Strafe Left
-                if (useRegularFunctions)
-                     strafe(DriveDirection.LEFT, getDrivePower(DrivePower), 450);
-                else
-                     strafeTiles(getCorrectDirection(DriveDirection.LEFT, needInvert), getDrivePower(DrivePower) * 0.5, 0.1);
-                telemetry.addData("Strafe Left", "");
-                telemetry.update();
-                sleep(200);
-                
-                // 
-                if (useRegularFunctions)
-                    drive(DriveDirection.FORWARD, getDrivePower(DrivePower), 600);
-                else
-                    driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower) * 0.8, 3.2);
+                     driveTiles(DriveDirection.FORWARD, getDrivePower(DrivePower), 1.2);
                 telemetry.addData("Move To Correct Parking Space", "");
                 telemetry.update();
                 sleep(200);
@@ -600,7 +391,7 @@ public class NessieAuto extends LinearOpMode {
             case MEDIUM:
                 return 2200;
             case LOW:
-                return 620;
+                return 650;
             case GROUND:
                 return 0;
             default:
@@ -658,11 +449,11 @@ public class NessieAuto extends LinearOpMode {
     }
     
     private void driveTiles(DriveDirection direction, double power, double tiles) {
-        drive(direction, power, tiles * 550);
+        drive(direction, power, tiles * 650);
     }
     
     private void strafeTiles(DriveDirection direction, double power, double tiles) {
-        strafe(direction, power, tiles * 1060);
+        strafe(direction, power, tiles * 1400);
     }
     
     private void turn(DriveDirection direction, double power, double tiles) {
